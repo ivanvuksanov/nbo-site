@@ -186,10 +186,11 @@ footer{padding-block:var(--pad) 3.5rem}
 .reveal-focus.in{opacity:1;transform:none}
 
 /* tweaks panel */
-.tweaks{position:fixed;right:1.1rem;bottom:1.1rem;z-index:200;font-family:var(--sans)}
-.tweaks .gear{width:44px;height:44px;border-radius:50%;border:1px solid var(--ink);background:var(--paper);
+.tweaks{position:fixed;right:1.1rem;bottom:1.1rem;z-index:200;font-family:var(--sans);
+  display:flex;flex-direction:column;align-items:flex-end;gap:.6rem}
+.tweaks .gear{order:0;flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--ink);background:var(--paper);
   color:var(--ink);cursor:pointer;font-size:1.05rem;display:grid;place-items:center;box-shadow:0 6px 24px rgba(0,0,0,.12)}
-.tweaks .panel{position:absolute;right:0;bottom:56px;width:286px;background:var(--paper);color:var(--ink);
+.tweaks .panel{order:1;width:286px;max-height:calc(100svh - 130px);overflow-y:auto;background:var(--paper);color:var(--ink);
   border:1px solid var(--ink);padding:1.2rem 1.3rem;box-shadow:0 12px 48px rgba(0,0,0,.18);display:none}
 .tweaks.open .panel{display:block}
 .tweaks h4{font-size:.62rem;text-transform:uppercase;letter-spacing:.24em;color:var(--ink-soft);font-weight:600;margin-bottom:.2rem}
@@ -300,7 +301,8 @@ body.clean .tweaks{display:none}
       <figcaption>Rijeka · photo Ivan Vranjić</figcaption>
     </figure>
     <div class="txt reveal-x" style="grid-column:7/12">
-      <p class="lead-sm">How can the relation between audience and musicians be changed? How can we play and listen freely?</p>
+      <p class="lead-sm">How can the relation between audience and musicians be changed?</p>
+      <p class="lead-sm" style="margin-top:.9rem">How can we play and listen freely?</p>
     </div>
   </div>
 </section>
@@ -321,7 +323,7 @@ body.clean .tweaks{display:none}
 <!-- WHO WE ARE — dark panel; title + two alternating rows (Premil · the ensemble) -->
 <section class="band field field-clay wrap who" id="who">
   <div class="grid">
-    <h2 class="lead reveal">The people on the stage.</h2>
+    <h2 class="lead reveal">NBO is space filled with new possibilities.</h2>
   </div>
   <div class="grid spread" style="margin-top:clamp(3rem,6vh,5rem)">
     <div class="txt reveal-x" style="grid-column:1/6">
@@ -338,8 +340,8 @@ body.clean .tweaks{display:none}
       <div class="img" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg');aspect-ratio:3/2"></div>
     </figure>
     <div class="txt reveal-x" style="grid-column:8/12">
-      <p class="lead-sm">NBO is an ensemble of soloists.</p>
-      <p class="soft">Excellent professional musicians from the former Yugoslavia.</p>
+      <p class="lead-sm">The ensemble</p>
+      <p class="soft">Excellent professional musicians from the former Yugoslavia. NBO is an ensemble of soloists.</p>
     </div>
   </div>
   <div class="grid"><div style="grid-column:1/9">
@@ -355,7 +357,7 @@ body.clean .tweaks{display:none}
 <!-- MEDIA — contained images, varied sizes + staggered -->
 <section class="band wrap media" id="media">
   <div class="grid">
-    <h2 class="lead reveal hang-r">On stage &amp; on record.</h2>
+    <h2 class="lead reveal hang-r">Be loud, be visible and audible.</h2>
   </div>
   <div class="grid gal">
     <figure class="fig m1 reveal"><div class="img" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div><figcaption>Dragstor</figcaption></figure>
@@ -401,6 +403,7 @@ body.clean .tweaks{display:none}
 
 <!-- PROTOTYPE: tweaks panel — ?clean hides it for screenshots -->
 <div class="tweaks" id="tweaks">
+  <button class="gear" aria-label="Toggle tweaks panel">✎</button>
   <div class="panel">
     <h4>Tweaks</h4>
     <div class="ttl">Direction C · UNIVERS</div>
@@ -430,7 +433,6 @@ body.clean .tweaks{display:none}
       <p class="hint">Contained centered photo, or a full-screen hero with a white header that turns solid on scroll (like Directions A &amp; B).</p>
     </div>
   </div>
-  <button class="gear" aria-label="Toggle tweaks panel">✎</button>
 </div>
 
 <script>
@@ -446,6 +448,8 @@ const logoImg=logo.querySelector('img');
 const LOGO_SMALL=124, LOGO_TH=360;
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 function sizeLogo(){
+  // full-screen hero mode: small fixed logo, no big→small transition (matches A/B)
+  if(reduce || document.body.classList.contains('hero-full')){ logoImg.style.width=LOGO_SMALL+'px'; return; }
   const t=Math.min(Math.max(scrollY,0),LOGO_TH)/LOGO_TH;       // 0 at top → 1 past threshold
   const left=logo.getBoundingClientRect().left;               // = page gutter
   const big=Math.max(LOGO_SMALL, innerWidth*0.20 - left);     // ~20% of the screen width
@@ -480,10 +484,12 @@ const opening=document.getElementById('opening');
 opening.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
   opening.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b===btn));
   document.body.classList.toggle('hero-full', btn.dataset.open==='full');
+  sizeLogo();
 }));
 
 if(location.search.includes('clean')) document.body.classList.add('clean');
 if(location.search.includes('herofull')) document.body.classList.add('hero-full');
+if(location.search.includes('openpanel')) document.getElementById('tweaks').classList.add('open');
 // PROTOTYPE: ?seek=<px> pulls content up so headless top-anchored shots can reach lower sections
 const seek=new URLSearchParams(location.search).get('seek');
 if(seek) document.body.style.marginTop='-'+parseInt(seek,10)+'px';
