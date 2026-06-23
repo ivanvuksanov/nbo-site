@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>No Borders Orchestra — Direction B (LINER)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ECEAE3; --ink:#1A1916; --ink-soft:#5C5A53; --hair:#D8D5CC;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Inter",system-ui,-apple-system,sans-serif;
+  --pad:clamp(7rem,18vh,16rem);
+  --gut:clamp(1.5rem,7vw,7rem);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:clamp(1rem,1.02vw,1.12rem);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);column-gap:clamp(1rem,2vw,2rem);
+  max-width:1320px;margin-inline:auto;padding-inline:var(--gut)}
+.col-mid{grid-column:3/11}
+.col-wide{grid-column:2/12}
+.eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-soft);font-weight:500}
+
+/* nav */
+header{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;gap:var(--gut);
+  padding:1.3rem var(--gut);color:#fff;transition:background .5s ease,color .5s ease,padding .5s ease}
+header.solid{background:var(--paper);color:var(--ink);padding:.85rem var(--gut);box-shadow:0 1px 0 var(--hair)}
+/* header entrance */
+@keyframes hdrIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.logo{display:inline-block;animation:hdrIn .7s ease both}
+.logo svg{display:block;height:3rem;width:auto}
+nav a,.actions a{animation:hdrIn .55s ease both}
+nav a:nth-child(2){animation-delay:.06s}
+nav a:nth-child(3){animation-delay:.12s}
+nav a:nth-child(4){animation-delay:.18s}
+.actions a:nth-child(1){animation-delay:.24s}
+.actions a:nth-child(2){animation-delay:.30s}
+nav{margin-inline:auto;display:flex;gap:clamp(1rem,2.8vw,2.8rem)}
+nav a{font-size:.72rem;text-transform:uppercase;letter-spacing:.17em;font-weight:500;padding-bottom:.4rem;
+  border-bottom:1px solid transparent;transition:border-color .3s,opacity .3s}
+nav a:hover{opacity:.6}
+nav a.active{border-bottom-color:currentColor}
+.actions{display:flex;align-items:center;gap:1.3rem;white-space:nowrap;font-size:.72rem;text-transform:uppercase;letter-spacing:.17em;font-weight:500}
+.actions a:hover{opacity:.6}
+
+/* hero */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;overflow:hidden}
+.hero .bg{position:absolute;inset:0;background-image:url("../../fotografije/Photo%20NBO%20arcive.jpg");
+  background-size:cover;background-position:center 38%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,20,18,.45),rgba(20,20,18,0)32%)}
+.hero .inner{position:relative;z-index:2;padding-bottom:clamp(3rem,10vh,8rem);color:#fff}
+.hero .eyebrow{color:rgba(255,255,255,.85);margin-bottom:1.6rem}
+.htitle{font-family:var(--display);font-weight:300;font-size:clamp(2.4rem,7vw,6.6rem);line-height:1.02;letter-spacing:-.01em}
+.scrollcue{position:absolute;bottom:1.6rem;left:50%;transform:translateX(-50%);z-index:2;color:rgba(255,255,255,.7);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase}
+
+/* generic section */
+section{position:relative}
+.band{padding-block:var(--pad)}
+.serif-lead{font-family:var(--display);font-weight:300;font-size:clamp(2rem,5vw,4.2rem);line-height:1.06;letter-spacing:-.005em}
+.measure{max-width:46ch}
+.soft{color:var(--ink-soft)}
+
+/* upcoming ledger */
+.led-head{margin-bottom:clamp(3rem,7vh,6rem)}
+.gig{display:grid;grid-template-columns:6.5rem 1fr auto;gap:clamp(1rem,3vw,2.5rem);align-items:baseline;padding:1.7rem 0}
+.gig + .gig{border-top:1px solid var(--hair)}
+.gig .date{font-variant-numeric:tabular-nums;color:var(--ink-soft);font-size:.95rem;letter-spacing:.02em}
+.gig .city{font-family:var(--display);font-weight:400;font-size:clamp(1.5rem,3vw,2.6rem);line-height:1;transition:opacity .3s}
+.gig .venue{color:var(--ink-soft);font-size:.85rem;text-transform:uppercase;letter-spacing:.12em}
+.gig:hover .city{opacity:.55}
+
+/* full-bleed photo (light parallax) */
+.plate{position:relative;height:clamp(70vh,88vh,920px);overflow:hidden}
+.plate .bg{position:absolute;inset:-12% 0;background-size:cover;background-position:center;will-change:transform}
+.plate .cap{position:absolute;left:var(--gut);bottom:1.6rem;color:rgba(255,255,255,.92);font-size:.68rem;
+  letter-spacing:.16em;text-transform:uppercase;z-index:2;text-shadow:0 1px 16px rgba(0,0,0,.5)}
+
+/* mission quote */
+.quote{font-family:var(--display);font-weight:300;font-size:clamp(1.8rem,4.6vw,4rem);line-height:1.16;letter-spacing:-.005em}
+.quote .lift{font-style:italic}
+.attrib{margin-top:2.5rem}
+
+/* program — numbered tracklist (honest sequence) */
+.track{display:grid;grid-template-columns:3.2rem 1fr;gap:clamp(1rem,3vw,2.5rem);align-items:baseline;padding:1.5rem 0}
+.track + .track{border-top:1px solid var(--hair)}
+.track .no{font-size:.8rem;color:var(--ink-soft);letter-spacing:.1em;font-variant-numeric:tabular-nums;padding-top:.6rem}
+.track .composer{font-family:var(--display);font-weight:400;font-size:clamp(1.4rem,3vw,2.4rem);line-height:1.05}
+.track .piece{color:var(--ink-soft);margin-top:.3rem}
+
+/* who-we-are */
+.who-row{margin-top:clamp(3rem,7vh,6rem)}
+.who-pic{aspect-ratio:3/4;overflow:hidden}
+.who-pic .bg{width:100%;height:100%;background-size:cover;background-position:center}
+.who-name{font-family:var(--display);font-weight:300;font-size:clamp(1.8rem,4vw,3.2rem);line-height:1.05;margin-bottom:.5rem}
+.who-bio{color:var(--ink-soft);max-width:34ch}
+
+/* media strip */
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(280px,40vw);gap:.75rem;overflow-x:auto;
+  scroll-snap-type:x mandatory;padding-block:1rem;margin-top:clamp(3rem,6vh,5rem)}
+.strip::-webkit-scrollbar{height:0}
+.shot{aspect-ratio:16/10;overflow:hidden;scroll-snap-align:start}
+.shot .bg{width:100%;height:100%;background-size:cover;background-position:center;transition:transform .8s}
+.shot:hover .bg{transform:scale(1.05)}
+
+/* footer */
+footer{padding-block:var(--pad) 3.5rem}
+.ftitle{font-family:var(--display);font-weight:300;font-size:clamp(2.4rem,6vw,5rem);line-height:1}
+.form{margin-top:clamp(2.5rem,5vh,4rem);max-width:560px}
+.field{margin-bottom:1.8rem}
+.field label{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.16em;color:var(--ink-soft);margin-bottom:.6rem}
+.field input,.field textarea{width:100%;font-family:var(--body);font-size:1rem;background:transparent;border:none;
+  border-bottom:1px solid var(--hair);padding:.5rem 0;color:var(--ink)}
+.field input:focus,.field textarea:focus{outline:none;border-bottom-color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.send{margin-top:1rem;background:none;border:1px solid var(--ink);color:var(--ink);cursor:pointer;
+  font-family:var(--body);font-weight:500;text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;
+  padding:.85rem 2rem;border-radius:0;transition:background .3s,color .3s}
+.send:hover{background:var(--ink);color:var(--paper)}
+.fmeta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;margin-top:var(--pad);color:var(--ink-soft);font-size:.85rem}
+.fmeta a:hover{color:var(--ink)}
+.socials{display:flex;gap:1.4rem;text-transform:uppercase;letter-spacing:.13em;font-size:.72rem}
+
+/* ECM reveal — opacity (1s linear) deliberately trails the movement (.7s ease-in-out) */
+.reveal{opacity:0;transform:translate3d(0,22px,0);transition:transform .7s ease-in-out,opacity 1s linear}
+.reveal.in{opacity:1;transform:none}
+
+/* "read more" link out to sub-page */
+.more{display:inline-block;margin-top:2.5rem;font-size:.74rem;text-transform:uppercase;letter-spacing:.16em;
+  font-weight:500;border-bottom:1px solid var(--ink);padding-bottom:.3rem;transition:opacity .3s}
+.more:hover{opacity:.6}
+.sublinks{display:flex;flex-wrap:wrap;gap:1.5rem 2.5rem;margin-top:clamp(2.5rem,5vh,4rem)}
+.sublinks a{font-family:var(--display);font-weight:400;font-size:clamp(1.1rem,2vw,1.5rem);
+  border-bottom:1px solid transparent;transition:border-color .3s}
+.sublinks a:hover{border-bottom-color:var(--ink)}
+.sublinks a .arr{color:var(--ink-soft);font-family:var(--body);font-size:.9em}
+
+/* quote variants */
+.quote[hidden]{display:none}
+
+/* tweaks panel */
+.tweaks{position:fixed;right:1.1rem;bottom:1.1rem;z-index:200;font-family:var(--body)}
+.tweaks .gear{width:44px;height:44px;border-radius:50%;border:1px solid var(--ink);background:var(--paper);
+  color:var(--ink);cursor:pointer;font-size:1.1rem;display:grid;place-items:center;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+.tweaks .panel{position:absolute;right:0;bottom:56px;width:280px;background:var(--paper);color:var(--ink);
+  border:1px solid var(--ink);padding:1.2rem 1.3rem;box-shadow:0 12px 48px rgba(0,0,0,.18);display:none}
+.tweaks.open .panel{display:block}
+.tweaks h4{font-size:.66rem;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-soft);font-weight:600;margin-bottom:.2rem}
+.tweaks .ttl{font-family:var(--display);font-weight:400;font-size:1.15rem;margin-bottom:1rem}
+.tw-group{margin-bottom:1.1rem}
+.tw-group > label{display:block;font-size:.64rem;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-soft);margin-bottom:.5rem}
+.seg{display:flex;border:1px solid var(--hair)}
+.seg button{flex:1;background:none;border:none;cursor:pointer;font-family:var(--body);font-size:.78rem;
+  padding:.5rem .4rem;color:var(--ink-soft);transition:background .2s,color .2s}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.tweaks .hint{font-size:.66rem;color:var(--ink-soft);line-height:1.5;margin-top:.4rem}
+body.clean .tweaks{display:none}
+
+@media(max-width:880px){
+  nav,.actions{display:none}
+  .col-mid,.col-wide{grid-column:1/-1}
+  .gig{grid-template-columns:1fr auto}
+  .gig .date{grid-column:1/-1;margin-bottom:.3rem}
+  .who-row .grid > *{margin-bottom:3rem}
+  .g1,.g2,.g3,.g4{grid-column:1/-1;aspect-ratio:16/10}
+  .two{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  .plate .bg{transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- PROTOTYPE: nav — anchor-scrolls to section overviews -->
+<header id="nav">
+  <a href="#top" class="logo" aria-label="No Borders Orchestra"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12794 5778" fill="currentColor" role="img" aria-label="No Borders Orchestra">
+<title>No Borders Orchestra</title>
+<path transform="translate(0 1545) scale(1 -1)" d="M135 0H447V685C447 773 438 933 427 1113C519 927 574 818 657 684L1085 0H1426V1490H1114V775C1114 677 1122 517 1133 371C1068 526 1005 639 946 736L475 1490H135ZM2350 -20C2745 -20 3045 259 3045 744C3045 1231 2745 1510 2350 1510C1955 1510 1655 1231 1655 744C1655 260 1955 -20 2350 -20ZM2350 251C2119 251 1965 425 1965 744C1965 1064 2119 1239 2350 1239C2581 1239 2735 1065 2735 744C2735 425 2581 251 2350 251Z"/>
+<path transform="translate(0 3634) scale(1 -1)" d="M135 0H764C1100 0 1276 175 1276 411C1276 632 1118 764 950 772V787C1103 821 1218 930 1218 1107C1218 1330 1053 1490 726 1490H135ZM440 251V655H712C865 655 962 565 962 440C962 327 883 251 704 251ZM440 864V1241H687C830 1241 909 1167 909 1058C909 938 812 864 681 864ZM2144 -20C2539 -20 2839 259 2839 744C2839 1231 2539 1510 2144 1510C1749 1510 1449 1231 1449 744C1449 260 1749 -20 2144 -20ZM2144 251C1913 251 1759 425 1759 744C1759 1064 1913 1239 2144 1239C2375 1239 2529 1065 2529 744C2529 425 2375 251 2144 251ZM3068 0H3373V532H3613L3897 0H4235L3918 581C4088 654 4182 801 4182 1005C4182 1298 3988 1490 3649 1490H3068ZM3373 779V1238H3592C3779 1238 3867 1155 3867 1005C3867 856 3779 779 3593 779ZM4937 0C5390 0 5663 280 5663 746C5663 1210 5390 1490 4942 1490H4413V0ZM4718 263V1227H4924C5209 1227 5359 1079 5359 746C5359 411 5209 263 4922 263ZM5892 0H6891V253H6197V628H6837V877H6197V1237H6889V1490H5892ZM7136 0H7441V532H7681L7965 0H8303L7986 581C8156 654 8250 801 8250 1005C8250 1298 8056 1490 7717 1490H7136ZM7441 779V1238H7660C7847 1238 7935 1155 7935 1005C7935 856 7847 779 7661 779ZM9027 -22C9389 -22 9602 153 9602 424C9602 674 9408 802 9157 860L9022 893C8896 923 8784 970 8784 1081C8784 1181 8872 1253 9028 1253C9181 1253 9276 1184 9287 1065H9582C9577 1327 9361 1510 9031 1510C8707 1510 8471 1330 8471 1061C8471 844 8622 717 8874 656L9038 615C9200 575 9295 528 9295 426C9295 313 9187 236 9024 236C8859 236 8738 311 8728 462H8431C8440 145 8669 -22 9027 -22Z"/>
+<path transform="translate(0 5723) scale(1 -1)" d="M789 -20C1184 -20 1484 259 1484 744C1484 1231 1184 1510 789 1510C394 1510 94 1231 94 744C94 260 394 -20 789 -20ZM789 251C558 251 404 425 404 744C404 1064 558 1239 789 1239C1020 1239 1174 1065 1174 744C1174 425 1020 251 789 251ZM1713 0H2018V532H2258L2542 0H2880L2563 581C2733 654 2827 801 2827 1005C2827 1298 2633 1490 2294 1490H1713ZM2018 779V1238H2237C2424 1238 2512 1155 2512 1005C2512 856 2424 779 2238 779ZM3709 -20C4085 -20 4317 233 4351 510H4042C4012 348 3884 251 3714 251C3484 251 3327 421 3327 744C3327 1060 3482 1239 3715 1239C3885 1239 4013 1143 4041 981H4350C4306 1316 4048 1510 3709 1510C3316 1510 3017 1231 3017 744C3017 260 3312 -20 3709 -20ZM4573 0H4878V635H5527V0H5833V1490H5527V888H4878V1490H4573ZM6103 0H7102V253H6408V628H7048V877H6408V1237H7100V1490H6103ZM7893 -22C8255 -22 8468 153 8468 424C8468 674 8274 802 8023 860L7888 893C7762 923 7650 970 7650 1081C7650 1181 7738 1253 7894 1253C8047 1253 8142 1184 8153 1065H8448C8443 1327 8227 1510 7897 1510C7573 1510 7337 1330 7337 1061C7337 844 7488 717 7740 656L7904 615C8066 575 8161 528 8161 426C8161 313 8053 236 7890 236C7725 236 7604 311 7594 462H7297C7306 145 7535 -22 7893 -22ZM8628 1237H9084V0H9390V1237H9845V1490H8628ZM10055 0H10360V532H10600L10884 0H11222L10905 581C11075 654 11169 801 11169 1005C11169 1298 10975 1490 10636 1490H10055ZM10360 779V1238H10579C10766 1238 10854 1155 10854 1005C10854 856 10766 779 10580 779ZM11314 0H11651L11762 346H12291L12406 0H12745L12223 1490H11823ZM11838 585 11881 719C11926 869 11970 1046 12020 1251C12072 1048 12119 872 12167 719L12212 585Z"/>
+</svg></a>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#who">Who we are</a>
+    <a href="#media">Media</a>
+  </nav>
+  <div class="actions">
+    <a href="#contact">Contact</a>
+    <a href="donate.html">Donate</a>
+  </div>
+</header>
+
+<!-- HERO — fixed design: audience lying on the floor + overlaid menu -->
+<section class="hero" id="top">
+  <div class="bg"></div>
+  <span class="scrollcue">↓</span>
+</section>
+
+<!-- UPCOMING — first section -->
+<section class="band" id="upcoming">
+  <div class="grid">
+    <div class="col-mid">
+      <div class="led-head">
+        <p class="eyebrow reveal">Upcoming</p>
+        <h2 class="serif-lead reveal" style="margin-top:1rem">Lovers Tour 2026</h2>
+
+      </div>
+      <div class="reveal">
+        <a class="gig" href="#contact"><span class="date">06.09.2026</span><span class="city">Belgrade</span><span class="venue">Kolarac Hall</span></a>
+        <a class="gig" href="#contact"><span class="date">12.09.2026</span><span class="city">Vienna</span><span class="venue">Konzerthaus</span></a>
+        <a class="gig" href="#contact"><span class="date">19.09.2026</span><span class="city">Rijeka</span><span class="venue">Exportdrvo</span></a>
+        <a class="gig" href="#contact"><span class="date">26.09.2026</span><span class="city">Sarajevo</span><span class="venue">National Theatre</span></a>
+        <a class="gig" href="#contact"><span class="date">03.10.2026</span><span class="city">Berlin</span><span class="venue">Radialsystem</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="plate">
+  <div class="bg" data-parallax="0.10" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div>
+  <span class="cap">Belgrade · Drugstore</span>
+</div>
+
+<!-- ABOUT / MISSION -->
+<section class="band" id="about">
+  <div class="grid">
+    <div class="col-mid">
+      <div class="reveal" style="margin-top:0">
+        <blockquote class="quote" data-variant="borders">Border is the other name for prejudice.<br><br>NBO is a call to play across the borders of purported, usual, and to listen without prejudices.</blockquote>
+        <blockquote class="quote" data-variant="symbol" hidden>NBO is a tool and a symbol to help overcome a violent history, to set an example on how people can work and live together.</blockquote>
+        <blockquote class="quote" data-variant="change" hidden>No Borders Orchestra is about making a decision that art should represent the change that we wish to see in the world.</blockquote>
+      </div>
+      <div class="sublinks reveal">
+        <a href="manifesto.html">Manifesto <span class="arr">→</span></a>
+        <a href="mission.html">Mission <span class="arr">→</span></a>
+        <a href="nbo-cv.html">NBO CV <span class="arr">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="plate">
+  <div class="bg" data-parallax="0.10" style="background-image:url('../../fotografije/Rijeka%202%20Ivan%20Vranjic..jpeg')"></div>
+  <span class="cap">Rijeka · photo Ivan Vranjić</span>
+</div>
+
+<!-- PROJECTS — numbered tracklist -->
+<section class="band" id="projects">
+  <div class="grid">
+    <div class="col-mid">
+      <h2 class="serif-lead reveal" style="margin-top:0">Our main interest is the connection between music and life.</h2>
+      <div class="sublinks reveal">
+        <a href="projects.html">All projects, 2018–2025 <span class="arr">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="plate">
+  <div class="bg" data-parallax="0.10" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg')"></div>
+  <span class="cap">Premil Petrović · photo Karlo Čargonja</span>
+</div>
+
+<!-- WHO WE ARE -->
+<section class="band" id="who">
+  <div class="grid">
+    <div class="col-mid">
+      <h2 class="serif-lead reveal" style="margin-top:0">NBO is space filled with new possibilities.</h2>
+    </div>
+  </div>
+  <div class="grid who-row">
+    <div class="reveal" style="grid-column:3/7">
+      <div class="who-pic"><div class="bg" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg')"></div></div>
+      <h3 class="who-name" style="margin-top:1.4rem">Premil Petrović</h3>
+      <p class="who-bio">Conductor and artistic director. Founder of the orchestra that gathers musicians across borders.</p>
+    </div>
+    <div class="reveal" style="grid-column:7/11">
+      <div class="who-pic"><div class="bg" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg')"></div></div>
+      <h3 class="who-name" style="margin-top:1.4rem">The ensemble</h3>
+      <p class="who-bio">Musicians from across the region and beyond, with stage direction by Brett Bailey.</p>
+    </div>
+  </div>
+  <div class="grid"><div class="col-mid">
+    <div class="sublinks reveal" style="margin-top:clamp(3rem,6vh,5rem)">
+      <a href="team.html">Team <span class="arr">→</span></a>
+      <a href="musicians.html">Musicians <span class="arr">→</span></a>
+      <a href="board.html">Board <span class="arr">→</span></a>
+      <a href="partners.html">Partners <span class="arr">→</span></a>
+    </div>
+  </div></div>
+</section>
+
+<div class="plate">
+  <div class="bg" data-parallax="0.10" style="background-image:url('../../fotografije/Macbeth_01c.jpg')"></div>
+</div>
+
+<!-- MEDIA -->
+<section class="band" id="media">
+  <div class="grid">
+    <div class="col-mid">
+      <h2 class="serif-lead reveal" style="margin-top:0">Be loud, be visible and audible.</h2>
+    </div>
+  </div>
+  <div class="grid" style="margin-top:0">
+    <div class="col-wide reveal">
+      <div class="strip">
+        <div class="shot"><div class="bg" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div></div>
+        <div class="shot"><div class="bg" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg')"></div></div>
+        <div class="shot"><div class="bg" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg')"></div></div>
+        <div class="shot"><div class="bg" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg')"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="grid"><div class="col-mid">
+    <div class="sublinks reveal" style="margin-top:clamp(3rem,6vh,5rem)">
+      <a href="videos.html">Videos <span class="arr">→</span></a>
+      <a href="photos.html">Photo Gallery <span class="arr">→</span></a>
+      <a href="reviews.html">Reviews <span class="arr">→</span></a>
+      <a href="discography.html">Discography <span class="arr">→</span></a>
+    </div>
+  </div></div>
+</section>
+
+<!-- CONTACT FOOTER -->
+<footer id="contact">
+  <div class="grid">
+    <div class="col-mid">
+      <h2 class="ftitle reveal">Contact us.</h2>
+      <form class="form reveal" onsubmit="event.preventDefault();this.querySelector('.send').textContent='Thank you'">
+        <div class="two">
+          <div class="field"><label>First name</label><input type="text" autocomplete="given-name"></div>
+          <div class="field"><label>Last name</label><input type="text" autocomplete="family-name"></div>
+        </div>
+        <div class="field"><label>Email</label><input type="email" autocomplete="email"></div>
+        <div class="field"><label>Message</label><textarea rows="3"></textarea></div>
+        <button class="send" type="submit">Send</button>
+      </form>
+      <div class="fmeta">
+        <div>
+          <p>Jelena Vojinović, Executive Producer</p>
+          <p><a href="mailto:office@nobordersorchestra.org">office@nobordersorchestra.org</a></p>
+        </div>
+        <div class="socials"><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">YouTube</a></div>
+      </div>
+      <p class="eyebrow" style="margin-top:3.5rem">© 2026 No Borders Orchestra — prototype, Direction B · LINER</p>
+    </div>
+  </div>
+</footer>
+
+<!-- PROTOTYPE: tweaks panel — toggle section variants live; ?clean hides it for screenshots -->
+<div class="tweaks" id="tweaks">
+  <div class="panel">
+    <h4>Tweaks</h4>
+    <div class="ttl">Section variants</div>
+    <div class="tw-group">
+      <label>About — mission text</label>
+      <div class=”seg” data-target=”about”>
+        <button data-variant=”borders” aria-pressed=”true”>Borders</button>
+        <button data-variant=”symbol” aria-pressed=”false”>A symbol</button>
+        <button data-variant=”change” aria-pressed=”false”>On art</button>
+      </div>
+      <p class=”hint”>All three are verbatim from the orchestra’s manifesto and mission.</p>
+    </div>
+  </div>
+  <button class="gear" aria-label="Toggle tweaks panel">✎</button>
+</div>
+
+<script>
+// PROTOTYPE: sticky header, scroll-reveal, active-nav, light parallax, tweaks panel.
+const header=document.getElementById('nav');
+const hero=document.querySelector('.hero');
+new IntersectionObserver(([e])=>header.classList.toggle('solid',!e.isIntersecting),
+  {rootMargin:'-80px 0px 0px 0px'}).observe(hero);
+
+const revObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target);}}),{threshold:.14});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+const links=[...document.querySelectorAll('nav a')];
+const map=links.map(a=>({a,sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec);
+map.forEach(x=>new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));x.a.classList.add('active');}}),{rootMargin:'-50% 0px -50% 0px'}).observe(x.sec));
+
+// light parallax on plate photos (subtle — keeps the calm ECM feel)
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+if(!reduce){
+  const items=[...document.querySelectorAll('[data-parallax]')];
+  let ticking=false;
+  const onScroll=()=>{ if(ticking)return; ticking=true;
+    requestAnimationFrame(()=>{
+      const vh=innerHeight;
+      items.forEach(el=>{
+        const r=el.parentElement.getBoundingClientRect();
+        const speed=parseFloat(el.dataset.parallax);
+        const offset=((r.top+r.height/2)-vh/2);
+        el.style.transform=`translate3d(0,${(-offset*speed).toFixed(1)}px,0)`;
+      });
+      ticking=false;
+    });
+  };
+  addEventListener('scroll',onScroll,{passive:true}); onScroll();
+}
+
+// tweaks panel — live section-variant switching
+const tw=document.getElementById('tweaks');
+tw.querySelector('.gear').addEventListener('click',()=>tw.classList.toggle('open'));
+tw.querySelectorAll('.seg').forEach(seg=>{
+  const target=seg.dataset.target;
+  seg.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
+    const v=btn.dataset.variant;
+    seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b===btn));
+    document.querySelectorAll('#'+target+' .quote[data-variant]').forEach(q=>{ q.hidden = q.dataset.variant!==v; });
+  }));
+});
+if(location.search.includes('clean')) document.body.classList.add('clean');
+</script>
+</body>
+</html>

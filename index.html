@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>No Borders Orchestra — design directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fbfbfa;--ink:#1e1e1e;--soft:#767676;--hair:#e4e4e4;
+  --sans:"Helvetica Neue",Helvetica,"Inter",Arial,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+*{box-sizing:border-box;margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;
+  -webkit-font-smoothing:antialiased;padding:clamp(2rem,6vw,6rem)}
+.logo{width:210px;max-width:62%;height:auto;display:block}
+h1{font-weight:300;font-size:clamp(1.4rem,3vw,2.2rem);letter-spacing:-.02em;margin:2.6rem 0 .5rem}
+.note{color:var(--soft);font-size:.95rem;max-width:50ch}
+.eyebrow{font-size:.66rem;text-transform:uppercase;letter-spacing:.26em;color:var(--soft);font-weight:600;margin-top:3.2rem}
+.dirs{margin-top:1.3rem;border-top:1px solid var(--hair);max-width:780px}
+.dir{display:flex;align-items:baseline;gap:1.4rem;padding:1.7rem .2rem;border-bottom:1px solid var(--hair);
+  text-decoration:none;color:inherit;transition:opacity .2s}
+.dir:hover{opacity:.55}
+.dir .k{font-family:var(--mono);font-size:.78rem;color:var(--soft);width:1.6rem}
+.dir .n{font-weight:400;font-size:clamp(1.2rem,2.4vw,1.7rem);letter-spacing:-.01em}
+.dir .d{color:var(--soft);font-size:.88rem;margin-left:auto;text-align:right}
+.dir .arr{color:var(--soft);font-family:var(--mono);margin-left:1rem}
+footer{margin-top:3.5rem;color:var(--soft);font-size:.78rem;letter-spacing:.02em}
+@media(max-width:640px){.dir .d{display:none}}
+</style>
+</head>
+<body>
+<img class="logo" src="prototypes/direction-c-univers/logo.svg" alt="No Borders Orchestra">
+<h1>Website — design directions</h1>
+<p class="note">Three directions for the new site, to compare. Open each one. Internal review — please don't share the link.</p>
+<p class="eyebrow">Directions</p>
+<div class="dirs">
+  <a class="dir" href="prototypes/direction-a-lovemusic/index.html"><span class="k">A</span><span class="n">Prism</span><span class="d">fluid · spectral · modern</span><span class="arr">→</span></a>
+  <a class="dir" href="prototypes/direction-b-ecm/index.html"><span class="k">B</span><span class="n">Liner</span><span class="d">serif · airy · timeless</span><span class="arr">→</span></a>
+  <a class="dir" href="prototypes/direction-c-univers/index.html"><span class="k">C</span><span class="n">Univers</span><span class="d">grotesque · ECM · austere</span><span class="arr">→</span></a>
+</div>
+<footer>No Borders Orchestra · prototype · 2026</footer>
+</body>
+</html>
