@@ -53,7 +53,9 @@ nav a{font-size:.74rem;text-transform:uppercase;letter-spacing:.15em;font-weight
 nav a:hover{opacity:.65}
 nav a.active{border-bottom-color:currentColor}
 .actions{display:flex;align-items:center;gap:1.1rem;white-space:nowrap}
-.actions .link{font-size:.74rem;text-transform:uppercase;letter-spacing:.15em;font-weight:600}
+.actions .link{font-size:.74rem;text-transform:uppercase;letter-spacing:.15em;font-weight:600;padding-bottom:.35rem;border-bottom:2px solid transparent;transition:border-color .25s,opacity .25s}
+.actions .link:hover{opacity:.65}
+.actions .link.active{border-bottom-color:currentColor}
 .donate{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;font-weight:700;
   padding:.5rem 1.05rem;border-radius:100px;background:var(--ink);color:var(--paper)}
 header.solid .donate{background:var(--ink);color:var(--paper)}
@@ -117,6 +119,11 @@ body.no-desc .tour-statement{display:none}
 /* full-bleed parallax photo */
 .plate{position:relative;height:clamp(60vh,80vh,820px);overflow:hidden}
 .plate .bg{position:absolute;inset:-12% 0;background-size:cover;background-position:center;will-change:transform}
+.panplate{height:clamp(78vh,96vh,1000px)}
+.panplate .bg{inset:0;transform:none!important;background-position:center 50%;will-change:background-position}
+/* pin-then-pan: JS adds .pan-on (skipped under reduced-motion, so it stays a normal plate) */
+.panwrap.pan-on{position:relative;height:180vh}
+.panwrap.pan-on .panplate{position:sticky;top:0;height:100vh}
 .plate .cap{position:absolute;left:var(--gut);bottom:1.4rem;color:#fff;font-size:.7rem;letter-spacing:.14em;
   text-transform:uppercase;text-shadow:0 1px 12px rgba(0,0,0,.5);z-index:2}
 .plate.tint::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.4),rgba(0,0,0,0)55%)}
@@ -318,9 +325,12 @@ body.clean .tweaks{display:none}
 
 <div class="seam" data-seam></div>
 
-<!-- MEDIA — full-weight plate on top -->
-<div class="plate tint">
-  <div class="bg" data-parallax="0.12" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg')"></div></div>
+<!-- MEDIA — plate pins full-screen, then vertically pans (top floor → bottom floor) -->
+<div class="panwrap">
+  <div class="plate tint panplate">
+    <div class="bg pan" data-pan="1" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg')"></div>
+  </div>
+</div>
 <section class="band wrap" id="media">
   <h2 class="lead reveal">media</h2>
   <div class="sublinks reveal">
@@ -409,7 +419,7 @@ const seamObs = new IntersectionObserver((es)=>{
 document.querySelectorAll('[data-seam]').forEach(el=>seamObs.observe(el));
 
 // active nav link
-const links = [...document.querySelectorAll('nav a')];
+const links = [...document.querySelectorAll('nav a, .actions a[href^="#"]')];
 const map = links.map(a=>({a,sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec);
 const navObs = new IntersectionObserver((es)=>{
   es.forEach(e=>{ if(e.isIntersecting){
@@ -437,6 +447,27 @@ if(!reduce){
     });
   };
   addEventListener('scroll',onScroll,{passive:true}); onScroll();
+}
+
+// vertical pan for the building photo — reveals top floor → bottom floor as it scrolls through
+const panEls=[...document.querySelectorAll('[data-pan]')];
+if(!reduce && panEls.length){
+  // pins full-screen, then pans only while pinned (progress across the wrapper's extra height)
+  const wraps=panEls.map(el=>({el,wrap:el.closest('.panwrap')})).filter(x=>x.wrap);
+  wraps.forEach(x=>x.wrap.classList.add('pan-on'));
+  let pTick=false;
+  const onPan=()=>{ if(pTick)return; pTick=true;
+    requestAnimationFrame(()=>{
+      const vh=innerHeight;
+      wraps.forEach(({el,wrap})=>{
+        const wr=wrap.getBoundingClientRect();
+        const p=Math.min(Math.max(-wr.top/(wr.height-vh),0),1);
+        el.style.backgroundPosition='center '+(p*100).toFixed(1)+'%';
+      });
+      pTick=false;
+    });
+  };
+  addEventListener('scroll',onPan,{passive:true}); addEventListener('resize',onPan); onPan();
 }
 
 // tweaks panel

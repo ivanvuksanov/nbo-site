@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>No Borders Orchestra — Direction C (UNIVERS)</title>
+<title>No Borders Orchestra</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -63,12 +63,13 @@ nav a:nth-child(4){animation-delay:.18s}
 figure.fig{margin:0}
 .fig .img{background-size:cover;background-position:center}
 .fig figcaption{font-family:var(--mono);font-size:.7rem;color:var(--ink-soft);margin-top:.85rem;letter-spacing:.03em}
-/* full-bleed photo plate (breaks the contained-image rule intentionally — e.g. Dragstor above About) */
-.plate{position:relative;width:100vw;left:calc(50% - 50vw);height:clamp(56vh,70vh,760px);overflow:hidden;margin:0}
-.plate .img{position:absolute;inset:-12% 0;background-size:cover;background-position:center}
-.plate::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(16,18,20,.42),rgba(16,18,20,0) 42%)}
-.plate figcaption{position:absolute;left:var(--gut);bottom:1.1rem;z-index:2;color:#fbfbfa;font-family:var(--mono);font-size:.7rem;letter-spacing:.03em}
-.plate-xl{height:clamp(74vh,92vh,1060px)}   /* as large as possible — near full-viewport plate */
+/* (full-bleed plate styles removed — C returned to contained images) */
+/* half-bleed split — image runs to the viewport's left edge, text on the right (About) */
+.bleed-left{display:grid;grid-template-columns:1.25fr 1fr;align-items:center;gap:clamp(2rem,5vw,5rem)}
+.bleed-left .bl-img{margin:0}
+.bleed-left .bl-img .img{width:100%;height:clamp(440px,64vh,700px)}
+.bleed-left .bl-text{padding-right:var(--gut)}
+@media(max-width:760px){.bleed-left{grid-template-columns:1fr;gap:1.4rem}.bleed-left .bl-text{padding-inline:var(--gut)}}
 
 /* type */
 .lead{font-weight:300;font-size:clamp(2rem,5vw,4.4rem);line-height:1.06;letter-spacing:-.02em}
@@ -117,9 +118,9 @@ body.hero-video-on .hero-video{display:block}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 /* full-screen hero: ribbon becomes a tour ticker pinned to the bottom edge, over the video/photo */
 body.hero-full .open .ribbon{position:absolute;left:0;right:0;bottom:0;z-index:3;
-  border:0;border-top:1px solid rgba(255,255,255,.16);padding-block:.95rem;
-  background:rgba(16,18,20,.34);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);color:#fbfbfa}
-body.hero-full .open .ribbon .sep{color:rgba(251,251,250,.5)}
+  border:0;border-top:1px solid var(--hair);padding-block:.95rem;
+  background:var(--paper);color:var(--ink)}
+body.hero-full .open .ribbon .sep{color:var(--ink-soft)}
 
 /* upcoming — label far left, content indented (asymmetric) */
 .up .lbl{grid-column:1/2}
@@ -167,7 +168,10 @@ body.hero-full .open .ribbon .sep{color:rgba(251,251,250,.5)}
 .m4{grid-column:2/8;margin-top:clamp(2rem,5vh,4rem)}.m4 .img{aspect-ratio:16/10}
 
 /* sublinks */
-.sublinks{display:flex;flex-wrap:wrap;gap:1.2rem 2.4rem;margin-top:clamp(2.4rem,5vh,3.6rem)}
+.sublinks{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .8rem;margin-top:clamp(.6rem,1.4vh,1rem)}
+.sublinks a{white-space:nowrap}
+.sublinks .dot{color:var(--ink-soft);font-size:1.4em;line-height:1;user-select:none}
+body.panels-dark .field .sublinks .dot{color:rgba(251,251,250,.5)}
 .sublinks a{font-weight:400;font-size:clamp(1.05rem,1.7vw,1.3rem);letter-spacing:-.005em;
   border-bottom:1px solid transparent;transition:border-color .3s}
 .sublinks a:hover{border-bottom-color:currentColor}
@@ -192,11 +196,18 @@ footer{padding-block:var(--pad) 3.5rem}
 .socials{display:flex;gap:1.3rem;text-transform:uppercase;letter-spacing:.16em;font-size:.7rem;margin-top:1.4rem}
 .fwrap .meta a:hover{color:var(--ink)}
 
-/* ECM reveal — opacity (1s linear) trails the movement (.7s ease-in-out); content enters from varied angles */
-.reveal{opacity:0;transform:translate3d(0,22px,0);transition:transform .7s ease-in-out,opacity 1s linear}
-.reveal-x{opacity:0;transform:translate3d(38px,0,0);transition:transform .7s ease-in-out,opacity 1s linear}
-.reveal-l{opacity:0;transform:translate3d(-38px,0,0);transition:transform .7s ease-in-out,opacity 1s linear}
+/* ECM reveal — fluid slide + fade on a decelerating curve; photos also scale in a touch */
+.reveal{opacity:0;transform:translate3d(0,42px,0);transition:transform 1.05s cubic-bezier(.16,1,.3,1),opacity .9s ease}
+.reveal-x{opacity:0;transform:translate3d(56px,0,0);transition:transform 1.05s cubic-bezier(.16,1,.3,1),opacity .9s ease}
+.reveal-l{opacity:0;transform:translate3d(-56px,0,0);transition:transform 1.05s cubic-bezier(.16,1,.3,1),opacity .9s ease}
 .reveal.in,.reveal-x.in,.reveal-l.in{opacity:1;transform:none}
+/* photos: slide + subtle zoom for a more dynamic entrance */
+.fig.reveal{transform:translate3d(0,54px,0) scale(.93)}
+.fig.reveal-l{transform:translate3d(-64px,0,0) scale(.93)}
+.fig.reveal-x{transform:translate3d(64px,0,0) scale(.93)}
+.fig.reveal.in,.fig.reveal-l.in,.fig.reveal-x.in{transform:none}
+/* small stagger so the links trail their title */
+.sublinks.reveal{transition-delay:.12s}
 .reveal-focus{opacity:0;transform:perspective(800px) translate3d(0,0,-180px) rotateX(18deg) scale(.95);
   transition:transform .6s ease-in-out,opacity 1s linear}
 .reveal-focus.in{opacity:1;transform:none}
@@ -288,107 +299,122 @@ body.clean .tweaks{display:none}
   </div>
 </section>
 
-<!-- UPCOMING — label far left, body indented -->
-<section class="band wrap up" id="upcoming">
+<!-- UPCOMING — dark-grey panel; content synced with Direction A (The Lovers Tour) -->
+<section class="band wrap up field" id="upcoming" style="padding-top:clamp(5rem,12vh,9rem)">
   <div class="grid">
-    <p class="lbl eyebrow reveal">Upcoming</p>
     <div class="body" data-par="0.14">
-      <h2 class="lead reveal draw hang-l">Lovers Tour 2026</h2>
-      <div class="reveal" style="margin-top:clamp(2.5rem,5vh,4rem)">
-        <a class="gig" href="#contact"><span class="date metanum">06.09.2026</span><span class="city">Belgrade</span><span class="venue">Kolarac Hall</span></a>
-        <a class="gig" href="#contact"><span class="date metanum">12.09.2026</span><span class="city">Vienna</span><span class="venue">Konzerthaus</span></a>
-        <a class="gig" href="#contact"><span class="date metanum">19.09.2026</span><span class="city">Rijeka</span><span class="venue">Exportdrvo</span></a>
-        <a class="gig" href="#contact"><span class="date metanum">26.09.2026</span><span class="city">Sarajevo</span><span class="venue">National Theatre</span></a>
-        <a class="gig" href="#contact"><span class="date metanum">03.10.2026</span><span class="city">Berlin</span><span class="venue">Radialsystem</span></a>
+      <p class="eyebrow reveal" style="margin-bottom:1.1rem">Upcoming</p>
+      <h2 class="lead reveal draw hang-l">The Lovers Tour</h2>
+      <div class="reveal" style="margin-top:clamp(2.4rem,5vh,3.6rem)">
+        <a class="gig" href="#contact"><span class="date metanum">06 Sep 2026</span><span class="city">Belgrade</span><span class="venue">Kolarac Hall</span></a>
+        <a class="gig" href="#contact"><span class="date metanum">12 Sep 2026</span><span class="city">Vienna</span><span class="venue">Konzerthaus</span></a>
+        <a class="gig" href="#contact"><span class="date metanum">19 Sep 2026</span><span class="city">Rijeka</span><span class="venue">Exportdrvo</span></a>
+        <a class="gig" href="#contact"><span class="date metanum">26 Sep 2026</span><span class="city">Sarajevo</span><span class="venue">National Theatre</span></a>
+        <a class="gig" href="#contact"><span class="date metanum">03 Oct 2026</span><span class="city">Berlin</span><span class="venue">Radialsystem</span></a>
+      </div>
+      <div class="reveal" style="margin-top:clamp(2.6rem,5vh,3.8rem);display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,6vw,5rem)">
+        <div>
+          <p class="eyebrow" style="display:block;margin-bottom:1rem">Program</p>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.55rem;line-height:1.4">
+            <li><strong>Gavin Bryars:</strong> Jesus' Blood Never Failed Me Yet</li>
+            <li><strong>Guillaume Lekeu:</strong> Adagio</li>
+            <li><strong>Sara Glojnaric:</strong> #popfem</li>
+            <li><strong>Gustav Mahler:</strong> Adagietto</li>
+            <li><strong>Julius Eastman:</strong> Gay Guerrilla</li>
+          </ul>
+        </div>
+        <div>
+          <p class="eyebrow" style="display:block;margin-bottom:1rem">Ensemble for Lovers Tour</p>
+          <p class="soft" style="max-width:26ch;line-height:1.5">String orchestra, piano and electric guitar (24 musicians)</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- DRAGSTOR — full-bleed plate above About (moved from Projects) -->
-<figure class="plate reveal">
-  <div class="img" data-par="0.08" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div>
-  <figcaption>Dragstor · Belgrade</figcaption>
-</figure>
-
-<!-- ABOUT — dark panel; section name as the title, links into the long-form pages -->
-<section class="band field mission" id="about">
-  <div class="wrap"><div class="grid">
-    <div class="q" data-par="0.13">
-      <h2 class="lead reveal draw">About</h2>
-      <div class="sublinks reveal" style="margin-top:clamp(2rem,4vh,3rem)">
-        <a href="#about">Manifesto <span class="arr">→</span></a>
-        <a href="#about">Mission <span class="arr">→</span></a>
-        <a href="#about">NBO CV <span class="arr">→</span></a>
-      </div>
+<!-- ABOUT — white; Dragstor photo bleeding to the left viewport edge, text right -->
+<section class="band mission bleed-left" id="about">
+  <figure class="fig reveal-l bl-img">
+    <div class="img" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div>
+  </figure>
+  <div class="bl-text">
+    <h2 class="lead reveal draw">About</h2>
+    <div class="sublinks reveal">
+      <a href="#about">Manifesto</a>
+      <span class="dot" aria-hidden="true">·</span>
+      <a href="#about">Mission</a>
+      <span class="dot" aria-hidden="true">·</span>
+      <a href="#about">NBO CV</a>
     </div>
-  </div></div>
+  </div>
 </section>
 
-<!-- PREMIL — near full-viewport plate above Projects (Premil Petrović conducting; photo Karlo Čargonja) -->
-<figure class="plate plate-xl reveal">
-  <div class="img" data-par="0.08" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg')"></div>
-  <figcaption>In performance · Karlo Čargonja</figcaption>
-</figure>
-
-<!-- PROJECTS — text section (photos promoted to full-bleed plates above the section) -->
+<!-- PROJECTS — white; text left, Premil photo right -->
 <section class="band wrap proj" id="projects">
-  <div class="grid" data-par="0.13">
-    <div class="body" style="grid-column:1/9">
+  <div class="grid" data-par="0.13" style="align-items:center">
+    <div class="body" style="grid-column:1/5">
       <h2 class="lead reveal draw">Projects</h2>
-      <p class="soft measure reveal" style="margin-top:1.2rem">Every year, the orchestra performs several new programmes across the former Yugoslavia and in cultural capitals of Europe.</p>
-      <div class="sublinks reveal" style="margin-top:clamp(2rem,4vh,3rem)">
-        <a href="#projects">All projects, 2018–2025 <span class="arr">→</span></a>
+      <div class="sublinks reveal">
+        <a href="#projects">All projects, 2018–2025</a>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- WHO WE ARE — dark panel; title + one ensemble photo + links (no individuals singled out) -->
-<section class="band field field-clay wrap who" id="who">
-  <div class="grid">
-    <h2 class="lead reveal draw">Who we are</h2>
-  </div>
-  <div class="grid" data-par="0.14" style="margin-top:clamp(2.5rem,5vh,4rem)">
-    <figure class="fig reveal" style="grid-column:1/11">
-      <div class="img" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg');aspect-ratio:16/9"></div>
+    <figure class="fig reveal" style="grid-column:6/13">
+      <div class="img" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg');aspect-ratio:3/2"></div>
     </figure>
   </div>
-  <div class="grid" style="margin-top:clamp(2.4rem,5vh,3.6rem)"><div style="grid-column:1/9">
-    <div class="sublinks reveal">
-      <a href="#who">Team <span class="arr">→</span></a>
-      <a href="#who">Musicians <span class="arr">→</span></a>
-      <a href="#who">Board <span class="arr">→</span></a>
-      <a href="#who">Partners <span class="arr">→</span></a>
-    </div>
-  </div></div>
 </section>
 
-<!-- MEDIA — contained images, varied sizes + staggered -->
-<section class="band wrap media" id="media">
-  <div class="grid">
-    <h2 class="lead reveal draw hang-r">Media</h2>
-  </div>
-  <div class="grid gal" data-par="0.14">
-    <figure class="fig m1 reveal-l"><div class="img" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg')"></div><figcaption>In performance · Karlo Čargonja</figcaption></figure>
-    <figure class="fig m2 reveal"><div class="img" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg')"></div><figcaption>NBO 2024 · archive</figcaption></figure>
-    <figure class="fig m3 reveal-x"><div class="img" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg')"></div><figcaption>Rijeka · Ivan Vranjić</figcaption></figure>
-    <figure class="fig m4 reveal-focus"><div class="img" style="background-image:url('../../fotografije/Macbeth_01c.jpg')"></div><figcaption>Macbeth</figcaption></figure>
-  </div>
-  <div class="grid"><div style="grid-column:1/9">
-    <div class="sublinks reveal">
-      <a href="#media">Videos <span class="arr">→</span></a>
-      <a href="#media">Photo Gallery <span class="arr">→</span></a>
-      <a href="#media">Reviews <span class="arr">→</span></a>
-      <a href="#media">Discography <span class="arr">→</span></a>
+<!-- WHO WE ARE — white; whole-ensemble photo left, title + links right -->
+<section class="band wrap who" id="who">
+  <div class="grid" data-par="0.14" style="align-items:center">
+    <figure class="fig reveal-l" style="grid-column:1/7">
+      <div class="img" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg');aspect-ratio:4/3"></div>
+    </figure>
+    <div class="q" style="grid-column:8/13">
+      <h2 class="lead reveal draw">Who we are</h2>
+      <div class="sublinks reveal">
+        <a href="#who">Team</a>
+        <span class="dot" aria-hidden="true">·</span>
+        <a href="#who">Musicians</a>
+        <span class="dot" aria-hidden="true">·</span>
+        <a href="#who">Board</a>
+        <span class="dot" aria-hidden="true">·</span>
+        <a href="#who">Partners</a>
+      </div>
     </div>
-  </div></div>
+  </div>
+</section>
+
+<!-- MEDIA — title + links left, Rijeka (violin) photo right -->
+<section class="band wrap media" id="media">
+  <div class="grid" data-par="0.14" style="align-items:center">
+    <div class="body" style="grid-column:1/7">
+      <h2 class="lead reveal draw">Media</h2>
+      <div class="sublinks reveal">
+        <a href="#media">Videos</a>
+        <span class="dot" aria-hidden="true">·</span>
+        <a href="#media">Photo Gallery</a>
+        <span class="dot" aria-hidden="true">·</span>
+        <a href="#media">Reviews</a>
+        <span class="dot" aria-hidden="true">·</span>
+        <a href="#media">Discography</a>
+      </div>
+    </div>
+    <figure class="fig reveal" style="grid-column:8/13">
+      <div class="img" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg');aspect-ratio:3/4"></div>
+    </figure>
+  </div>
 </section>
 
 <!-- CONTACT FOOTER -->
 <footer id="contact" class="wrap fwrap">
+  <div class="grid" style="margin-bottom:clamp(2.5rem,6vh,4.5rem)">
+    <figure class="fig reveal-l" style="grid-column:1/10">
+      <div class="img" style="background-image:url('../../fotografije/Macbeth_01c.jpg');aspect-ratio:16/9"></div>
+    </figure>
+  </div>
   <div class="grid">
-    <div class="t"><h2 class="ftitle reveal draw hang-l">Contact us.</h2></div>
+    <div class="t"><h2 class="ftitle reveal draw hang-l">Contact us</h2></div>
   </div>
   <div class="grid">
     <div class="f">
@@ -403,10 +429,8 @@ body.clean .tweaks{display:none}
       </form>
     </div>
     <div class="meta reveal">
-      <p>Jelena Vojinović, Executive Producer</p>
-      <p><a href="mailto:office@nobordersorchestra.org">office@nobordersorchestra.org</a></p>
       <div class="socials"><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">YouTube</a></div>
-      <p class="eyebrow" style="margin-top:2.4rem">© 2026 NBO — prototype, Direction C · UNIVERS</p>
+      <p class="eyebrow" style="margin-top:2.4rem">© 2026 NBO</p>
     </div>
   </div>
 </footer>
