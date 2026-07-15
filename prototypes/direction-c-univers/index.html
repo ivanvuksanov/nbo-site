@@ -63,6 +63,12 @@ nav a:nth-child(4){animation-delay:.18s}
 figure.fig{margin:0}
 .fig .img{background-size:cover;background-position:center}
 .fig figcaption{font-family:var(--mono);font-size:.7rem;color:var(--ink-soft);margin-top:.85rem;letter-spacing:.03em}
+/* full-bleed photo plate (breaks the contained-image rule intentionally — e.g. Dragstor above About) */
+.plate{position:relative;width:100vw;left:calc(50% - 50vw);height:clamp(56vh,70vh,760px);overflow:hidden;margin:0}
+.plate .img{position:absolute;inset:-12% 0;background-size:cover;background-position:center}
+.plate::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(16,18,20,.42),rgba(16,18,20,0) 42%)}
+.plate figcaption{position:absolute;left:var(--gut);bottom:1.1rem;z-index:2;color:#fbfbfa;font-family:var(--mono);font-size:.7rem;letter-spacing:.03em}
+.plate-xl{height:clamp(74vh,92vh,1060px)}   /* as large as possible — near full-viewport plate */
 
 /* type */
 .lead{font-weight:300;font-size:clamp(2rem,5vw,4.4rem);line-height:1.06;letter-spacing:-.02em}
@@ -93,9 +99,15 @@ body.hero-full header.solid{background:var(--paper);color:var(--ink);box-shadow:
 body.hero-full .logo img{filter:brightness(0) invert(1)}            /* white wordmark over the photo */
 body.hero-full header.solid .logo img{filter:none}                 /* dark again when the header is solid */
 body.hero-full .open{min-height:100svh;display:block;padding:0;overflow:hidden}
-body.hero-full .open .fig{position:absolute;inset:-14% 0;width:auto;margin:0}   /* oversized so parallax drift never reveals an edge */
+body.hero-full .open .fig{position:absolute;inset:-14% 0;width:auto;margin:0;z-index:0}   /* oversized so parallax drift never reveals an edge; poster beneath the video */
 body.hero-full .open .fig .img{width:100%;height:100%;aspect-ratio:auto}
-body.hero-full .open::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(16,18,20,.5),rgba(16,18,20,.05) 28%,rgba(16,18,20,0) 55%)}
+/* header-legibility gradient (top) + a flat scrim over the whole hero to darken the video/photo */
+body.hero-full .open::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,rgba(16,18,20,.5),rgba(16,18,20,0) 45%),linear-gradient(rgba(16,18,20,.34),rgba(16,18,20,.34))}
+/* tweak: YouTube clip as the hero background — iframe scaled to COVER the viewport (16:9, no letterbox), sits above the photo poster and below the gradient. Photo fig stays as the fallback while the video loads / under reduced-motion. */
+.hero-video{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;display:none}
+body.hero-video-on .hero-video{display:block}
+.hero-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
 
 /* marquee ribbon — type, not image */
 .ribbon{border-block:1px solid var(--hair);overflow:hidden;padding-block:1.1rem}
@@ -103,6 +115,11 @@ body.hero-full .open::after{content:"";position:absolute;inset:0;z-index:1;point
 .ribbon .run span{font-size:clamp(1.05rem,1.9vw,1.6rem);font-weight:300;letter-spacing:.01em;padding-inline:1.4rem}
 .ribbon .run .sep{color:var(--ink-soft);font-family:var(--mono);font-size:.8em}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* full-screen hero: ribbon becomes a tour ticker pinned to the bottom edge, over the video/photo */
+body.hero-full .open .ribbon{position:absolute;left:0;right:0;bottom:0;z-index:3;
+  border:0;border-top:1px solid rgba(255,255,255,.16);padding-block:.95rem;
+  background:rgba(16,18,20,.34);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);color:#fbfbfa}
+body.hero-full .open .ribbon .sep{color:rgba(251,251,250,.5)}
 
 /* upcoming — label far left, content indented (asymmetric) */
 .up .lbl{grid-column:1/2}
@@ -235,7 +252,7 @@ body.clean .tweaks{display:none}
 }
 </style>
 </head>
-<body class="panels-dark hero-full">
+<body class="panels-dark hero-full hero-video-on">
 
 <!-- PROTOTYPE: nav on paper -->
 <header id="nav">
@@ -257,15 +274,19 @@ body.clean .tweaks{display:none}
   <figure class="fig" data-par="0.17">
     <div class="img" style="background-image:url('../../fotografije/Home%20fotka.jpg')"></div>
   </figure>
-</section>
-
-<!-- MARQUEE RIBBON -->
-<div class="ribbon" aria-label="Lovers Tour 2026">
-  <div class="run">
-    <span>Lovers Tour 2026</span><span class="sep">—</span><span>Belgrade</span><span class="sep">—</span><span>Vienna</span><span class="sep">—</span><span>Rijeka</span><span class="sep">—</span><span>Sarajevo</span><span class="sep">—</span><span>Berlin</span><span class="sep">—</span>
-    <span>Lovers Tour 2026</span><span class="sep">—</span><span>Belgrade</span><span class="sep">—</span><span>Vienna</span><span class="sep">—</span><span>Rijeka</span><span class="sep">—</span><span>Sarajevo</span><span class="sep">—</span><span>Berlin</span><span class="sep">—</span>
+  <div class="hero-video" aria-hidden="true">
+    <video id="heroVid" poster="hero-poster.jpg" muted loop playsinline preload="auto">
+      <source src="hero.mp4" type="video/mp4">
+    </video>
   </div>
-</div>
+  <!-- MARQUEE RIBBON — pinned to the bottom of the hero viewport as a tour ticker -->
+  <div class="ribbon" aria-label="Lovers Tour 2026">
+    <div class="run">
+      <span>Lovers Tour 2026</span><span class="sep">—</span><span>Belgrade</span><span class="sep">—</span><span>Vienna</span><span class="sep">—</span><span>Rijeka</span><span class="sep">—</span><span>Sarajevo</span><span class="sep">—</span><span>Berlin</span><span class="sep">—</span>
+      <span>Lovers Tour 2026</span><span class="sep">—</span><span>Belgrade</span><span class="sep">—</span><span>Vienna</span><span class="sep">—</span><span>Rijeka</span><span class="sep">—</span><span>Sarajevo</span><span class="sep">—</span><span>Berlin</span><span class="sep">—</span>
+    </div>
+  </div>
+</section>
 
 <!-- UPCOMING — label far left, body indented -->
 <section class="band wrap up" id="upcoming">
@@ -284,6 +305,12 @@ body.clean .tweaks{display:none}
   </div>
 </section>
 
+<!-- DRAGSTOR — full-bleed plate above About (moved from Projects) -->
+<figure class="plate reveal">
+  <div class="img" data-par="0.08" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div>
+  <figcaption>Dragstor · Belgrade</figcaption>
+</figure>
+
 <!-- ABOUT — dark panel; section name as the title, links into the long-form pages -->
 <section class="band field mission" id="about">
   <div class="wrap"><div class="grid">
@@ -298,14 +325,16 @@ body.clean .tweaks{display:none}
   </div></div>
 </section>
 
-<!-- PROJECTS — photo (Dragstor) left, text right -->
+<!-- PREMIL — near full-viewport plate above Projects (Premil Petrović conducting; photo Karlo Čargonja) -->
+<figure class="plate plate-xl reveal">
+  <div class="img" data-par="0.08" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg')"></div>
+  <figcaption>In performance · Karlo Čargonja</figcaption>
+</figure>
+
+<!-- PROJECTS — text section (photos promoted to full-bleed plates above the section) -->
 <section class="band wrap proj" id="projects">
-  <div class="grid" data-par="0.13" style="align-items:center">
-    <figure class="fig reveal-l" style="grid-column:1/7">
-      <div class="img" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg');aspect-ratio:4/3"></div>
-      <figcaption>Dragstor · Belgrade</figcaption>
-    </figure>
-    <div class="body" style="grid-column:8/13">
+  <div class="grid" data-par="0.13">
+    <div class="body" style="grid-column:1/9">
       <h2 class="lead reveal draw">Projects</h2>
       <p class="soft measure reveal" style="margin-top:1.2rem">Every year, the orchestra performs several new programmes across the former Yugoslavia and in cultural capitals of Europe.</p>
       <div class="sublinks reveal" style="margin-top:clamp(2rem,4vh,3rem)">
@@ -341,7 +370,7 @@ body.clean .tweaks{display:none}
     <h2 class="lead reveal draw hang-r">Media</h2>
   </div>
   <div class="grid gal" data-par="0.14">
-    <figure class="fig m1 reveal-l"><div class="img" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div><figcaption>Dragstor</figcaption></figure>
+    <figure class="fig m1 reveal-l"><div class="img" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg')"></div><figcaption>In performance · Karlo Čargonja</figcaption></figure>
     <figure class="fig m2 reveal"><div class="img" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg')"></div><figcaption>NBO 2024 · archive</figcaption></figure>
     <figure class="fig m3 reveal-x"><div class="img" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg')"></div><figcaption>Rijeka · Ivan Vranjić</figcaption></figure>
     <figure class="fig m4 reveal-focus"><div class="img" style="background-image:url('../../fotografije/Macbeth_01c.jpg')"></div><figcaption>Macbeth</figcaption></figure>
@@ -388,6 +417,14 @@ body.clean .tweaks{display:none}
   <div class="panel">
     <h4>Tweaks</h4>
     <div class="ttl">Direction C · UNIVERS</div>
+    <div class="tw-group">
+      <label>Hero background</label>
+      <div class="seg" id="herobg">
+        <button data-herobg="video" aria-pressed="true">Video</button>
+        <button data-herobg="photo" aria-pressed="false">Photo</button>
+      </div>
+      <p class="hint">A muted, looping YouTube clip fills the hero; the Home photo stays as the fallback beneath it.</p>
+    </div>
     <div class="tw-group">
       <label>Coloured sections</label>
       <div class="seg" id="panels">
@@ -486,6 +523,23 @@ function wireSeg(id,fn){ const seg=document.getElementById(id); if(!seg) return;
 wireSeg('panels', btn=>document.body.classList.toggle('panels-dark', btn.dataset.panels==='dark'));
 wireSeg('parallax', btn=>setParallax(btn.dataset.parOn==='1'));
 wireSeg('drawin', btn=>document.body.classList.toggle('draw-in', btn.dataset.draw==='1'));
+
+// PROTOTYPE: hero background — self-hosted, muted, looping clip (a text-free 23s cut of NBO's own
+// "Embracing Vulnerability Tour" trailer) covering the viewport, photo fig as the fallback/poster.
+// Reduced-motion starts on the photo (no autoplay); ?photohero forces the photo (e.g. for clean screenshots).
+const heroVid=document.getElementById('heroVid');
+function setHeroVideo(on){
+  document.body.classList.toggle('hero-video-on',on);
+  if(!heroVid) return;
+  if(on){ const p=heroVid.play(); if(p&&p.catch) p.catch(()=>{}); }
+  else { heroVid.pause(); }
+}
+wireSeg('herobg', btn=>setHeroVideo(btn.dataset.herobg==='video'));
+const heroVideoDefault = !reduce && !location.search.includes('photohero');
+if(!heroVideoDefault){
+  document.querySelectorAll('#herobg button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.herobg==='photo'));
+}
+setHeroVideo(heroVideoDefault);
 
 if(location.search.includes('clean')) document.body.classList.add('clean');
 if(location.search.includes('drawin')) document.body.classList.add('draw-in');

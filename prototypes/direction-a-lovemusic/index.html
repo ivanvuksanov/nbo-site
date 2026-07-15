@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>No Borders Orchestra — Direction A (PRISM)</title>
+<title>No Borders Orchestra</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Archivo+Expanded:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -78,6 +78,28 @@ section{position:relative}
 .lead{font-family:var(--display);font-weight:600;text-transform:lowercase;line-height:.98;letter-spacing:-.01em;
   font-size:clamp(2rem,6vw,5rem);max-width:14ch}
 .sub{color:var(--mist);max-width:46ch;margin-top:1.4rem;font-size:1.05rem}
+/* Upcoming / Lovers Tour — dynamic block */
+.tour-kicker{display:block;margin-bottom:.9rem}
+.tour-name.tc{text-transform:none}
+.tour-name-sub{font-family:var(--display);font-weight:500;text-transform:lowercase;line-height:1;font-size:clamp(1.3rem,3vw,2rem);margin-top:.7rem;color:var(--mist)}
+.tour-statement{font-family:var(--body);font-weight:500;font-size:clamp(1.5rem,3.4vw,2.6rem);line-height:1.18;letter-spacing:-.01em;margin-top:clamp(1rem,2.4vh,1.8rem);max-width:38ch}
+body.no-desc .tour-statement{display:none}
+.tour-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(2rem,6vw,5rem);margin-top:clamp(2.4rem,5vh,3.6rem)}
+.tm-col .eyebrow{display:block;margin-bottom:1rem}
+.program{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.program li{line-height:1.35}
+.program .pc{font-weight:600}
+.ensemble{line-height:1.5;max-width:26ch}
+.dates{list-style:none;display:flex;flex-direction:column;margin-top:clamp(1.3rem,2.8vh,2rem)}
+.date-item{display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:.4rem 3rem;padding:1.05rem 0;border-top:1px solid rgba(14,14,15,.12);color:inherit;text-decoration:none}
+.date-item:first-child{border-top:0;padding-top:0}
+.d-date{font-variant-numeric:tabular-nums;font-weight:600;font-size:clamp(.95rem,1.5vw,1.1rem);min-width:6.5rem}
+.d-place{display:flex;flex-wrap:wrap;align-items:baseline;gap:.15rem .7rem}
+.d-city{font-family:var(--display);font-weight:500;text-transform:lowercase;line-height:1;font-size:clamp(1.1rem,2vw,1.4rem)}
+.d-venue{color:var(--mist);font-size:.92rem}
+.d-go{color:var(--mist);font-size:1.15rem;line-height:1;transition:transform .3s,color .3s}
+.date-item:hover .d-go{transform:translateX(5px);color:var(--ink)}
+.date-item:hover .d-city{opacity:.6}
 
 /* upcoming */
 .up-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:1rem;margin-bottom:2.5rem}
@@ -137,13 +159,15 @@ footer{padding-block:var(--pad) 3rem}
 .send{justify-self:start;margin-top:.5rem;background:var(--ink);color:var(--paper);border:none;cursor:pointer;
   font-family:var(--body);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.74rem;
   padding:.9rem 1.8rem;border-radius:100px}
-.fmeta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;margin-top:var(--pad);color:var(--mist);font-size:.82rem}
+.fmeta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem;margin-top:var(--pad);color:var(--mist);font-size:.82rem}
 .fmeta a:hover{color:var(--ink)}
+.fmeta .copy{margin:0;text-transform:uppercase;letter-spacing:.12em}
 .socials{display:flex;gap:1.2rem;text-transform:uppercase;letter-spacing:.12em}
 
 /* sub-page links from section overviews */
-.sublinks{display:flex;flex-wrap:wrap;gap:1rem 2.5rem;margin-top:clamp(2.5rem,5vh,4rem)}
-.sublinks a{font-family:var(--display);font-weight:500;text-transform:lowercase;font-size:clamp(1.1rem,2.2vw,1.6rem);
+.sublinks{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .8rem;margin-top:clamp(.4rem,1vh,.7rem)}
+.sublinks .dot{color:rgba(14,14,15,.4);font-size:1.55em;line-height:1;user-select:none;pointer-events:none}
+.sublinks a{font-family:var(--body);font-weight:400;text-transform:capitalize;font-size:clamp(1rem,1.9vw,1.35rem);color:rgba(14,14,15,.58);
   border-bottom:1px solid transparent;transition:border-color .3s,opacity .3s}
 .sublinks a:hover{border-bottom-color:var(--ink)}
 .sublinks a .arr{color:var(--mist);font-family:var(--body);font-size:.8em}
@@ -166,9 +190,24 @@ footer{padding-block:var(--pad) 3rem}
   .reveal{opacity:1;transform:none}
   .hero .bg,.plate .bg,.duo .pic .bg{transform:none!important}
 }
+
+/* PROTOTYPE: tweaks panel (hidden with ?clean) */
+.tweaks{position:fixed;right:1.1rem;bottom:1.1rem;z-index:200;font-family:var(--body);display:flex;flex-direction:column;align-items:flex-end;gap:.6rem}
+.tweaks .gear{width:44px;height:44px;border-radius:50%;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer;font-size:1.05rem;line-height:1}
+.tweaks .panel{display:none;width:288px;max-height:calc(100svh - 130px);overflow-y:auto;background:var(--paper);color:var(--ink);border:1px solid rgba(14,14,15,.15);padding:1.1rem 1.2rem;box-shadow:0 12px 44px rgba(0,0,0,.18)}
+.tweaks.open .panel{display:block}
+.tweaks h4{font-size:.62rem;text-transform:uppercase;letter-spacing:.24em;color:var(--mist);font-weight:600;margin-bottom:.2rem}
+.tweaks .ttl{font-weight:500;font-size:1.05rem;margin-bottom:1rem}
+.tw-group{margin-bottom:1.2rem}
+.tw-group > label{display:block;font-size:.6rem;text-transform:uppercase;letter-spacing:.18em;color:var(--mist);margin-bottom:.5rem}
+.seg{display:flex;border:1px solid rgba(14,14,15,.2)}
+.seg button{flex:1;background:none;border:none;cursor:pointer;font-family:var(--body);font-size:.76rem;padding:.5rem;color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.tweaks .hint{font-size:.64rem;color:var(--mist);line-height:1.5;margin-top:.4rem}
+body.clean .tweaks{display:none}
 </style>
 </head>
-<body>
+<body class="no-desc">
 
 <!-- PROTOTYPE: nav — anchor-scrolls to section overviews -->
 <header id="nav">
@@ -200,89 +239,110 @@ footer{padding-block:var(--pad) 3rem}
 
 <!-- UPCOMING — first section -->
 <section class="band wrap" id="upcoming">
-  <div class="up-head reveal">
-    <h2>upcoming</h2>
-    <span class="eyebrow">Lovers Tour 2026</span>
+  <!-- DYNAMIC SECTION: tour heading, statement, program, ensemble, dates (editable content) -->
+  <div class="tour-head" id="tour-head">
+    <h2 class="lead tour-name tc">The Lovers Tour</h2>
   </div>
-  <div class="gigs">
-    <a class="gig reveal" href="#contact"><span class="date">06 Sep 2026</span><span class="city">belgrade</span><span class="venue">Kolarac Hall</span><span class="go">→</span></a>
-    <a class="gig reveal" href="#contact"><span class="date">12 Sep 2026</span><span class="city">vienna</span><span class="venue">Konzerthaus</span><span class="go">→</span></a>
-    <a class="gig reveal" href="#contact"><span class="date">19 Sep 2026</span><span class="city">rijeka</span><span class="venue">Exportdrvo</span><span class="go">→</span></a>
-    <a class="gig reveal" href="#contact"><span class="date">26 Sep 2026</span><span class="city">sarajevo</span><span class="venue">National Theatre</span><span class="go">→</span></a>
-    <a class="gig reveal" href="#contact"><span class="date">03 Oct 2026</span><span class="city">berlin</span><span class="venue">Radialsystem</span><span class="go">→</span></a>
+  <p class="tour-statement reveal">The Lovers Tour thematizes both the freedom of the individual act of love and love as a political force in the world.</p>
+  <!-- concerts are ticket links (href = ticket URL, editable) -->
+  <div class="dates reveal">
+    <a class="date-item" href="#"><span class="d-date">06 Sep 2026</span><span class="d-place"><span class="d-city">belgrade</span> <span class="d-venue">Kolarac Hall</span></span><span class="d-go">→</span></a>
+    <a class="date-item" href="#"><span class="d-date">12 Sep 2026</span><span class="d-place"><span class="d-city">vienna</span> <span class="d-venue">Konzerthaus</span></span><span class="d-go">→</span></a>
+    <a class="date-item" href="#"><span class="d-date">19 Sep 2026</span><span class="d-place"><span class="d-city">rijeka</span> <span class="d-venue">Exportdrvo</span></span><span class="d-go">→</span></a>
+    <a class="date-item" href="#"><span class="d-date">26 Sep 2026</span><span class="d-place"><span class="d-city">sarajevo</span> <span class="d-venue">National Theatre</span></span><span class="d-go">→</span></a>
+    <a class="date-item" href="#"><span class="d-date">03 Oct 2026</span><span class="d-place"><span class="d-city">berlin</span> <span class="d-venue">Radialsystem</span></span><span class="d-go">→</span></a>
+  </div>
+  <div class="tour-meta reveal">
+    <div class="tm-col">
+      <p class="eyebrow">Program</p>
+      <ul class="program">
+        <li><span class="pc">Gavin Bryars:</span> Jesus' Blood Never Failed Me Yet</li>
+        <li><span class="pc">Guillaume Lekeu:</span> Adagio</li>
+        <li><span class="pc">Sara Glojnaric:</span> #popfem</li>
+        <li><span class="pc">Gustav Mahler:</span> Adagietto</li>
+        <li><span class="pc">Julius Eastman:</span> Gay Guerrilla</li>
+      </ul>
+    </div>
+    <div class="tm-col">
+      <p class="eyebrow">Ensemble for Lovers Tour</p>
+      <p class="ensemble">String orchestra, piano and electric guitar (24 musicians)</p>
+    </div>
   </div>
 </section>
 
 <div class="seam" data-seam></div>
 
-<!-- ABOUT -->
+<!-- ABOUT — full-weight plate on top -->
+<div class="plate tint">
+  <div class="bg" data-parallax="0.12" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div></div>
 <section class="band wrap" id="about">
   <h2 class="lead reveal">about</h2>
   <div class="sublinks reveal">
-    <a href="manifesto.html">manifesto <span class="arr">→</span></a>
-    <a href="mission.html">mission <span class="arr">→</span></a>
-    <a href="nbo-cv.html">nbo cv <span class="arr">→</span></a>
+    <a href="manifesto.html">manifesto</a>
+    <span class="dot" aria-hidden="true">·</span>
+    <a href="mission.html">mission</a>
+    <span class="dot" aria-hidden="true">·</span>
+    <a href="nbo-cv.html">NBO CV</a>
   </div>
 </section>
 
+<div class="seam" data-seam></div>
+
+<!-- PROJECTS — full-weight plate on top -->
 <div class="plate tint">
-  <div class="bg" data-parallax="0.12" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg')"></div>
-  <span class="cap">Rijeka · photo Ivan Vranjić</span>
-</div>
-
-<div class="seam" data-seam></div>
-
-<!-- PROJECTS -->
-<section id="projects">
-  <div class="band wrap">
-    <h2 class="lead reveal">projects</h2>
-    <div class="sublinks reveal">
-      <a href="projects.html">all projects, 2018–2025 <span class="arr">→</span></a>
-    </div>
-  </div>
-  <div class="plate tint">
-    <div class="bg" data-parallax="0.12" style="background-image:url('../../fotografije/Macbeth_01c.jpg')"></div>
-    <span class="cap">No Borders Orchestra · stage work</span>
-  </div>
-</section>
-
-<div class="seam" data-seam></div>
-
-<!-- WHO WE ARE -->
-<section class="band wrap" id="who">
-  <h2 class="lead reveal" style="margin-bottom:clamp(2rem,5vh,3.5rem)">who we are</h2>
+  <div class="bg" data-parallax="0.12" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg')"></div></div>
+<section class="band wrap" id="projects">
+  <h2 class="lead reveal">projects</h2>
   <div class="sublinks reveal">
-    <a href="team.html">team <span class="arr">→</span></a>
-    <a href="musicians.html">musicians <span class="arr">→</span></a>
-    <a href="board.html">board <span class="arr">→</span></a>
-    <a href="partners.html">partners <span class="arr">→</span></a>
+    <a href="projects.html">all projects, 2018–2025</a>
   </div>
 </section>
 
 <div class="seam" data-seam></div>
 
-<!-- MEDIA -->
+<!-- WHO WE ARE — full-weight plate on top -->
+<div class="plate tint">
+  <div class="bg" data-parallax="0.12" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg')"></div></div>
+<section class="band wrap" id="who">
+  <h2 class="lead reveal">who we are</h2>
+  <div class="sublinks reveal">
+    <a href="team.html">team</a>
+    <span class="dot" aria-hidden="true">·</span>
+    <a href="musicians.html">musicians</a>
+    <span class="dot" aria-hidden="true">·</span>
+    <a href="board.html">board</a>
+    <span class="dot" aria-hidden="true">·</span>
+    <a href="partners.html">partners</a>
+  </div>
+</section>
+
+<div class="seam" data-seam></div>
+
+<!-- MEDIA — full-weight plate on top -->
+<div class="plate tint">
+  <div class="bg" data-parallax="0.12" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg')"></div></div>
 <section class="band wrap" id="media">
   <h2 class="lead reveal">media</h2>
-  <div class="strip reveal">
-    <div class="shot"><div class="bg" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div></div>
-    <div class="shot"><div class="bg" style="background-image:url('../../fotografije/Rijeka%202%20Ivan%20Vranjic..jpeg')"></div></div>
-    <div class="shot"><div class="bg" style="background-image:url('../../fotografije/Macbeth_01c.jpg')"></div></div>
-    <div class="shot"><div class="bg" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg')"></div></div>
-  </div>
   <div class="sublinks reveal">
-    <a href="videos.html">videos <span class="arr">→</span></a>
-    <a href="photos.html">photo gallery <span class="arr">→</span></a>
-    <a href="reviews.html">reviews <span class="arr">→</span></a>
-    <a href="discography.html">discography <span class="arr">→</span></a>
+    <a href="videos.html">videos</a>
+    <span class="dot" aria-hidden="true">·</span>
+    <a href="photos.html">photo gallery</a>
+    <span class="dot" aria-hidden="true">·</span>
+    <a href="reviews.html">reviews</a>
+    <span class="dot" aria-hidden="true">·</span>
+    <a href="discography.html">discography</a>
   </div>
 </section>
 
 <div class="seam" data-seam></div>
+
+<!-- CONTACT — full-weight plate on top -->
+<div class="plate tint">
+  <div class="bg" data-parallax="0.12" style="background-image:url('../../fotografije/Macbeth_01c.jpg')"></div></div>
 
 <!-- CONTACT FOOTER -->
 <footer class="wrap" id="contact">
-  <h2 class="ftitle reveal" style="text-transform:none">Contact us.</h2>
+  <h2 class="ftitle reveal">contact us</h2>
   <form class="form reveal" onsubmit="event.preventDefault();this.querySelector('.send').textContent='thank you'">
     <div class="field"><label>First name</label><input type="text" autocomplete="given-name"></div>
     <div class="field"><label>Last name</label><input type="text" autocomplete="family-name"></div>
@@ -291,16 +351,38 @@ footer{padding-block:var(--pad) 3rem}
     <button class="send" type="submit">Send</button>
   </form>
   <div class="fmeta">
-    <div>
-      <p>Jelena Vojinović, Executive Producer</p>
-      <p><a href="mailto:office@nobordersorchestra.org">office@nobordersorchestra.org</a></p>
-    </div>
+    <p class="copy">© 2026 No Borders Orchestra</p>
     <div class="socials">
       <a href="#">Instagram</a><a href="#">Facebook</a><a href="#">YouTube</a>
     </div>
   </div>
-  <p class="eyebrow" style="margin-top:3rem">© 2026 No Borders Orchestra — prototype, Direction A · PRISM</p>
 </footer>
+
+<!-- PROTOTYPE: tweaks panel — ?clean hides it for screenshots -->
+<div class="tweaks" id="tweaks">
+  <button class="gear" aria-label="Toggle tweaks panel">✎</button>
+  <div class="panel">
+    <h4>Tweaks</h4>
+    <div class="ttl">Direction A · PRISM</div>
+    <div class="tw-group">
+      <label>Tour heading</label>
+      <div class="seg" id="heading">
+        <button data-head="a" aria-pressed="true">Name only</button>
+        <button data-head="b" aria-pressed="false">+ Upcoming</button>
+        <button data-head="c" aria-pressed="false">Combined</button>
+      </div>
+      <p class="hint">A — just "The Lovers Tour". B — "Upcoming" kicker + "The Lovers Tour". C — "upcoming lovers tour" as one title.</p>
+    </div>
+    <div class="tw-group">
+      <label>Description</label>
+      <div class="seg" id="desc">
+        <button data-desc="on" aria-pressed="false">Show</button>
+        <button data-desc="off" aria-pressed="true">Hide</button>
+      </div>
+      <p class="hint">Hide drops the thematic sentence and jumps the heading straight into Program / Ensemble.</p>
+    </div>
+  </div>
+</div>
 
 <script>
 // PROTOTYPE: parallax, scroll-reveal, active-nav, sticky header
@@ -356,6 +438,23 @@ if(!reduce){
   };
   addEventListener('scroll',onScroll,{passive:true}); onScroll();
 }
+
+// tweaks panel
+const tw=document.getElementById('tweaks');
+tw.querySelector('.gear').addEventListener('click',()=>tw.classList.toggle('open'));
+function wireSeg(id,fn){const seg=document.getElementById(id);if(!seg)return;
+  seg.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
+    seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===btn)); fn(btn); }));}
+
+// tour heading variants
+const tourHead=document.getElementById('tour-head');
+const HEADS={
+  a:'<h2 class="lead tour-name tc">The Lovers Tour</h2>',
+  b:'<p class="eyebrow tour-kicker">Upcoming</p><h2 class="lead tour-name tc">The Lovers Tour</h2>',
+  c:'<h2 class="lead tour-name">upcoming lovers tour</h2>'
+};
+wireSeg('heading', btn=>{ if(tourHead) tourHead.innerHTML=HEADS[btn.dataset.head]; });
+wireSeg('desc', btn=>document.body.classList.toggle('no-desc', btn.dataset.desc==='off'));
 
 if(location.search.includes('clean')) document.body.classList.add('clean');
 </script>
