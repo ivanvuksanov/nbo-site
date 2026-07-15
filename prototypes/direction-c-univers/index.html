@@ -92,8 +92,8 @@ body.hero-full header{position:fixed;inset:0 0 auto 0;background:transparent;col
 body.hero-full header.solid{background:var(--paper);color:var(--ink);box-shadow:0 1px 0 var(--hair)}
 body.hero-full .logo img{filter:brightness(0) invert(1)}            /* white wordmark over the photo */
 body.hero-full header.solid .logo img{filter:none}                 /* dark again when the header is solid */
-body.hero-full .open{min-height:100svh;display:block;padding:0}
-body.hero-full .open .fig{position:absolute;inset:0;width:auto;margin:0}
+body.hero-full .open{min-height:100svh;display:block;padding:0;overflow:hidden}
+body.hero-full .open .fig{position:absolute;inset:-14% 0;width:auto;margin:0}   /* oversized so parallax drift never reveals an edge */
 body.hero-full .open .fig .img{width:100%;height:100%;aspect-ratio:auto}
 body.hero-full .open::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(16,18,20,.5),rgba(16,18,20,.05) 28%,rgba(16,18,20,0) 55%)}
 
@@ -114,10 +114,8 @@ body.hero-full .open::after{content:"";position:absolute;inset:0;z-index:1;point
 .gig .venue{color:var(--ink-soft);font-size:.72rem;text-transform:uppercase;letter-spacing:.16em}
 .gig:hover .city{opacity:.5}
 
-/* mission — sage field; label inline above the quote, on a line with the text */
+/* about — content column hangs off the left margin (off-grid) */
 .mission .q{grid-column:2/10}
-.quote{font-weight:300;font-size:clamp(1.7rem,4vw,3.4rem);line-height:1.22;letter-spacing:-.012em}
-.quote[hidden]{display:none}
 
 /* spread — contained portrait + adjacent text, mirrored per instance */
 .spread{align-items:center}
@@ -177,13 +175,22 @@ footer{padding-block:var(--pad) 3.5rem}
 .socials{display:flex;gap:1.3rem;text-transform:uppercase;letter-spacing:.16em;font-size:.7rem;margin-top:1.4rem}
 .fwrap .meta a:hover{color:var(--ink)}
 
-/* ECM reveal — opacity (1s linear) trails the movement (.7s ease-in-out) */
+/* ECM reveal — opacity (1s linear) trails the movement (.7s ease-in-out); content enters from varied angles */
 .reveal{opacity:0;transform:translate3d(0,22px,0);transition:transform .7s ease-in-out,opacity 1s linear}
 .reveal-x{opacity:0;transform:translate3d(38px,0,0);transition:transform .7s ease-in-out,opacity 1s linear}
-.reveal.in,.reveal-x.in{opacity:1;transform:none}
+.reveal-l{opacity:0;transform:translate3d(-38px,0,0);transition:transform .7s ease-in-out,opacity 1s linear}
+.reveal.in,.reveal-x.in,.reveal-l.in{opacity:1;transform:none}
 .reveal-focus{opacity:0;transform:perspective(800px) translate3d(0,0,-180px) rotateX(18deg) scale(.95);
   transition:transform .6s ease-in-out,opacity 1s linear}
 .reveal-focus.in{opacity:1;transform:none}
+
+/* scroll-linked parallax (Rellax analog) — JS drives translateY drift on tagged block containers */
+[data-par]{will-change:transform}
+
+/* draw-in (experimental, off by default) — headings wipe up from a line; clip only, no translate */
+body.draw-in .draw{transform:none!important;opacity:1;clip-path:inset(0 0 102% 0);
+  transition:clip-path .9s cubic-bezier(.19,1,.22,1)}
+body.draw-in .draw.in{clip-path:inset(0 0 -8% 0)}
 
 /* tweaks panel */
 .tweaks{position:fixed;right:1.1rem;bottom:1.1rem;z-index:200;font-family:var(--sans);
@@ -223,18 +230,19 @@ body.clean .tweaks{display:none}
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *{animation:none!important;transition:none!important}
-  .reveal,.reveal-x,.reveal-focus{opacity:1;transform:none}
+  .reveal,.reveal-x,.reveal-l,.reveal-focus{opacity:1;transform:none}
+  body.draw-in .draw{clip-path:none!important}
 }
 </style>
 </head>
-<body class="panels-dark">
+<body class="panels-dark hero-full">
 
 <!-- PROTOTYPE: nav on paper -->
 <header id="nav">
   <a href="#top" class="logo" aria-label="No Borders Orchestra"><img src="logo.svg" alt="No Borders Orchestra"></a>
   <nav>
-    <a href="#projects">Projects</a>
     <a href="#about">About</a>
+    <a href="#projects">Projects</a>
     <a href="#who">Who we are</a>
     <a href="#media">Media</a>
   </nav>
@@ -246,8 +254,8 @@ body.clean .tweaks{display:none}
 
 <!-- OPENING — contained, asymmetric (image inset, not full-bleed) -->
 <section class="open" id="top">
-  <figure class="fig reveal">
-    <div class="img" style="background-image:url('../../fotografije/Photo%20NBO%20arcive.jpg')"></div>
+  <figure class="fig" data-par="0.17">
+    <div class="img" style="background-image:url('../../fotografije/Home%20fotka.jpg')"></div>
   </figure>
 </section>
 
@@ -263,8 +271,8 @@ body.clean .tweaks{display:none}
 <section class="band wrap up" id="upcoming">
   <div class="grid">
     <p class="lbl eyebrow reveal">Upcoming</p>
-    <div class="body">
-      <h2 class="lead reveal hang-l">Lovers Tour 2026</h2>
+    <div class="body" data-par="0.14">
+      <h2 class="lead reveal draw hang-l">Lovers Tour 2026</h2>
       <div class="reveal" style="margin-top:clamp(2.5rem,5vh,4rem)">
         <a class="gig" href="#contact"><span class="date metanum">06.09.2026</span><span class="city">Belgrade</span><span class="venue">Kolarac Hall</span></a>
         <a class="gig" href="#contact"><span class="date metanum">12.09.2026</span><span class="city">Vienna</span><span class="venue">Konzerthaus</span></a>
@@ -276,15 +284,12 @@ body.clean .tweaks{display:none}
   </div>
 </section>
 
-<!-- ABOUT / MISSION — sage field; label right, quote hangs left -->
+<!-- ABOUT — dark panel; section name as the title, links into the long-form pages -->
 <section class="band field mission" id="about">
   <div class="wrap"><div class="grid">
-    <div class="q">
-      <p class="eyebrow reveal">About</p>
-      <blockquote class="quote reveal" data-variant="borders" style="margin-top:1.5rem">Border is the other name for prejudice. NBO is a call to play across the borders of purported, usual, and to listen without prejudices.</blockquote>
-      <blockquote class="quote reveal" data-variant="symbol" hidden style="margin-top:1.5rem">NBO is a tool and a symbol to help overcome a violent history, to set an example on how people can work and live together.</blockquote>
-      <blockquote class="quote reveal" data-variant="change" hidden style="margin-top:1.5rem">No Borders Orchestra is about making a decision that art should represent the change that we wish to see in the world.</blockquote>
-      <div class="sublinks reveal">
+    <div class="q" data-par="0.13">
+      <h2 class="lead reveal draw">About</h2>
+      <div class="sublinks reveal" style="margin-top:clamp(2rem,4vh,3rem)">
         <a href="#about">Manifesto <span class="arr">→</span></a>
         <a href="#about">Mission <span class="arr">→</span></a>
         <a href="#about">NBO CV <span class="arr">→</span></a>
@@ -293,58 +298,34 @@ body.clean .tweaks{display:none}
   </div></div>
 </section>
 
-<!-- SPREAD — contained portrait left, text right -->
-<section class="band wrap">
-  <div class="grid spread">
-    <figure class="fig reveal" style="grid-column:2/6">
-      <div class="img" style="background-image:url('../../fotografije/Rijeka%202%20Ivan%20Vranjic..jpeg')"></div>
-      <figcaption>Rijeka · photo Ivan Vranjić</figcaption>
-    </figure>
-    <div class="txt reveal-x" style="grid-column:7/12">
-      <p class="lead-sm">How can the relation between audience and musicians be changed?</p>
-      <p class="lead-sm" style="margin-top:.9rem">How can we play and listen freely?</p>
-    </div>
-  </div>
-</section>
-
-<!-- PROJECTS — label far left, lead + list pushed right, hung into right gutter -->
+<!-- PROJECTS — photo (Dragstor) left, text right -->
 <section class="band wrap proj" id="projects">
-  <div class="grid">
-    <p class="lbl eyebrow reveal">Projects</p>
-    <div class="body">
-      <h2 class="lead reveal-focus measure hang-r">Every year, the orchestra performs several new programmes — across the former Yugoslavia and in cultural capitals of Europe.</h2>
-      <div class="sublinks reveal" style="margin-top:clamp(2.6rem,5vh,4rem)">
+  <div class="grid" data-par="0.13" style="align-items:center">
+    <figure class="fig reveal-l" style="grid-column:1/7">
+      <div class="img" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg');aspect-ratio:4/3"></div>
+      <figcaption>Dragstor · Belgrade</figcaption>
+    </figure>
+    <div class="body" style="grid-column:8/13">
+      <h2 class="lead reveal draw">Projects</h2>
+      <p class="soft measure reveal" style="margin-top:1.2rem">Every year, the orchestra performs several new programmes across the former Yugoslavia and in cultural capitals of Europe.</p>
+      <div class="sublinks reveal" style="margin-top:clamp(2rem,4vh,3rem)">
         <a href="#projects">All projects, 2018–2025 <span class="arr">→</span></a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- WHO WE ARE — dark panel; title + two alternating rows (Premil · the ensemble) -->
+<!-- WHO WE ARE — dark panel; title + one ensemble photo + links (no individuals singled out) -->
 <section class="band field field-clay wrap who" id="who">
   <div class="grid">
-    <h2 class="lead reveal">NBO is space filled with new possibilities.</h2>
+    <h2 class="lead reveal draw">Who we are</h2>
   </div>
-  <div class="grid spread" style="margin-top:clamp(3rem,6vh,5rem)">
-    <div class="txt reveal-x" style="grid-column:1/6">
-      <p class="lead-sm">Premil Petrović</p>
-      <p class="soft">Conductor · Artistic director · Founder</p>
-    </div>
-    <figure class="fig reveal" style="grid-column:7/12">
-      <div class="img" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg')"></div>
-      <figcaption>Premil Petrović · photo Karlo Čargonja</figcaption>
+  <div class="grid" data-par="0.14" style="margin-top:clamp(2.5rem,5vh,4rem)">
+    <figure class="fig reveal" style="grid-column:1/11">
+      <div class="img" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg');aspect-ratio:16/9"></div>
     </figure>
   </div>
-  <div class="grid spread" style="margin-top:clamp(3rem,7vh,6rem)">
-    <figure class="fig reveal" style="grid-column:1/7">
-      <div class="img" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg');aspect-ratio:3/2"></div>
-    </figure>
-    <div class="txt reveal-x" style="grid-column:8/12">
-      <p class="lead-sm">The ensemble</p>
-      <p class="soft">Excellent professional musicians from the former Yugoslavia. NBO is an ensemble of soloists.</p>
-    </div>
-  </div>
-  <div class="grid"><div style="grid-column:1/9">
+  <div class="grid" style="margin-top:clamp(2.4rem,5vh,3.6rem)"><div style="grid-column:1/9">
     <div class="sublinks reveal">
       <a href="#who">Team <span class="arr">→</span></a>
       <a href="#who">Musicians <span class="arr">→</span></a>
@@ -357,13 +338,13 @@ body.clean .tweaks{display:none}
 <!-- MEDIA — contained images, varied sizes + staggered -->
 <section class="band wrap media" id="media">
   <div class="grid">
-    <h2 class="lead reveal hang-r">Be loud, be visible and audible.</h2>
+    <h2 class="lead reveal draw hang-r">Media</h2>
   </div>
-  <div class="grid gal">
-    <figure class="fig m1 reveal"><div class="img" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div><figcaption>Dragstor</figcaption></figure>
+  <div class="grid gal" data-par="0.14">
+    <figure class="fig m1 reveal-l"><div class="img" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div><figcaption>Dragstor</figcaption></figure>
     <figure class="fig m2 reveal"><div class="img" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg')"></div><figcaption>NBO 2024 · archive</figcaption></figure>
-    <figure class="fig m3 reveal"><div class="img" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg')"></div><figcaption>Rijeka · Ivan Vranjić</figcaption></figure>
-    <figure class="fig m4 reveal"><div class="img" style="background-image:url('../../fotografije/Macbeth_01c.jpg')"></div><figcaption>Macbeth</figcaption></figure>
+    <figure class="fig m3 reveal-x"><div class="img" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg')"></div><figcaption>Rijeka · Ivan Vranjić</figcaption></figure>
+    <figure class="fig m4 reveal-focus"><div class="img" style="background-image:url('../../fotografije/Macbeth_01c.jpg')"></div><figcaption>Macbeth</figcaption></figure>
   </div>
   <div class="grid"><div style="grid-column:1/9">
     <div class="sublinks reveal">
@@ -378,7 +359,7 @@ body.clean .tweaks{display:none}
 <!-- CONTACT FOOTER -->
 <footer id="contact" class="wrap fwrap">
   <div class="grid">
-    <div class="t"><h2 class="ftitle reveal hang-l">Contact us.</h2></div>
+    <div class="t"><h2 class="ftitle reveal draw hang-l">Contact us.</h2></div>
   </div>
   <div class="grid">
     <div class="f">
@@ -408,15 +389,6 @@ body.clean .tweaks{display:none}
     <h4>Tweaks</h4>
     <div class="ttl">Direction C · UNIVERS</div>
     <div class="tw-group">
-      <label>About — quote</label>
-      <div class="seg" data-target="about">
-        <button data-variant="borders" aria-pressed="true">Borders</button>
-        <button data-variant="symbol" aria-pressed="false">A symbol</button>
-        <button data-variant="change" aria-pressed="false">On art</button>
-      </div>
-      <p class="hint">Three lines from the orchestra's own manifesto &amp; mission — pick the one that fits.</p>
-    </div>
-    <div class="tw-group">
       <label>Coloured sections</label>
       <div class="seg" id="panels">
         <button data-panels="dark" aria-pressed="true">Dark grey</button>
@@ -425,18 +397,26 @@ body.clean .tweaks{display:none}
       <p class="hint">About + Who as ECM dark-grey panels (#1e1e1e, light text), or plain white.</p>
     </div>
     <div class="tw-group">
-      <label>Opening</label>
-      <div class="seg" id="opening">
-        <button data-open="center" aria-pressed="true">Centered photo</button>
-        <button data-open="full" aria-pressed="false">Full-screen</button>
+      <label>Scroll parallax</label>
+      <div class="seg" id="parallax">
+        <button data-par-on="1" aria-pressed="true">On</button>
+        <button data-par-on="0" aria-pressed="false">Off</button>
       </div>
-      <p class="hint">Contained centered photo, or a full-screen hero with a white header that turns solid on scroll (like Directions A &amp; B).</p>
+      <p class="hint">ECM-style scroll-linked drift — photos and content move at different speeds as you scroll.</p>
+    </div>
+    <div class="tw-group">
+      <label>Draw-in headings</label>
+      <div class="seg" id="drawin">
+        <button data-draw="0" aria-pressed="true">Off</button>
+        <button data-draw="1" aria-pressed="false">On</button>
+      </div>
+      <p class="hint">Experimental — section titles wipe up from a line as they enter (a closer take on ECM's "drawn-in" feel).</p>
     </div>
   </div>
 </div>
 
 <script>
-// PROTOTYPE: sticky-header shadow, ECM scroll-reveal, active-nav, tweaks panel. Reveal-led (no parallax).
+// PROTOTYPE: sticky-header shadow, ECM scroll-reveal + scroll-linked parallax, active-nav, tweaks panel.
 const header=document.getElementById('nav');
 const sentinel=document.getElementById('top');
 new IntersectionObserver(([e])=>header.classList.toggle('solid',!e.isIntersecting),
@@ -458,41 +438,61 @@ function sizeLogo(){
 if(!reduce){ addEventListener('scroll',sizeLogo,{passive:true}); addEventListener('resize',sizeLogo); sizeLogo(); }
 
 const revObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target);}}),{threshold:.12});
-document.querySelectorAll('.reveal,.reveal-x,.reveal-focus').forEach(el=>revObs.observe(el));
+document.querySelectorAll('.reveal,.reveal-x,.reveal-l,.reveal-focus').forEach(el=>revObs.observe(el));
 
 const links=[...document.querySelectorAll('nav a')];
 links.map(a=>({a,sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec)
   .forEach(x=>new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));x.a.classList.add('active');}}),{rootMargin:'-50% 0px -50% 0px'}).observe(x.sec));
 
+// PROTOTYPE: ECM-style scroll-linked parallax (Rellax analog) with SMOOTHING so content follows the scroll
+// with a slight delay and settles — the fluid lag the reference site has, not a 1:1 snap. Whole block
+// containers ([data-par], never .reveal elements) drift in translateY at per-block speeds, but the offset is
+// computed from a LERPED scroll value (parCurrent eases toward the real scrollY), so blocks trail then catch up.
+// Base offset is read with the transform cleared, so there's no feedback loop.
+let parOn=true;
+const parT=[...document.querySelectorAll('[data-par]')];
+function measurePar(){ parT.forEach(el=>{ el.style.transform=''; el.dataset.base=(el.getBoundingClientRect().top+scrollY).toFixed(1); }); }
+let parTarget=scrollY, parCurrent=scrollY, parRAF=null;
+function applyPar(){
+  const vc=parCurrent+innerHeight/2;
+  parT.forEach(el=>{ const c=parseFloat(el.dataset.base)+el.offsetHeight/2;
+    el.style.transform='translate3d(0,'+(-(c-vc)*parseFloat(el.dataset.par)).toFixed(2)+'px,0)'; });
+}
+function parLoop(){
+  parCurrent += (parTarget-parCurrent)*0.085;   // ease → blocks trail the scroll, then settle
+  applyPar();
+  if(Math.abs(parTarget-parCurrent)>0.3){ parRAF=requestAnimationFrame(parLoop); }
+  else { parCurrent=parTarget; applyPar(); parRAF=null; }   // final settle, exact
+}
+function onPar(){ parTarget=scrollY; if(parOn && !reduce && parRAF===null) parRAF=requestAnimationFrame(parLoop); }
+function syncPar(){ measurePar(); parTarget=parCurrent=scrollY; applyPar(); }
+if(!reduce){
+  syncPar();
+  addEventListener('scroll',onPar,{passive:true});
+  addEventListener('resize',syncPar);
+  addEventListener('load',syncPar);
+}
+function setParallax(on){
+  parOn=on;
+  if(!on){ if(parRAF){cancelAnimationFrame(parRAF);parRAF=null;} parT.forEach(el=>el.style.transform=''); }
+  else if(!reduce){ syncPar(); }
+}
+
 const tw=document.getElementById('tweaks');
 tw.querySelector('.gear').addEventListener('click',()=>tw.classList.toggle('open'));
-tw.querySelectorAll('.seg[data-target]').forEach(seg=>{
-  const target=seg.dataset.target;
+function wireSeg(id,fn){ const seg=document.getElementById(id); if(!seg) return;
   seg.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
-    const v=btn.dataset.variant;
-    seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b===btn));
-    document.querySelectorAll('#'+target+' .quote[data-variant]').forEach(q=>{ q.hidden = q.dataset.variant!==v; });
-  }));
-});
-const panels=document.getElementById('panels');
-panels.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
-  panels.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b===btn));
-  document.body.classList.toggle('panels-dark', btn.dataset.panels==='dark');
-}));
-
-const opening=document.getElementById('opening');
-opening.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
-  opening.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b===btn));
-  document.body.classList.toggle('hero-full', btn.dataset.open==='full');
-  sizeLogo();
-}));
+    seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b===btn)); fn(btn); })); }
+wireSeg('panels', btn=>document.body.classList.toggle('panels-dark', btn.dataset.panels==='dark'));
+wireSeg('parallax', btn=>setParallax(btn.dataset.parOn==='1'));
+wireSeg('drawin', btn=>document.body.classList.toggle('draw-in', btn.dataset.draw==='1'));
 
 if(location.search.includes('clean')) document.body.classList.add('clean');
-if(location.search.includes('herofull')) document.body.classList.add('hero-full');
+if(location.search.includes('drawin')) document.body.classList.add('draw-in');
 if(location.search.includes('openpanel')) document.getElementById('tweaks').classList.add('open');
 // PROTOTYPE: ?seek=<px> pulls content up so headless top-anchored shots can reach lower sections
 const seek=new URLSearchParams(location.search).get('seek');
-if(seek) document.body.style.marginTop='-'+parseInt(seek,10)+'px';
+if(seek){ document.body.style.marginTop='-'+parseInt(seek,10)+'px'; if(!reduce){syncPar();} }
 </script>
 </body>
 </html>
