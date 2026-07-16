@@ -7,7 +7,7 @@
 <title>No Borders Orchestra</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#fbfbfa; --ink:#1e1e1e; --ink-soft:#767676; --hair:#e4e4e4;   /* white bg + ECM dark grey #1e1e1e (from ecmrecords.com) */
@@ -38,16 +38,21 @@ header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:clam
   min-height:5.2rem;padding:.9rem var(--gut);background:var(--paper);transition:box-shadow .4s ease}
 header.solid{box-shadow:0 1px 0 var(--hair)}
 .logo{position:absolute;left:var(--gut);top:.9rem;z-index:60;display:block}
-.logo img{display:block;width:124px;height:auto}   /* outlined wordmark; JS sizes width big→small on scroll */
+.logo img{display:block;width:150px;height:auto}   /* outlined wordmark (2-line lockup); JS sizes width big→small on scroll */
 nav{margin-left:auto;display:flex;gap:clamp(1rem,2.6vw,2.6rem)}
-nav a{font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;font-weight:500;padding-bottom:.4rem;
+nav a{font-size:.82rem;text-transform:uppercase;letter-spacing:.18em;font-weight:500;padding-bottom:.4rem;
   border-bottom:1px solid transparent;transition:border-color .3s,opacity .3s}
 nav a:hover{opacity:.55}
 nav a.active{border-bottom-color:currentColor}
-.actions{display:flex;align-items:center;gap:1.4rem;white-space:nowrap;font-size:.7rem;
-  text-transform:uppercase;letter-spacing:.2em;font-weight:500}
+.actions{display:flex;align-items:center;gap:1.4rem;white-space:nowrap;font-size:.82rem;
+  text-transform:uppercase;letter-spacing:.18em;font-weight:500}
 .actions a{padding-bottom:.4rem;border-bottom:1px solid transparent}   /* match nav box so all header items align */
 .actions a:hover{opacity:.55}
+.actions a.active{border-bottom-color:currentColor}
+/* Donate = the page's one call-to-action — hairline box sets it apart from wayfinding */
+.actions a[href="#contact"]{border:1px solid currentColor;padding:.5rem .85rem .5rem}
+/* accessible page title (the visible name lives in the logo image + hero mask) */
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* header entrance — logo + nav fade/slide in on load */
 @keyframes hdrIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
@@ -64,16 +69,13 @@ figure.fig{margin:0}
 .fig .img{background-size:cover;background-position:center}
 .fig figcaption{font-family:var(--mono);font-size:.7rem;color:var(--ink-soft);margin-top:.85rem;letter-spacing:.03em}
 /* (full-bleed plate styles removed — C returned to contained images) */
-/* half-bleed split — image runs to the viewport's left edge, text on the right (About) */
-.bleed-left{display:grid;grid-template-columns:1.25fr 1fr;align-items:center;gap:clamp(2rem,5vw,5rem)}
-.bleed-left .bl-img{margin:0}
-.bleed-left .bl-img .img{width:100%;height:clamp(440px,64vh,700px)}
-.bleed-left .bl-text{padding-right:var(--gut)}
-@media(max-width:760px){.bleed-left{grid-template-columns:1fr;gap:1.4rem}.bleed-left .bl-text{padding-inline:var(--gut)}}
+/* about — contained photo (~centered, well short of the edges), text beside it on the right */
 
-/* type */
-.lead{font-weight:300;font-size:clamp(2rem,5vw,4.4rem);line-height:1.06;letter-spacing:-.02em}
+/* type — display headlines: large bold CAPS (Inter Tight), tight leading, staggered second line */
+.lead{font-family:"Inter Tight",var(--sans);font-weight:700;font-size:clamp(2.4rem,5.4vw,4.8rem);line-height:.98;letter-spacing:.005em;text-transform:uppercase}
+.lead .l2{display:block;padding-left:clamp(2.2rem,6vw,5.5rem)}   /* ECM's indented second line */
 .lead-sm{font-weight:300;font-size:clamp(1.5rem,3vw,2.6rem);line-height:1.1;letter-spacing:-.014em}
+/* editorial body paragraph beneath a headline — liner-notes register */
 .measure{max-width:52ch}
 .soft{color:var(--ink-soft)}
 /* off-grid hangs — type breaks the content column into the gutter */
@@ -87,7 +89,6 @@ body.panels-dark .field{position:relative;color:#fbfbfa}
 body.panels-dark .field::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:calc(50% - 50vw);width:100vw;background:#1e1e1e}
 body.panels-dark .field .eyebrow{color:rgba(251,251,250,.5)}
 body.panels-dark .field .soft,body.panels-dark .field .who-bio,body.panels-dark .field figcaption{color:rgba(251,251,250,.62)}
-body.panels-dark .field .sublinks a .arr{color:rgba(251,251,250,.5)}
 
 /* OPENING — small logo top-left; photo centered in the viewport with a margin around it */
 .open{position:relative;min-height:calc(100svh - 5.2rem);display:grid;place-items:center;
@@ -104,23 +105,34 @@ body.hero-full .open .fig{position:absolute;inset:-14% 0;width:auto;margin:0;z-i
 body.hero-full .open .fig .img{width:100%;height:100%;aspect-ratio:auto}
 /* header-legibility gradient (top) + a flat scrim over the whole hero to darken the video/photo */
 body.hero-full .open::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
-  background:linear-gradient(180deg,rgba(16,18,20,.5),rgba(16,18,20,0) 45%),linear-gradient(rgba(16,18,20,.34),rgba(16,18,20,.34))}
+  background:linear-gradient(180deg,rgba(16,18,20,.5),rgba(16,18,20,0) 45%),linear-gradient(rgba(16,18,20,.5),rgba(16,18,20,.5))}
 /* tweak: YouTube clip as the hero background — iframe scaled to COVER the viewport (16:9, no letterbox), sits above the photo poster and below the gradient. Photo fig stays as the fallback while the video loads / under reduced-motion. */
 .hero-video{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;display:none}
 body.hero-video-on .hero-video{display:block}
-.hero-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.hero-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:blur(1px);transform:scale(1.02)}   /* whisper of blur to soften compression artefacts; scale hides the edge fringe */
 
-/* marquee ribbon — type, not image */
-.ribbon{border-block:1px solid var(--hair);overflow:hidden;padding-block:1.1rem}
-.ribbon .run{display:flex;width:max-content;white-space:nowrap;animation:marquee 34s linear infinite}
-.ribbon .run span{font-size:clamp(1.05rem,1.9vw,1.6rem);font-weight:300;letter-spacing:.01em;padding-inline:1.4rem}
-.ribbon .run .sep{color:var(--ink-soft);font-family:var(--mono);font-size:.8em}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-/* full-screen hero: ribbon becomes a tour ticker pinned to the bottom edge, over the video/photo */
-body.hero-full .open .ribbon{position:absolute;left:0;right:0;bottom:0;z-index:3;
-  border:0;border-top:1px solid var(--hair);padding-block:.95rem;
-  background:var(--paper);color:var(--ink)}
-body.hero-full .open .ribbon .sep{color:var(--ink-soft)}
+/* tweak: HERO MARK — the wordmark centered over the video as a mask effect (logo.svg is outlined
+   paths, so it works as a CSS mask with no font dependency). Three variants, switchable in the panel:
+   stencil = letters punch through the scrim (backdrop-filter re-brightens the video inside the mask);
+   invert  = letters invert the footage beneath (white fill + mix-blend-mode:difference);
+   ghost   = faint white watermark. Sits above the scrim (z3), below the ticker's old slot. */
+.heromark{position:absolute;inset:0;z-index:3;pointer-events:none;display:none}
+.heromark .mk{position:absolute;left:50%;bottom:80px;transform:translateX(-50%);
+  width:min(78vw,1136px);aspect-ratio:12651/3506;   /* 97vw lockup reduced 20%, anchored to the hero's foot */
+  -webkit-mask:url(hero-mask.svg) center/contain no-repeat;mask:url(hero-mask.svg) center/contain no-repeat;
+  animation:markIn .7s ease both}   /* plain fade-in, same entrance window as the header */
+@keyframes markIn{from{opacity:0}to{opacity:1}}   /* opacity-only so the position classes own the transform */
+body.markpos-center .heromark .mk{bottom:auto;top:50%;transform:translate(-50%,-50%)}
+/* mark edge treatments (panel-switchable): ripple = SMIL displacement (default file above);
+   dissolve = noise-eroded edges that break up and reform; sharp = the raw logo paths */
+body.markedge-dissolve .heromark .mk{-webkit-mask-image:url(hero-mask-dissolve.svg);mask-image:url(hero-mask-dissolve.svg)}
+body.markedge-sharp .heromark .mk{-webkit-mask-image:url(logo.svg);mask-image:url(logo.svg)}
+body.heromark-stencil .heromark,body.heromark-invert .heromark,body.heromark-ghost .heromark{display:block}
+body.heromark-stencil .heromark .mk{-webkit-backdrop-filter:brightness(2.4) saturate(1.2) contrast(1.05);
+  backdrop-filter:brightness(2.4) saturate(1.2) contrast(1.05);
+  background:rgba(251,251,250,.09)}   /* luminance floor so the name stays present through dark passages */
+body.heromark-invert .heromark .mk{background:#fff;mix-blend-mode:difference}
+body.heromark-ghost .heromark .mk{background:#fff;opacity:.22}
 
 /* upcoming — label far left, content indented (asymmetric) */
 .up .lbl{grid-column:1/2}
@@ -128,7 +140,7 @@ body.hero-full .open .ribbon .sep{color:var(--ink-soft)}
 .gig{display:grid;grid-template-columns:7rem 1fr auto;gap:clamp(1rem,3vw,2.5rem);align-items:baseline;padding:1.5rem 0}
 .gig + .gig{border-top:1px solid var(--hair)}
 .gig .date{color:var(--ink-soft);font-size:.84rem}
-.gig .city{font-weight:300;font-size:clamp(1.4rem,2.6vw,2.4rem);line-height:1;letter-spacing:-.01em;transition:opacity .3s}
+.gig .city{font-family:"Inter Tight",var(--sans);font-weight:600;font-size:clamp(1.4rem,2.6vw,2.4rem);line-height:1;letter-spacing:0;transition:opacity .3s}   /* speaks the display voice */
 .gig .venue{color:var(--ink-soft);font-size:.72rem;text-transform:uppercase;letter-spacing:.16em}
 .gig:hover .city{opacity:.5}
 
@@ -160,26 +172,24 @@ body.hero-full .open .ribbon .sep{color:var(--ink-soft)}
 .who-bio{color:var(--ink-soft);max-width:32ch;font-size:.92rem;margin-top:.4rem}
 
 /* media — contained images, varied sizes + staggered (scattered plates, not a flush grid) */
-.media .lead{grid-column:6/13;text-align:right}     /* title pushed right */
+.media .lead{grid-column:6/13}
 .media .gal{margin-top:clamp(3rem,7vh,6rem)}
 .m1{grid-column:1/5}.m1 .img{aspect-ratio:4/5}
 .m2{grid-column:6/9;margin-top:clamp(5rem,10vh,8rem)}.m2 .img{aspect-ratio:1/1}
 .m3{grid-column:10/13;margin-top:2rem}.m3 .img{aspect-ratio:3/4}
 .m4{grid-column:2/8;margin-top:clamp(2rem,5vh,4rem)}.m4 .img{aspect-ratio:16/10}
 
-/* sublinks */
-.sublinks{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .8rem;margin-top:clamp(.6rem,1.4vh,1rem)}
-.sublinks a{white-space:nowrap}
-.sublinks .dot{color:var(--ink-soft);font-size:1.4em;line-height:1;user-select:none}
-body.panels-dark .field .sublinks .dot{color:rgba(251,251,250,.5)}
-.sublinks a{font-weight:400;font-size:clamp(1.05rem,1.7vw,1.3rem);letter-spacing:-.005em;
-  border-bottom:1px solid transparent;transition:border-color .3s}
-.sublinks a:hover{border-bottom-color:currentColor}
-.sublinks a .arr{color:var(--ink-soft);font-family:var(--mono);font-size:.82em}
+/* sublinks — stacked, underlined by default; hover softens */
+.sublinks{display:flex;flex-direction:column;align-items:flex-start;gap:.85rem;margin-top:clamp(1.6rem,3.4vh,2.6rem)}
+.sublinks a{white-space:nowrap;font-weight:400;font-size:clamp(1.15rem,1.5vw,1.35rem);letter-spacing:0;   /* no tracking: trailing letter-space would widen the underline past the word */
+  border-bottom:1px solid currentColor;transition:opacity .3s}
+.sublinks a:hover{opacity:.55}
 
 /* footer — title hangs left, narrow form */
 footer{padding-block:var(--pad) 3.5rem}
-.ftitle{font-weight:300;font-size:clamp(2.4rem,6vw,5rem);line-height:1;letter-spacing:-.02em}
+.ftitle{font-family:"Inter Tight",var(--sans);font-weight:700;font-size:clamp(2.4rem,6vw,5rem);line-height:.98;letter-spacing:.005em;text-transform:uppercase;
+  filter:url(#edgeDissolve)}   /* echoes the hero's dissolving borders at the close of the page */
+.ftitle .l2{display:block;padding-left:clamp(2.2rem,6vw,5.5rem)}
 .fwrap .t{grid-column:1/8}
 .fwrap .f{grid-column:1/7;margin-top:clamp(2.5rem,5vh,4rem)}
 .fwrap .meta{grid-column:9/13;align-self:end;color:var(--ink-soft);font-size:.84rem}
@@ -196,15 +206,16 @@ footer{padding-block:var(--pad) 3.5rem}
 .socials{display:flex;gap:1.3rem;text-transform:uppercase;letter-spacing:.16em;font-size:.7rem;margin-top:1.4rem}
 .fwrap .meta a:hover{color:var(--ink)}
 
-/* ECM reveal — fluid slide + fade on a decelerating curve; photos also scale in a touch */
-.reveal{opacity:0;transform:translate3d(0,42px,0);transition:transform 1.05s cubic-bezier(.16,1,.3,1),opacity .9s ease}
-.reveal-x{opacity:0;transform:translate3d(56px,0,0);transition:transform 1.05s cubic-bezier(.16,1,.3,1),opacity .9s ease}
-.reveal-l{opacity:0;transform:translate3d(-56px,0,0);transition:transform 1.05s cubic-bezier(.16,1,.3,1),opacity .9s ease}
+/* ECM reveal — fluid slide + fade on a decelerating curve; photos also scale in a touch.
+   Reveals RE-TRIGGER on every viewport entry (scroll up + down), so travel is generous. */
+.reveal{opacity:0;transform:translate3d(0,64px,0);transition:transform 1.2s cubic-bezier(.16,1,.3,1),opacity 1s ease}
+.reveal-x{opacity:0;transform:translate3d(76px,0,0);transition:transform 1.2s cubic-bezier(.16,1,.3,1),opacity 1s ease}
+.reveal-l{opacity:0;transform:translate3d(-76px,0,0);transition:transform 1.2s cubic-bezier(.16,1,.3,1),opacity 1s ease}
 .reveal.in,.reveal-x.in,.reveal-l.in{opacity:1;transform:none}
-/* photos: slide + subtle zoom for a more dynamic entrance */
-.fig.reveal{transform:translate3d(0,54px,0) scale(.93)}
-.fig.reveal-l{transform:translate3d(-64px,0,0) scale(.93)}
-.fig.reveal-x{transform:translate3d(64px,0,0) scale(.93)}
+/* photos: slide + zoom for a more dynamic entrance */
+.fig.reveal{transform:translate3d(0,72px,0) scale(.9)}
+.fig.reveal-l{transform:translate3d(-80px,0,0) scale(.9)}
+.fig.reveal-x{transform:translate3d(80px,0,0) scale(.9)}
 .fig.reveal.in,.fig.reveal-l.in,.fig.reveal-x.in{transform:none}
 /* small stagger so the links trail their title */
 .sublinks.reveal{transition-delay:.12s}
@@ -237,8 +248,12 @@ body.draw-in .draw.in{clip-path:inset(0 0 -8% 0)}
   padding:.5rem .4rem;color:var(--ink-soft);transition:background .2s,color .2s}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 .tweaks .hint{font-size:.64rem;color:var(--ink-soft);line-height:1.5;margin-top:.4rem}
+.tweaks input[type=range]{width:100%;accent-color:var(--ink);margin:.2rem 0}
 body.clean .tweaks{display:none}
 
+@media(max-width:700px){
+  .heromark{display:none!important}   /* letters become slivers at phone widths; the corner logo carries the brand */
+}
 @media(max-width:880px){
   nav,.actions{display:none}
   .open{min-height:auto;display:block;padding:4.5rem var(--gut) 0}
@@ -248,6 +263,8 @@ body.clean .tweaks{display:none}
   .m1,.m2,.m3,.m4,.media .lead,.fwrap .t,.fwrap .f,.fwrap .meta{grid-column:1/-1}
   .media .lead{text-align:left}
   .who .p1,.who .p2,.m2,.m3,.m4{margin-top:2.5rem}
+  .proj .body,.proj .fig,.who .q,.who .figwrap,.media .body,.media .figwrap,.fwrap .figwrap,.mission .figwrap,.mission .q{grid-column:1/-1!important}
+  .proj .fig,.media .fig{margin-top:2rem!important}
   .hang-l,.hang-r{margin-inline:0}
   .gig{grid-template-columns:1fr auto}
   .gig .date{grid-column:1/-1;margin-bottom:.3rem}
@@ -263,7 +280,7 @@ body.clean .tweaks{display:none}
 }
 </style>
 </head>
-<body class="panels-dark hero-full hero-video-on">
+<body class="panels-dark hero-full hero-video-on heromark-stencil markedge-dissolve">
 
 <!-- PROTOTYPE: nav on paper -->
 <header id="nav">
@@ -290,17 +307,12 @@ body.clean .tweaks{display:none}
       <source src="hero.mp4" type="video/mp4">
     </video>
   </div>
-  <!-- MARQUEE RIBBON — pinned to the bottom of the hero viewport as a tour ticker -->
-  <div class="ribbon" aria-label="Lovers Tour 2026">
-    <div class="run">
-      <span>Lovers Tour 2026</span><span class="sep">—</span><span>Belgrade</span><span class="sep">—</span><span>Vienna</span><span class="sep">—</span><span>Rijeka</span><span class="sep">—</span><span>Sarajevo</span><span class="sep">—</span><span>Berlin</span><span class="sep">—</span>
-      <span>Lovers Tour 2026</span><span class="sep">—</span><span>Belgrade</span><span class="sep">—</span><span>Vienna</span><span class="sep">—</span><span>Rijeka</span><span class="sep">—</span><span>Sarajevo</span><span class="sep">—</span><span>Berlin</span><span class="sep">—</span>
-    </div>
-  </div>
+  <div class="heromark" aria-hidden="true"><div class="mk"></div></div>
+  <h1 class="sr-only">No Borders Orchestra</h1>
 </section>
 
 <!-- UPCOMING — dark-grey panel; content synced with Direction A (The Lovers Tour) -->
-<section class="band wrap up field" id="upcoming" style="padding-top:clamp(5rem,12vh,9rem)">
+<section class="band wrap up" id="upcoming" style="padding-top:clamp(5rem,12vh,9rem)">
   <div class="grid">
     <div class="body" data-par="0.14">
       <p class="eyebrow reveal" style="margin-bottom:1.1rem">Upcoming</p>
@@ -333,53 +345,58 @@ body.clean .tweaks{display:none}
 </section>
 
 <!-- ABOUT — white; Dragstor photo bleeding to the left viewport edge, text right -->
-<section class="band mission bleed-left" id="about">
-  <figure class="fig reveal-l bl-img">
-    <div class="img" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg')"></div>
-  </figure>
-  <div class="bl-text">
-    <h2 class="lead reveal draw">About</h2>
-    <div class="sublinks reveal">
-      <a href="#about">Manifesto</a>
-      <span class="dot" aria-hidden="true">·</span>
-      <a href="#about">Mission</a>
-      <span class="dot" aria-hidden="true">·</span>
-      <a href="#about">NBO CV</a>
+<section class="band wrap mission field" id="about">
+  <div class="grid" style="align-items:center">
+    <div class="figwrap" data-par="0.14" style="grid-column:2/9">
+      <figure class="fig reveal">
+        <div class="img" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg');aspect-ratio:4/3"></div>
+      </figure>
+    </div>
+    <div class="q" data-par="0.07" style="grid-column:10/13">
+      <h2 class="lead reveal draw">About</h2>
+      <div class="sublinks reveal">
+        <a href="#about"><span>Manifesto</span></a>
+        <a href="#about"><span>Mission</span></a>
+        <a href="#about"><span>NBO CV</span></a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- PROJECTS — white; text left, Premil photo right -->
+<!-- PROJECTS — white; diagonal stack: headline top-left, wide cinematic photo below indented right -->
 <section class="band wrap proj" id="projects">
-  <div class="grid" data-par="0.13" style="align-items:center">
-    <div class="body" style="grid-column:1/5">
-      <h2 class="lead reveal draw">Projects</h2>
-      <div class="sublinks reveal">
-        <a href="#projects">All projects, 2018–2025</a>
+  <div>
+    <div class="grid" data-par="0.07">
+      <div class="body" style="grid-column:1/7">
+        <h2 class="lead reveal draw">Projects</h2>
+        <div class="sublinks reveal">
+          <a href="#projects"><span>All projects, 2018–2025</span></a>
+        </div>
       </div>
     </div>
-    <figure class="fig reveal" style="grid-column:6/13">
-      <div class="img" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg');aspect-ratio:3/2"></div>
-    </figure>
+    <div class="grid" data-par="0.15">
+      <figure class="fig reveal" style="grid-column:4/13;margin-top:clamp(1rem,2.5vh,1.8rem)">
+        <div class="img" style="background-image:url('../../fotografije/Premil%20Petrovic,%20foto%20Karlo%20Cargonja%20copy.jpg');aspect-ratio:3/2"></div>
+      </figure>
+    </div>
   </div>
 </section>
 
 <!-- WHO WE ARE — white; whole-ensemble photo left, title + links right -->
 <section class="band wrap who" id="who">
-  <div class="grid" data-par="0.14" style="align-items:center">
-    <figure class="fig reveal-l" style="grid-column:1/7">
-      <div class="img" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg');aspect-ratio:4/3"></div>
-    </figure>
-    <div class="q" style="grid-column:8/13">
-      <h2 class="lead reveal draw">Who we are</h2>
+  <div class="grid" style="align-items:end">
+    <div class="figwrap" data-par="0.15" style="grid-column:1/9">
+      <figure class="fig reveal-l">
+        <div class="img" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg');aspect-ratio:4/3"></div>
+      </figure>
+    </div>
+    <div class="q" data-par="0.07" style="grid-column:10/13;padding-bottom:.4rem">
+      <h2 class="lead reveal draw">Who<span class="l2">we are</span></h2>
       <div class="sublinks reveal">
-        <a href="#who">Team</a>
-        <span class="dot" aria-hidden="true">·</span>
-        <a href="#who">Musicians</a>
-        <span class="dot" aria-hidden="true">·</span>
-        <a href="#who">Board</a>
-        <span class="dot" aria-hidden="true">·</span>
-        <a href="#who">Partners</a>
+        <a href="#who"><span>Team</span></a>
+        <a href="#who"><span>Musicians</span></a>
+        <a href="#who"><span>Board</span></a>
+        <a href="#who"><span>Partners</span></a>
       </div>
     </div>
   </div>
@@ -387,34 +404,45 @@ body.clean .tweaks{display:none}
 
 <!-- MEDIA — title + links left, Rijeka (violin) photo right -->
 <section class="band wrap media" id="media">
-  <div class="grid" data-par="0.14" style="align-items:center">
-    <div class="body" style="grid-column:1/7">
+  <div class="grid" style="align-items:center">
+    <div class="figwrap" data-par="0.15" style="grid-column:1/7">
+      <figure class="fig reveal-l">
+        <div class="img" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg');aspect-ratio:3/4"></div>
+      </figure>
+    </div>
+    <div class="body" data-par="0.07" style="grid-column:8/13">
       <h2 class="lead reveal draw">Media</h2>
       <div class="sublinks reveal">
-        <a href="#media">Videos</a>
-        <span class="dot" aria-hidden="true">·</span>
-        <a href="#media">Photo Gallery</a>
-        <span class="dot" aria-hidden="true">·</span>
-        <a href="#media">Reviews</a>
-        <span class="dot" aria-hidden="true">·</span>
-        <a href="#media">Discography</a>
+        <a href="#media"><span>Videos</span></a>
+        <a href="#media"><span>Photo Gallery</span></a>
+        <a href="#media"><span>Reviews</span></a>
+        <a href="#media"><span>Discography</span></a>
       </div>
     </div>
-    <figure class="fig reveal" style="grid-column:8/13">
-      <div class="img" style="background-image:url('../../fotografije/Rijeka%201%20Ivan%20Vranjic.jpeg');aspect-ratio:3/4"></div>
-    </figure>
   </div>
 </section>
 
+<!-- shared SVG filter: the hero's dissolving-borders language, scaled to text pixels — echoed on the Contact headline -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="edgeDissolve" x="-10%" y="-30%" width="120%" height="160%">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="soft"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="4" seed="11" result="n"/>
+    <feComposite in="soft" in2="n" operator="arithmetic" k1="0" k2="2.8" k3="-1.3" k4="-0.25" result="a"/>
+    <feComposite in="SourceGraphic" in2="a" operator="in"/>
+  </filter>
+</defs></svg>
+
 <!-- CONTACT FOOTER -->
 <footer id="contact" class="wrap fwrap">
-  <div class="grid" style="margin-bottom:clamp(2.5rem,6vh,4.5rem)">
-    <figure class="fig reveal-l" style="grid-column:1/10">
-      <div class="img" style="background-image:url('../../fotografije/Macbeth_01c.jpg');aspect-ratio:16/9"></div>
-    </figure>
+  <div class="grid" style="margin-bottom:clamp(5rem,12vh,9rem)">
+    <div class="figwrap" data-par="0.13" style="grid-column:1/10">
+      <figure class="fig reveal-l">
+        <div class="img" style="background-image:url('../../fotografije/Macbeth_01c.jpg');aspect-ratio:16/9"></div>
+      </figure>
+    </div>
   </div>
   <div class="grid">
-    <div class="t"><h2 class="ftitle reveal draw hang-l">Contact us</h2></div>
+    <div class="t" data-par="0.07"><h2 class="ftitle reveal draw hang-l">Contact us</h2></div>
   </div>
   <div class="grid">
     <div class="f">
@@ -442,36 +470,12 @@ body.clean .tweaks{display:none}
     <h4>Tweaks</h4>
     <div class="ttl">Direction C · UNIVERS</div>
     <div class="tw-group">
-      <label>Hero background</label>
-      <div class="seg" id="herobg">
-        <button data-herobg="video" aria-pressed="true">Video</button>
-        <button data-herobg="photo" aria-pressed="false">Photo</button>
+      <label>Mark position</label>
+      <div class="seg" id="markpos">
+        <button data-markpos="bottom" aria-pressed="true">Bottom</button>
+        <button data-markpos="center" aria-pressed="false">Center</button>
       </div>
-      <p class="hint">A muted, looping YouTube clip fills the hero; the Home photo stays as the fallback beneath it.</p>
-    </div>
-    <div class="tw-group">
-      <label>Coloured sections</label>
-      <div class="seg" id="panels">
-        <button data-panels="dark" aria-pressed="true">Dark grey</button>
-        <button data-panels="white" aria-pressed="false">White</button>
-      </div>
-      <p class="hint">About + Who as ECM dark-grey panels (#1e1e1e, light text), or plain white.</p>
-    </div>
-    <div class="tw-group">
-      <label>Scroll parallax</label>
-      <div class="seg" id="parallax">
-        <button data-par-on="1" aria-pressed="true">On</button>
-        <button data-par-on="0" aria-pressed="false">Off</button>
-      </div>
-      <p class="hint">ECM-style scroll-linked drift — photos and content move at different speeds as you scroll.</p>
-    </div>
-    <div class="tw-group">
-      <label>Draw-in headings</label>
-      <div class="seg" id="drawin">
-        <button data-draw="0" aria-pressed="true">Off</button>
-        <button data-draw="1" aria-pressed="false">On</button>
-      </div>
-      <p class="hint">Experimental — section titles wipe up from a line as they enter (a closer take on ECM's "drawn-in" feel).</p>
+      <p class="hint">The wordmark anchored 80px off the hero's foot, or centered in the viewport.</p>
     </div>
   </div>
 </div>
@@ -486,7 +490,7 @@ new IntersectionObserver(([e])=>header.classList.toggle('solid',!e.isIntersectin
 // PROTOTYPE: logo occupies ~20% of the screen width at the top and shrinks to its normal corner size on scroll
 const logo=header.querySelector('.logo');
 const logoImg=logo.querySelector('img');
-const LOGO_SMALL=124, LOGO_TH=360;
+const LOGO_SMALL=150, LOGO_TH=360;
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 function sizeLogo(){
   // full-screen hero mode: small fixed logo, no big→small transition (matches A/B)
@@ -498,12 +502,21 @@ function sizeLogo(){
 }
 if(!reduce){ addEventListener('scroll',sizeLogo,{passive:true}); addEventListener('resize',sizeLogo); sizeLogo(); }
 
-const revObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target);}}),{threshold:.12});
+// re-triggers every time an element enters the viewport (both scroll directions), like the reference site
+const revObs=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('in',e.isIntersecting)),{threshold:.12});
 document.querySelectorAll('.reveal,.reveal-x,.reveal-l,.reveal-focus').forEach(el=>revObs.observe(el));
 
-const links=[...document.querySelectorAll('nav a')];
+const links=[...document.querySelectorAll('nav a, .actions a')].filter(a=>(a.getAttribute('href')||'').startsWith('#'));
 links.map(a=>({a,sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec)
   .forEach(x=>new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));x.a.classList.add('active');}}),{rootMargin:'-50% 0px -50% 0px'}).observe(x.sec));
+// at the very bottom the short footer never crosses the viewport middle — force Contact active there
+addEventListener('scroll',()=>{
+  if(innerHeight+scrollY>=document.body.scrollHeight-4){
+    links.forEach(l=>l.classList.remove('active'));
+    const c=links.find(l=>l.getAttribute('href')==='#contact');
+    if(c) c.classList.add('active');
+  }
+},{passive:true});
 
 // PROTOTYPE: ECM-style scroll-linked parallax (Rellax analog) with SMOOTHING so content follows the scroll
 // with a slight delay and settles — the fluid lag the reference site has, not a 1:1 snap. Whole block
@@ -544,9 +557,7 @@ tw.querySelector('.gear').addEventListener('click',()=>tw.classList.toggle('open
 function wireSeg(id,fn){ const seg=document.getElementById(id); if(!seg) return;
   seg.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
     seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b===btn)); fn(btn); })); }
-wireSeg('panels', btn=>document.body.classList.toggle('panels-dark', btn.dataset.panels==='dark'));
-wireSeg('parallax', btn=>setParallax(btn.dataset.parOn==='1'));
-wireSeg('drawin', btn=>document.body.classList.toggle('draw-in', btn.dataset.draw==='1'));
+wireSeg('markpos', btn=>document.body.classList.toggle('markpos-center', btn.dataset.markpos==='center'));
 
 // PROTOTYPE: hero background — self-hosted, muted, looping clip (a text-free 23s cut of NBO's own
 // "Embracing Vulnerability Tour" trailer) covering the viewport, photo fig as the fallback/poster.
@@ -558,7 +569,56 @@ function setHeroVideo(on){
   if(on){ const p=heroVid.play(); if(p&&p.catch) p.catch(()=>{}); }
   else { heroVid.pause(); }
 }
-wireSeg('herobg', btn=>setHeroVideo(btn.dataset.herobg==='video'));
+
+// PROTOTYPE: dissolve-amount slider — regenerates the dissolve mask as a data-URI with the
+// noise-erosion strength (k3) mapped from the slider; logo paths fetched once from logo.svg.
+let logoPaths=null;
+fetch('logo.svg').then(r=>r.text()).then(t=>{
+  logoPaths=t.match(/<path[^>]*\/>/g).join('');
+  warmDissolveCache();   // pre-decode all levels so the scroll-linked dissolve swaps cleanly
+});
+function warmLevel(v){
+  if(!dissolveCache[v]) dissolveCache[v]=dissolveMaskURI(v/100);
+  const img=new Image();
+  img.src=dissolveCache[v].slice(5,-2);   // strip the url(" … ") wrapper → raw data URI
+  return img.decode ? img.decode().catch(()=>{}) : Promise.resolve();
+}
+function warmDissolveCache(){
+  const vs=new Set([dissolveBase,99,100]);
+  for(let v=Math.ceil(dissolveBase/3)*3; v<=99; v+=3) vs.add(v);
+  return Promise.all([...vs].map(warmLevel));
+}
+function dissolveMaskURI(a){   // a in [0,1] — drives blur depth, core solidity and noise bite together; 0.13 = shipped default
+  const std=(20+180*a).toFixed(0);          // how deep the soft zone reaches into the letter
+  const k2=(2.4-0.9*a).toFixed(3);          // core solidity (lower = noise chews into the body)
+  const k3=(-(0.4+1.2*a)).toFixed(3);       // noise bite
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12651 3506" fill="#000"><defs>'
+    +'<filter id="d" x="-10%" y="-20%" width="120%" height="140%">'
+    +'<feGaussianBlur in="SourceAlpha" stdDeviation="'+std+'" result="soft"/>'
+    +'<feTurbulence type="fractalNoise" baseFrequency="0.0026" numOctaves="3" seed="11" result="n">'
+    +'<animate attributeName="baseFrequency" values="0.0022;0.0033;0.0022" dur="16s" repeatCount="indefinite"/>'
+    +'</feTurbulence>'
+    +'<feComposite in="soft" in2="n" operator="arithmetic" k1="0" k2="'+k2+'" k3="'+k3+'" k4="-0.12"/>'
+    +'</filter></defs><g filter="url(#d)">'+logoPaths+'</g></svg>';
+  return 'url("data:image/svg+xml;utf8,'+encodeURIComponent(svg)+'")';
+}
+const dissolveCache={};
+function setDissolve(v){   // v integer 0..100; data-URIs memoized so scroll scrubbing stays cheap
+  if(!logoPaths) return;
+  if(!dissolveCache[v]) dissolveCache[v]=dissolveMaskURI(v/100);
+  const mk=document.querySelector('.heromark .mk');
+  mk.style.webkitMaskImage=dissolveCache[v]; mk.style.maskImage=dissolveCache[v];
+}
+let dissolveBase=13;
+// SCROLL-LINKED DISSOLVE — the name disintegrates from the base amount toward 100 as the hero
+// scrolls out: the border dissolves as you cross it. Quantized to steps of 3 to bound the cache.
+function scrollDissolve(){
+  if(reduce || !document.body.classList.contains('markedge-dissolve')) return;
+  const p=Math.min(Math.max(scrollY/(innerHeight*0.9),0),1);
+  const v=Math.min(100,Math.round((dissolveBase+(100-dissolveBase)*p)/3)*3);
+  setDissolve(v);
+}
+addEventListener('scroll',()=>requestAnimationFrame(scrollDissolve),{passive:true});
 const heroVideoDefault = !reduce && !location.search.includes('photohero');
 if(!heroVideoDefault){
   document.querySelectorAll('#herobg button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.herobg==='photo'));
