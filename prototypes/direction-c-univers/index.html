@@ -49,8 +49,10 @@ nav a.active{border-bottom-color:currentColor}
 .actions a{padding-bottom:.4rem;border-bottom:1px solid transparent}   /* match nav box so all header items align */
 .actions a:hover{opacity:.55}
 .actions a.active{border-bottom-color:currentColor}
-/* Donate = the page's one call-to-action — hairline box sets it apart from wayfinding */
-.actions a[href="#contact"]{border:1px solid currentColor;padding:.5rem .85rem .5rem}
+/* Donate = the page's one call-to-action — hairline box sets it apart from wayfinding.
+   Class selector, NOT [href] — the deploy postbuild rewrites hrefs (donate.html→#contact) and
+   a href-based selector gets rewritten with them, boxing the wrong link on the live site. */
+.actions a.donate{border:1px solid currentColor;padding:.5rem .85rem .5rem}
 /* accessible page title (the visible name lives in the logo image + hero mask) */
 .sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
@@ -293,7 +295,7 @@ body.clean .tweaks{display:none}
   </nav>
   <div class="actions">
     <a href="#contact">Contact</a>
-    <a href="#contact">Donate</a>
+    <a href="#contact" class="donate">Donate</a>
   </div>
 </header>
 
