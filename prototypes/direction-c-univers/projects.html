@@ -253,31 +253,6 @@ The Covid-19 pandemic is a tragedy. This crisis is, however, inviting us to exam
   </div>
 </footer>
 
-<!-- PROTOTYPE: tweaks panel — ?clean hides it for screenshots, ?openpanel opens it -->
-<div class="tweaks" id="tweaks">
-  <button class="gear" aria-label="Toggle tweaks panel">✎</button>
-  <div class="panel">
-    <h4>Tweaks</h4>
-    <div class="ttl">Projects · UNIVERS</div>
-    <div class="tw-group">
-      <label>Programme</label>
-      <div class="seg" id="prog">
-        <button data-prog="plain" aria-pressed="true">Plain</button>
-        <button data-prog="rows" aria-pressed="false">Rows</button>
-      </div>
-      <p class="hint">Rows keeps the concert list's grammar — number, composer, work flush right. Plain is the homepage's Program block: just "Composer: Work" at body size, no numbers and no rules.</p>
-    </div>
-    <div class="tw-group">
-      <label>Year rail</label>
-      <div class="seg" id="rail">
-        <button data-rail="index" aria-pressed="true">Year index</button>
-        <button data-rail="monument" aria-pressed="false">Big years</button>
-      </div>
-      <p class="hint">Big years puts the stacked year monument in the rail. Year index replaces it with the list of tours, sticky under the header, the current one highlighted.</p>
-    </div>
-
-  </div>
-</div>
 
 <script src="c-base.js"></script>
 <script>
@@ -291,14 +266,11 @@ if(location.search.includes('view=grid')){
 
 // TWEAK: Programme layout. Every programme row changes height, so the parallax bases MUST be
 // re-measured — without syncPar the tagged blocks drift against stale offsets.
-// TWEAK: rail mode. Heights change (the monument is far taller than the index), so re-measure.
-wireSeg('rail', btn=>{
-  document.body.classList.toggle('rail-index', btn.dataset.rail==='index');
-  if(typeof syncPar==='function') syncPar();
-});
+// The page ships ONE version (year index in the rail + plain programme list) — the tweaks panel is
+// gone. Both alternates survive in CSS and stay reachable by URL flag for review, so the built work
+// isn't thrown away but the client is never offered a choice.
 if(location.search.includes('rail=monument')){       // the non-default; index ships by default
   document.body.classList.remove('rail-index');
-  document.querySelectorAll('#rail button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.rail==='monument'));
   if(typeof syncPar==='function') syncPar();
 }
 
@@ -321,13 +293,8 @@ if(yrLinks.length && yrChaps.length){
   yrChaps.forEach(c=>obs.observe(c));
 }
 
-wireSeg('prog', btn=>{
-  document.body.classList.toggle('prog-plain', btn.dataset.prog==='plain');
-  if(typeof syncPar==='function') syncPar();
-});
 if(location.search.includes('prog=rows')){           // the non-default; plain ships by default
   document.body.classList.remove('prog-plain');
-  document.querySelectorAll('#prog button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.prog==='rows'));
   if(typeof syncPar==='function') syncPar();
 }
 </script>
