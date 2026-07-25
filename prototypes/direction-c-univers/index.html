@@ -8,89 +8,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="c-base.css">
 <style>
-:root{
-  --paper:#fbfbfa; --ink:#1e1e1e; --ink-soft:#767676; --hair:#e4e4e4;   /* white bg + ECM dark grey #1e1e1e (from ecmrecords.com) */
-  /* Real ECM face is Univers (licensed). Helvetica Neue → Inter is the free grotesque analog. */
-  --sans:"Helvetica Neue",Helvetica,"Inter",Arial,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --pad:clamp(6.5rem,15vh,13rem);
-  --gut:clamp(1.5rem,6vw,6rem);
-  --cool:grayscale(.66) contrast(1.05) brightness(.98);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-weight:400;
-  font-size:clamp(.95rem,.98vw,1.05rem);line-height:1.72;letter-spacing:.005em;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden}
-img{display:block;max-width:100%}
-a{color:inherit;text-decoration:none}
+/* Homepage-only composition. The direction's tokens, header, type scale, row/figure/reveal
+   primitives and tweaks panel live in c-base.css, which loads first — so everything below
+   wins at equal specificity, as it did when this was one block. */
 
-.wrap{max-width:1380px;margin-inline:auto;padding-inline:var(--gut)}
-.grid{display:grid;grid-template-columns:repeat(12,1fr);column-gap:clamp(1rem,2vw,2rem);row-gap:0}
-
-/* tiny tracked-caps margin label — ECM signature */
-.eyebrow{font-size:.66rem;text-transform:uppercase;letter-spacing:.26em;color:var(--ink-soft);font-weight:600}
-.metanum{font-family:var(--mono);font-weight:400;font-variant-numeric:tabular-nums;letter-spacing:.02em}
-
-/* nav — always on paper; logo is absolute so its oversized state never grows the header */
-header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:clamp(1rem,2.6vw,2.6rem);
-  min-height:5.2rem;padding:.9rem var(--gut);background:var(--paper);transition:box-shadow .4s ease}
-header.solid{box-shadow:0 1px 0 var(--hair)}
-.logo{position:absolute;left:var(--gut);top:.9rem;z-index:60;display:block}
-.logo img{display:block;width:150px;height:auto}   /* outlined wordmark (2-line lockup); JS sizes width big→small on scroll */
-nav{margin-left:auto;display:flex;gap:clamp(1rem,2.6vw,2.6rem)}
-nav a{font-size:.82rem;text-transform:uppercase;letter-spacing:.18em;font-weight:500;padding-bottom:.4rem;
-  border-bottom:1px solid transparent;transition:border-color .3s,opacity .3s}
-nav a:hover{opacity:.55}
-nav a.active{border-bottom-color:currentColor}
-.actions{display:flex;align-items:center;gap:1.4rem;white-space:nowrap;font-size:.82rem;
-  text-transform:uppercase;letter-spacing:.18em;font-weight:500}
-.actions a{padding-bottom:.4rem;border-bottom:1px solid transparent}   /* match nav box so all header items align */
-.actions a:hover{opacity:.55}
-.actions a.active{border-bottom-color:currentColor}
-/* Donate = the page's one call-to-action — hairline box sets it apart from wayfinding.
-   Class selector, NOT [href] — the deploy postbuild rewrites hrefs (donate.html→#contact) and
-   a href-based selector gets rewritten with them, boxing the wrong link on the live site. */
-.actions a.donate{border:1px solid currentColor;padding:.5rem .85rem .5rem}
-/* accessible page title (the visible name lives in the logo image + hero mask) */
-.sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-
-/* header entrance — logo + nav fade/slide in on load */
-@keyframes hdrIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-.logo{animation:hdrIn .7s ease both}
-nav a,.actions a{animation:hdrIn .55s ease both}
-nav a:nth-child(2){animation-delay:.06s}
-nav a:nth-child(3){animation-delay:.12s}
-nav a:nth-child(4){animation-delay:.18s}
-.actions a:nth-child(1){animation-delay:.24s}
-.actions a:nth-child(2){animation-delay:.30s}
-
-/* contained figure — images are objects on the page, never full-bleed */
-figure.fig{margin:0}
-.fig .img{background-size:cover;background-position:center}
-.fig figcaption{font-family:var(--mono);font-size:.7rem;color:var(--ink-soft);margin-top:.85rem;letter-spacing:.03em}
 /* (full-bleed plate styles removed — C returned to contained images) */
 /* about — contained photo (~centered, well short of the edges), text beside it on the right */
 
-/* type — display headlines: large bold CAPS (Inter Tight), tight leading, staggered second line */
-.lead{font-family:"Inter Tight",var(--sans);font-weight:700;font-size:clamp(2.4rem,5.4vw,4.8rem);line-height:.98;letter-spacing:.005em;text-transform:uppercase}
-.lead .l2{display:block;padding-left:clamp(2.2rem,6vw,5.5rem)}   /* ECM's indented second line */
-.lead-sm{font-weight:300;font-size:clamp(1.5rem,3vw,2.6rem);line-height:1.1;letter-spacing:-.014em}
-/* editorial body paragraph beneath a headline — liner-notes register */
-.measure{max-width:52ch}
-.soft{color:var(--ink-soft)}
-/* off-grid hangs — type breaks the content column into the gutter */
-.hang-l{margin-left:calc(-.5 * var(--gut))}
-.hang-r{margin-right:calc(-.5 * var(--gut))}
-
-section{position:relative}
-.band{padding-block:var(--pad)}
-/* the former colour fields → optional ECM dark-grey full-bleed panels (tweak: body.panels-dark, default on) */
-body.panels-dark .field{position:relative;color:#fbfbfa}
-body.panels-dark .field::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:calc(50% - 50vw);width:100vw;background:#1e1e1e}
-body.panels-dark .field .eyebrow{color:rgba(251,251,250,.5)}
-body.panels-dark .field .soft,body.panels-dark .field .who-bio,body.panels-dark .field figcaption{color:rgba(251,251,250,.62)}
+/* tweak: the About and Who-we-are photos trade places. They carry their own aspect ratios with them
+   (Dragstor is 4:3, the lying-down shot is 16:9), so the ratio travels with the source — otherwise a
+   swap would crop one of them badly. Swapping changes block heights, so the JS re-measures parallax. */
+/* DEFAULT: Who we are takes Dragstor, About takes the lying-down shot. .photos-swapped is the
+   other way round — so the class now means "lying down in Who we are". */
+body{--about-img:url('../../fotografije/Home%20fotka.jpg');--about-ar:16/9;
+     --who-img:url('../../fotografije/Dragstor%20640x480.jpg');--who-ar:4/3}
+body.photos-swapped{--about-img:url('../../fotografije/Dragstor%20640x480.jpg');--about-ar:4/3;
+     --who-img:url('../../fotografije/Home%20fotka.jpg');--who-ar:16/9}
+.aboutimg{background-image:var(--about-img);aspect-ratio:var(--about-ar)}
+.whoimg{background-image:var(--who-img);aspect-ratio:var(--who-ar)}
 
 /* OPENING — small logo top-left; photo centered in the viewport with a margin around it */
 .open{position:relative;min-height:calc(100svh - 5.2rem);display:grid;place-items:center;
@@ -105,46 +42,62 @@ body.hero-full header.solid .logo img{filter:none}                 /* dark again
 body.hero-full .open{min-height:100svh;display:block;padding:0;overflow:hidden}
 body.hero-full .open .fig{position:absolute;inset:-14% 0;width:auto;margin:0;z-index:0}   /* oversized so parallax drift never reveals an edge; poster beneath the video */
 body.hero-full .open .fig .img{width:100%;height:100%;aspect-ratio:auto}
-/* header-legibility gradient (top) + a flat scrim over the whole hero to darken the video/photo */
+/* header-legibility gradient (top) + a flat scrim over the whole hero to darken the video/photo.
+   tweak: three overlay strengths — the scrim, the video blur and the stencil's brightness all scale
+   together, so "none" is genuinely untreated footage and the mark stays legible at every level. */
+body{--scrim:.5;--heroblur:1px;--mkbright:2.4;--mkfloor:.09}
+body.overlay-half{--scrim:.25;--heroblur:.5px;--mkbright:1.9;--mkfloor:.13}
+body.overlay-none{--scrim:0;--heroblur:0px;--mkbright:1.5;--mkfloor:.17}   /* no scrim to punch through, so the white floor carries more of the mark */
 body.hero-full .open::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
-  background:linear-gradient(180deg,rgba(16,18,20,.5),rgba(16,18,20,0) 45%),linear-gradient(rgba(16,18,20,.5),rgba(16,18,20,.5))}
+  background:linear-gradient(180deg,rgba(16,18,20,var(--scrim)),rgba(16,18,20,0) 45%),
+             linear-gradient(rgba(16,18,20,var(--scrim)),rgba(16,18,20,var(--scrim)))}
 /* tweak: YouTube clip as the hero background — iframe scaled to COVER the viewport (16:9, no letterbox), sits above the photo poster and below the gradient. Photo fig stays as the fallback while the video loads / under reduced-motion. */
 .hero-video{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;display:none}
 body.hero-video-on .hero-video{display:block}
-.hero-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:blur(1px);transform:scale(1.02)}   /* whisper of blur to soften compression artefacts; scale hides the edge fringe */
+.hero-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:blur(var(--heroblur));transform:scale(1.02)}   /* whisper of blur to soften compression artefacts; scale hides the edge fringe */
 
-/* tweak: HERO MARK — the wordmark centered over the video as a mask effect (logo.svg is outlined
-   paths, so it works as a CSS mask with no font dependency). Three variants, switchable in the panel:
+/* tweak: HERO MARK — the wordmark set over the video as a mask effect (the mark files are outlined
+   paths, so it works as a CSS mask with no font dependency). Three fills, switchable in the panel:
    stencil = letters punch through the scrim (backdrop-filter re-brightens the video inside the mask);
    invert  = letters invert the footage beneath (white fill + mix-blend-mode:difference);
-   ghost   = faint white watermark. Sits above the scrim (z3), below the ticker's old slot. */
+   ghost   = faint white watermark. Sits above the scrim (z3), below the ticker's old slot.
+   Two LOCKUPS (tweak: marklines-2 / marklines-1) — the two-line stack, or the whole name on one
+   wide line. These are separate files from logo.svg, which now carries the three-line header mark. */
 .heromark{position:absolute;inset:0;z-index:3;pointer-events:none;display:none}
 .heromark .mk{position:absolute;left:50%;bottom:80px;transform:translateX(-50%);
-  width:min(78vw,1136px);aspect-ratio:12651/3506;   /* 97vw lockup reduced 20%, anchored to the hero's foot */
-  -webkit-mask:url(hero-mask.svg) center/contain no-repeat;mask:url(hero-mask.svg) center/contain no-repeat;
+  -webkit-mask:var(--markfile) center/contain no-repeat;mask:var(--markfile) center/contain no-repeat;
   animation:markIn .7s ease both}   /* plain fade-in, same entrance window as the header */
-@keyframes markIn{from{opacity:0}to{opacity:1}}   /* opacity-only so the position classes own the transform */
-body.markpos-center .heromark .mk{bottom:auto;top:50%;transform:translate(-50%,-50%)}
-/* mark edge treatments (panel-switchable): ripple = SMIL displacement (default file above);
-   dissolve = noise-eroded edges that break up and reform; sharp = the raw logo paths */
-body.markedge-dissolve .heromark .mk{-webkit-mask-image:url(hero-mask-dissolve.svg);mask-image:url(hero-mask-dissolve.svg)}
-body.markedge-sharp .heromark .mk{-webkit-mask-image:url(logo.svg);mask-image:url(logo.svg)}
+body.marklines-2 .heromark .mk{width:min(62.4vw,909px);aspect-ratio:12651/3506}   /* two-line stack, a further 20% down from the shipped size */
+body.marklines-1 .heromark .mk{width:min(94vw,1720px);aspect-ratio:26148/1490}    /* one line — a wide, thin band of type */
+@keyframes markIn{from{opacity:0}to{opacity:1}}   /* opacity-only, so .mk keeps its own transform */
+/* mark edge treatments: ripple = SMIL displacement; dissolve = noise-eroded edges that break up and
+   reform (the shipped default); sharp = the raw lockup paths. Compounded with the lockup class so
+   neither pair can win on source order — JS overwrites --markfile inline once the paths are fetched. */
+body.marklines-2 .heromark .mk{--markfile:url(hero-mask.svg)}
+body.marklines-1 .heromark .mk{--markfile:url(mark-1line.svg)}
+body.marklines-2.markedge-dissolve .heromark .mk{--markfile:url(hero-mask-dissolve.svg)}
+body.marklines-1.markedge-dissolve .heromark .mk{--markfile:url(mark-1line-dissolve.svg)}
+body.marklines-2.markedge-sharp .heromark .mk{--markfile:url(mark-2line.svg)}
+body.marklines-1.markedge-sharp .heromark .mk{--markfile:url(mark-1line.svg)}
 body.heromark-stencil .heromark,body.heromark-invert .heromark,body.heromark-ghost .heromark{display:block}
-body.heromark-stencil .heromark .mk{-webkit-backdrop-filter:brightness(2.4) saturate(1.2) contrast(1.05);
-  backdrop-filter:brightness(2.4) saturate(1.2) contrast(1.05);
-  background:rgba(251,251,250,.09)}   /* luminance floor so the name stays present through dark passages */
+body.heromark-stencil .heromark .mk{-webkit-backdrop-filter:brightness(var(--mkbright)) saturate(1.2) contrast(1.05);
+  backdrop-filter:brightness(var(--mkbright)) saturate(1.2) contrast(1.05);
+  background:rgba(251,251,250,var(--mkfloor))}   /* luminance floor so the name stays present through dark passages */
 body.heromark-invert .heromark .mk{background:#fff;mix-blend-mode:difference}
 body.heromark-ghost .heromark .mk{background:#fff;opacity:.22}
 
 /* upcoming — label far left, content indented (asymmetric) */
 .up .lbl{grid-column:1/2}
 .up .body{grid-column:3/10}
-.gig{display:grid;grid-template-columns:7rem 1fr auto;gap:clamp(1rem,3vw,2.5rem);align-items:baseline;padding:1.5rem 0}
-.gig + .gig{border-top:1px solid var(--hair)}
-.gig .date{color:var(--ink-soft);font-size:.84rem}
-.gig .city{font-family:"Inter Tight",var(--sans);font-weight:600;font-size:clamp(1.4rem,2.6vw,2.4rem);line-height:1;letter-spacing:0;transition:opacity .3s}   /* speaks the display voice */
-.gig .venue{color:var(--ink-soft);font-size:.72rem;text-transform:uppercase;letter-spacing:.16em}
-.gig:hover .city{opacity:.5}
+
+/* tour visual — the season's key artwork, FULL-BLEED (the one image on the page that isn't contained;
+   it's a poster, not a photograph, so it gets the whole measure). No .wrap/.grid on the section, and
+   it butts straight onto the dark About panel below — hence no bottom padding.
+   That flush seam is also why this figure gets NO parallax and a fade-only reveal: any drift or the
+   usual scale(.9) entrance would open a sliver of paper between the poster and the panel. */
+.tourvis{padding-top:clamp(2.5rem,6vh,5rem);padding-bottom:0}
+.tourvis .fig .img{width:100%;aspect-ratio:1400/744}
+.tourvis .fig.reveal{transform:none;transition:opacity 1s ease}
 
 /* about — content column hangs off the left margin (off-grid) */
 .mission .q{grid-column:2/10}
@@ -159,11 +112,13 @@ body.heromark-ghost .heromark .mk{background:#fff;opacity:.22}
 /* projects — label far left, lead + list pushed RIGHT and hung into right gutter */
 .proj .lbl{grid-column:1/3;align-self:start;padding-top:.6rem}
 .proj .body{grid-column:4/13}
-.track{display:grid;grid-template-columns:3.2rem 1fr;gap:clamp(1rem,3vw,2.5rem);align-items:baseline;padding:1.5rem 0}
-.track + .track{border-top:1px solid var(--hair)}
-.track .no{font-family:var(--mono);font-size:.76rem;color:var(--ink-soft);padding-top:.5rem}
-.track .composer{font-weight:400;font-size:clamp(1.3rem,2.8vw,2.2rem);line-height:1.06;letter-spacing:-.01em}
-.track .piece{color:var(--ink-soft);margin-top:.3rem;font-size:.94rem}
+/* Projects is the one diagonal stack: the photo sits in a SEPARATE grid below the text and
+   parallaxes upward, so its full-width box drifts over the year link and swallowed the click
+   (the box's empty left half lands on top of it). The z-index has to go on the TEXT GRID, not
+   on .body — every [data-par] carries will-change:transform, so each grid is its own stacking
+   context and a z-index inside the first one can't outrank the second grid. Paints nothing
+   new: the overlap region carries no image pixels. */
+.proj .ptext{position:relative;z-index:2}
 
 /* who — two contained portraits, staggered baselines (off-grid) */
 .who .lead{grid-column:1/8}
@@ -181,17 +136,7 @@ body.heromark-ghost .heromark .mk{background:#fff;opacity:.22}
 .m3{grid-column:10/13;margin-top:2rem}.m3 .img{aspect-ratio:3/4}
 .m4{grid-column:2/8;margin-top:clamp(2rem,5vh,4rem)}.m4 .img{aspect-ratio:16/10}
 
-/* sublinks — stacked, underlined by default; hover softens */
-.sublinks{display:flex;flex-direction:column;align-items:flex-start;gap:.85rem;margin-top:clamp(1.6rem,3.4vh,2.6rem)}
-.sublinks a{white-space:nowrap;font-weight:400;font-size:clamp(1.15rem,1.5vw,1.35rem);letter-spacing:0;   /* no tracking: trailing letter-space would widen the underline past the word */
-  border-bottom:1px solid currentColor;transition:opacity .3s}
-.sublinks a:hover{opacity:.55}
-
-/* footer — title hangs left, narrow form */
-footer{padding-block:var(--pad) 3.5rem}
-.ftitle{font-family:"Inter Tight",var(--sans);font-weight:700;font-size:clamp(2.4rem,6vw,5rem);line-height:.98;letter-spacing:.005em;text-transform:uppercase;
-  filter:url(#edgeDissolve)}   /* echoes the hero's dissolving borders at the close of the page */
-.ftitle .l2{display:block;padding-left:clamp(2.2rem,6vw,5.5rem)}
+/* footer — narrow form beside the hanging title */
 .fwrap .t{grid-column:1/8}
 .fwrap .f{grid-column:1/7;margin-top:clamp(2.5rem,5vh,4rem)}
 .fwrap .meta{grid-column:9/13;align-self:end;color:var(--ink-soft);font-size:.84rem}
@@ -208,56 +153,10 @@ footer{padding-block:var(--pad) 3.5rem}
 .socials{display:flex;gap:1.3rem;text-transform:uppercase;letter-spacing:.16em;font-size:.7rem;margin-top:1.4rem}
 .fwrap .meta a:hover{color:var(--ink)}
 
-/* ECM reveal — fluid slide + fade on a decelerating curve; photos also scale in a touch.
-   Reveals RE-TRIGGER on every viewport entry (scroll up + down), so travel is generous. */
-.reveal{opacity:0;transform:translate3d(0,64px,0);transition:transform 1.2s cubic-bezier(.16,1,.3,1),opacity 1s ease}
-.reveal-x{opacity:0;transform:translate3d(76px,0,0);transition:transform 1.2s cubic-bezier(.16,1,.3,1),opacity 1s ease}
-.reveal-l{opacity:0;transform:translate3d(-76px,0,0);transition:transform 1.2s cubic-bezier(.16,1,.3,1),opacity 1s ease}
-.reveal.in,.reveal-x.in,.reveal-l.in{opacity:1;transform:none}
-/* photos: slide + zoom for a more dynamic entrance */
-.fig.reveal{transform:translate3d(0,72px,0) scale(.9)}
-.fig.reveal-l{transform:translate3d(-80px,0,0) scale(.9)}
-.fig.reveal-x{transform:translate3d(80px,0,0) scale(.9)}
-.fig.reveal.in,.fig.reveal-l.in,.fig.reveal-x.in{transform:none}
-/* small stagger so the links trail their title */
-.sublinks.reveal{transition-delay:.12s}
-.reveal-focus{opacity:0;transform:perspective(800px) translate3d(0,0,-180px) rotateX(18deg) scale(.95);
-  transition:transform .6s ease-in-out,opacity 1s linear}
-.reveal-focus.in{opacity:1;transform:none}
-
-/* scroll-linked parallax (Rellax analog) — JS drives translateY drift on tagged block containers */
-[data-par]{will-change:transform}
-
-/* draw-in (experimental, off by default) — headings wipe up from a line; clip only, no translate */
-body.draw-in .draw{transform:none!important;opacity:1;clip-path:inset(0 0 102% 0);
-  transition:clip-path .9s cubic-bezier(.19,1,.22,1)}
-body.draw-in .draw.in{clip-path:inset(0 0 -8% 0)}
-
-/* tweaks panel */
-.tweaks{position:fixed;right:1.1rem;bottom:1.1rem;z-index:200;font-family:var(--sans);
-  display:flex;flex-direction:column;align-items:flex-end;gap:.6rem}
-.tweaks .gear{order:0;flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--ink);background:var(--paper);
-  color:var(--ink);cursor:pointer;font-size:1.05rem;display:grid;place-items:center;box-shadow:0 6px 24px rgba(0,0,0,.12)}
-.tweaks .panel{order:1;width:286px;max-height:calc(100svh - 130px);overflow-y:auto;background:var(--paper);color:var(--ink);
-  border:1px solid var(--ink);padding:1.2rem 1.3rem;box-shadow:0 12px 48px rgba(0,0,0,.18);display:none}
-.tweaks.open .panel{display:block}
-.tweaks h4{font-size:.62rem;text-transform:uppercase;letter-spacing:.24em;color:var(--ink-soft);font-weight:600;margin-bottom:.2rem}
-.tweaks .ttl{font-weight:400;font-size:1.1rem;margin-bottom:1rem}
-.tw-group{margin-bottom:1.2rem}
-.tw-group > label{display:block;font-size:.6rem;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-soft);margin-bottom:.5rem}
-.seg{display:flex;border:1px solid var(--hair)}
-.seg button{flex:1;background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:.76rem;
-  padding:.5rem .4rem;color:var(--ink-soft);transition:background .2s,color .2s}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
-.tweaks .hint{font-size:.64rem;color:var(--ink-soft);line-height:1.5;margin-top:.4rem}
-.tweaks input[type=range]{width:100%;accent-color:var(--ink);margin:.2rem 0}
-body.clean .tweaks{display:none}
-
 @media(max-width:700px){
   .heromark{display:none!important}   /* letters become slivers at phone widths; the corner logo carries the brand */
 }
 @media(max-width:880px){
-  nav,.actions{display:none}
   .open{min-height:auto;display:block;padding:4.5rem var(--gut) 0}
   .open .fig{width:100%;margin:0 auto}
   .up .lbl,.up .body,.mission .q,
@@ -267,22 +166,13 @@ body.clean .tweaks{display:none}
   .who .p1,.who .p2,.m2,.m3,.m4{margin-top:2.5rem}
   .proj .body,.proj .fig,.who .q,.who .figwrap,.media .body,.media .figwrap,.fwrap .figwrap,.mission .figwrap,.mission .q{grid-column:1/-1!important}
   .proj .fig,.media .fig{margin-top:2rem!important}
-  .hang-l,.hang-r{margin-inline:0}
-  .gig{grid-template-columns:1fr auto}
-  .gig .date{grid-column:1/-1;margin-bottom:.3rem}
   .frow{grid-template-columns:1fr}
   .spread > *{grid-column:1/-1!important}
   .spread .txt{margin-top:2rem}
 }
-@media(prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *{animation:none!important;transition:none!important}
-  .reveal,.reveal-x,.reveal-l,.reveal-focus{opacity:1;transform:none}
-  body.draw-in .draw{clip-path:none!important}
-}
 </style>
 </head>
-<body class="panels-dark hero-full hero-video-on heromark-stencil markedge-dissolve">
+<body class="panels-dark hero-full hero-video-on heromark-stencil markedge-dissolve marklines-2">
 
 <!-- PROTOTYPE: nav on paper -->
 <header id="nav">
@@ -318,46 +208,50 @@ body.clean .tweaks{display:none}
   <div class="grid">
     <div class="body" data-par="0.14">
       <p class="eyebrow reveal" style="margin-bottom:1.1rem">Upcoming</p>
-      <h2 class="lead reveal draw hang-l">The Lovers Tour</h2>
+      <h2 class="lead reveal draw hang-l">Lovers Tour</h2>
+      <p class="season metanum soft reveal">Balkan Season 2026</p>
       <div class="reveal" style="margin-top:clamp(2.4rem,5vh,3.6rem)">
-        <a class="gig" href="#contact"><span class="date metanum">06 Sep 2026</span><span class="city">Belgrade</span><span class="venue">Kolarac Hall</span></a>
-        <a class="gig" href="#contact"><span class="date metanum">12 Sep 2026</span><span class="city">Vienna</span><span class="venue">Konzerthaus</span></a>
-        <a class="gig" href="#contact"><span class="date metanum">19 Sep 2026</span><span class="city">Rijeka</span><span class="venue">Exportdrvo</span></a>
-        <a class="gig" href="#contact"><span class="date metanum">26 Sep 2026</span><span class="city">Sarajevo</span><span class="venue">National Theatre</span></a>
-        <a class="gig" href="#contact"><span class="date metanum">03 Oct 2026</span><span class="city">Berlin</span><span class="venue">Radialsystem</span></a>
+        <!-- rows are static: there is no per-concert link by default (a ticket link gets added per gig in the backoffice) -->
+        <div class="gig"><span class="date metanum">06 Sep 2026</span><span class="city">Banja Luka</span><span class="venue">Banski Dvor</span></div>
+        <div class="gig"><span class="date metanum">08 Sep 2026</span><span class="city">Rijeka</span><span class="venue">Export Drvo</span></div>
+        <div class="gig"><span class="date metanum">10 Sep 2026</span><span class="city">Novi Sad</span><span class="venue">Synagogue</span></div>
+        <div class="gig"><span class="date metanum">06 Oct 2026</span><span class="city">Pristina</span><span class="venue">Palace of Youth and Sport</span></div>
       </div>
-      <div class="reveal" style="margin-top:clamp(2.6rem,5vh,3.8rem);display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,6vw,5rem)">
-        <div>
-          <p class="eyebrow" style="display:block;margin-bottom:1rem">Program</p>
-          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.55rem;line-height:1.4">
-            <li><strong>Gavin Bryars:</strong> Jesus' Blood Never Failed Me Yet</li>
-            <li><strong>Guillaume Lekeu:</strong> Adagio</li>
-            <li><strong>Sara Glojnaric:</strong> #popfem</li>
-            <li><strong>Gustav Mahler:</strong> Adagietto</li>
-            <li><strong>Julius Eastman:</strong> Gay Guerrilla</li>
-          </ul>
-        </div>
-        <div>
-          <p class="eyebrow" style="display:block;margin-bottom:1rem">Ensemble for Lovers Tour</p>
-          <p class="soft" style="max-width:26ch;line-height:1.5">String orchestra, piano and electric guitar (24 musicians)</p>
-        </div>
+      <div class="reveal" style="margin-top:clamp(2.6rem,5vh,3.8rem)">
+        <p class="eyebrow" style="display:block;margin-bottom:1rem">Program</p>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.55rem;line-height:1.4;max-width:44ch">
+          <li><strong>Julius Eastman:</strong> Gay Guerilla</li>
+          <li><strong>Claude Debussy:</strong> Clair de Lune</li>
+          <li><strong>Sara Glojnaric:</strong> #popfem</li>
+          <li><strong>Gustav Mahler:</strong> Adagietto</li>
+          <li><strong>Gavin Bryars:</strong> Jesus’ blood never failed me yet</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ABOUT — white; Dragstor photo bleeding to the left viewport edge, text right -->
+<!-- TOUR VISUAL — the season's key artwork, full-bleed, between the dates and About -->
+<section class="band tourvis" id="tour-visual">
+  <div class="figwrap">
+    <figure class="fig reveal">
+      <div class="img" style="background-image:url('../../fotografije/NBO-Lovers-Tour.jpg')"></div>
+    </figure>
+  </div>
+</section>
+
+<!-- ABOUT — dark panel; photo is whichever of the pair isn't in Who we are (tweak), text right -->
 <section class="band wrap mission field" id="about">
   <div class="grid" style="align-items:center">
     <div class="figwrap" data-par="0.14" style="grid-column:2/9">
       <figure class="fig reveal">
-        <div class="img" style="background-image:url('../../fotografije/Dragstor%20640x480.jpg');aspect-ratio:4/3"></div>
+        <div class="img aboutimg"></div>
       </figure>
     </div>
     <div class="q" data-par="0.07" style="grid-column:10/13">
       <h2 class="lead reveal draw">About</h2>
       <div class="sublinks reveal">
-        <a href="#about"><span>Manifesto</span></a>
+        <a href="manifesto.html"><span>Manifesto</span></a>
         <a href="#about"><span>Mission</span></a>
         <a href="#about"><span>NBO CV</span></a>
       </div>
@@ -368,11 +262,11 @@ body.clean .tweaks{display:none}
 <!-- PROJECTS — white; diagonal stack: headline top-left, wide cinematic photo below indented right -->
 <section class="band wrap proj" id="projects">
   <div>
-    <div class="grid" data-par="0.07">
+    <div class="grid ptext" data-par="0.07">
       <div class="body" style="grid-column:1/7">
         <h2 class="lead reveal draw">Projects</h2>
         <div class="sublinks reveal">
-          <a href="#projects"><span>All projects, 2018–2025</span></a>
+          <a href="projects.html"><span>2018–2025</span></a>
         </div>
       </div>
     </div>
@@ -384,19 +278,19 @@ body.clean .tweaks{display:none}
   </div>
 </section>
 
-<!-- WHO WE ARE — white; whole-ensemble photo left, title + links right -->
+<!-- WHO WE ARE — white; photo switchable between the lying-down shot and Dragstor (tweak), title + links right -->
 <section class="band wrap who" id="who">
   <div class="grid" style="align-items:end">
     <div class="figwrap" data-par="0.15" style="grid-column:1/9">
       <figure class="fig reveal-l">
-        <div class="img" style="background-image:url('../../fotografije/2%20NBO%202024%20NBO%20archive.jpg');aspect-ratio:4/3"></div>
+        <div class="img whoimg"></div>
       </figure>
     </div>
     <div class="q" data-par="0.07" style="grid-column:10/13;padding-bottom:.4rem">
       <h2 class="lead reveal draw">Who<span class="l2">we are</span></h2>
       <div class="sublinks reveal">
         <a href="#who"><span>Team</span></a>
-        <a href="#who"><span>Musicians</span></a>
+        <a href="musicians.html"><span>Musicians</span></a>
         <a href="#who"><span>Board</span></a>
         <a href="#who"><span>Partners</span></a>
       </div>
@@ -472,94 +366,44 @@ body.clean .tweaks{display:none}
     <h4>Tweaks</h4>
     <div class="ttl">Direction C · UNIVERS</div>
     <div class="tw-group">
-      <label>Mark position</label>
-      <div class="seg" id="markpos">
-        <button data-markpos="bottom" aria-pressed="true">Bottom</button>
-        <button data-markpos="center" aria-pressed="false">Center</button>
+      <label>Hero overlay</label>
+      <div class="seg" id="overlay">
+        <button data-overlay="full" aria-pressed="true">Full</button>
+        <button data-overlay="half" aria-pressed="false">Half</button>
+        <button data-overlay="none" aria-pressed="false">None</button>
       </div>
-      <p class="hint">The wordmark anchored 80px off the hero's foot, or centered in the viewport.</p>
+      <p class="hint">Darkening + blur over the hero footage. Half is 50% of the shipped amount; None leaves the video untreated.</p>
+    </div>
+    <div class="tw-group">
+      <label>Big letters</label>
+      <div class="seg" id="marklines">
+        <button data-marklines="2" aria-pressed="true">2 lines</button>
+        <button data-marklines="1" aria-pressed="false">1 line</button>
+      </div>
+      <p class="hint">The two-line stack (20% smaller than before), or the whole name on one wide line.</p>
+    </div>
+    <div class="tw-group">
+      <label>Who we are photo</label>
+      <div class="seg" id="whophoto">
+        <button data-whophoto="dragstor" aria-pressed="true">Dragstor</button>
+        <button data-whophoto="lying" aria-pressed="false">Lying down</button>
+      </div>
+      <p class="hint">The two photos trade places — About always takes the other one.</p>
     </div>
   </div>
 </div>
 
+<script src="c-base.js"></script>
 <script>
-// PROTOTYPE: sticky-header shadow, ECM scroll-reveal + scroll-linked parallax, active-nav, tweaks panel.
-const header=document.getElementById('nav');
-const sentinel=document.getElementById('top');
-new IntersectionObserver(([e])=>header.classList.toggle('solid',!e.isIntersecting),
-  {rootMargin:'-72px 0px 0px 0px'}).observe(sentinel);
-
-// PROTOTYPE: logo occupies ~20% of the screen width at the top and shrinks to its normal corner size on scroll
-const logo=header.querySelector('.logo');
-const logoImg=logo.querySelector('img');
-const LOGO_SMALL=150, LOGO_TH=360;
-const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-function sizeLogo(){
-  // full-screen hero mode: small fixed logo, no big→small transition (matches A/B)
-  if(reduce || document.body.classList.contains('hero-full')){ logoImg.style.width=LOGO_SMALL+'px'; return; }
-  const t=Math.min(Math.max(scrollY,0),LOGO_TH)/LOGO_TH;       // 0 at top → 1 past threshold
-  const left=logo.getBoundingClientRect().left;               // = page gutter
-  const big=Math.max(LOGO_SMALL, innerWidth*0.20 - left);     // ~20% of the screen width
-  logoImg.style.width=(big-(big-LOGO_SMALL)*t).toFixed(1)+'px';
-}
-if(!reduce){ addEventListener('scroll',sizeLogo,{passive:true}); addEventListener('resize',sizeLogo); sizeLogo(); }
-
-// re-triggers every time an element enters the viewport (both scroll directions), like the reference site
-const revObs=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('in',e.isIntersecting)),{threshold:.12});
-document.querySelectorAll('.reveal,.reveal-x,.reveal-l,.reveal-focus').forEach(el=>revObs.observe(el));
-
-const links=[...document.querySelectorAll('nav a, .actions a')].filter(a=>(a.getAttribute('href')||'').startsWith('#'));
-links.map(a=>({a,sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec)
-  .forEach(x=>new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));x.a.classList.add('active');}}),{rootMargin:'-50% 0px -50% 0px'}).observe(x.sec));
-// at the very bottom the short footer never crosses the viewport middle — force Contact active there
-addEventListener('scroll',()=>{
-  if(innerHeight+scrollY>=document.body.scrollHeight-4){
-    links.forEach(l=>l.classList.remove('active'));
-    const c=links.find(l=>l.getAttribute('href')==='#contact');
-    if(c) c.classList.add('active');
-  }
-},{passive:true});
-
-// PROTOTYPE: ECM-style scroll-linked parallax (Rellax analog) with SMOOTHING so content follows the scroll
-// with a slight delay and settles — the fluid lag the reference site has, not a 1:1 snap. Whole block
-// containers ([data-par], never .reveal elements) drift in translateY at per-block speeds, but the offset is
-// computed from a LERPED scroll value (parCurrent eases toward the real scrollY), so blocks trail then catch up.
-// Base offset is read with the transform cleared, so there's no feedback loop.
-let parOn=true;
-const parT=[...document.querySelectorAll('[data-par]')];
-function measurePar(){ parT.forEach(el=>{ el.style.transform=''; el.dataset.base=(el.getBoundingClientRect().top+scrollY).toFixed(1); }); }
-let parTarget=scrollY, parCurrent=scrollY, parRAF=null;
-function applyPar(){
-  const vc=parCurrent+innerHeight/2;
-  parT.forEach(el=>{ const c=parseFloat(el.dataset.base)+el.offsetHeight/2;
-    el.style.transform='translate3d(0,'+(-(c-vc)*parseFloat(el.dataset.par)).toFixed(2)+'px,0)'; });
-}
-function parLoop(){
-  parCurrent += (parTarget-parCurrent)*0.085;   // ease → blocks trail the scroll, then settle
-  applyPar();
-  if(Math.abs(parTarget-parCurrent)>0.3){ parRAF=requestAnimationFrame(parLoop); }
-  else { parCurrent=parTarget; applyPar(); parRAF=null; }   // final settle, exact
-}
-function onPar(){ parTarget=scrollY; if(parOn && !reduce && parRAF===null) parRAF=requestAnimationFrame(parLoop); }
-function syncPar(){ measurePar(); parTarget=parCurrent=scrollY; applyPar(); }
-if(!reduce){
-  syncPar();
-  addEventListener('scroll',onPar,{passive:true});
-  addEventListener('resize',syncPar);
-  addEventListener('load',syncPar);
-}
-function setParallax(on){
-  parOn=on;
-  if(!on){ if(parRAF){cancelAnimationFrame(parRAF);parRAF=null;} parT.forEach(el=>el.style.transform=''); }
-  else if(!reduce){ syncPar(); }
-}
-
-const tw=document.getElementById('tweaks');
-tw.querySelector('.gear').addEventListener('click',()=>tw.classList.toggle('open'));
-function wireSeg(id,fn){ const seg=document.getElementById(id); if(!seg) return;
-  seg.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
-    seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b===btn)); fn(btn); })); }
-wireSeg('markpos', btn=>document.body.classList.toggle('markpos-center', btn.dataset.markpos==='center'));
+// PROTOTYPE: homepage-only behaviour — hero video, the hero mark's two lockups + scroll-linked
+// dissolve, the overlay levels and the About/Who photo swap. The header, reveals, parallax engine
+// (syncPar), active-nav, tweaks gear, wireSeg and URL flags all come from c-base.js.
+wireSeg('overlay', btn=>{ document.body.classList.remove('overlay-half','overlay-none');
+  if(btn.dataset.overlay!=='full') document.body.classList.add('overlay-'+btn.dataset.overlay); });
+wireSeg('marklines', btn=>setMarkLines(btn.dataset.marklines));
+// swapping the pair changes both blocks' heights, so the parallax bases have to be re-measured
+wireSeg('whophoto', btn=>{ document.body.classList.toggle('photos-swapped', btn.dataset.whophoto==='lying');
+  if(!reduce) syncPar(); });
 
 // PROTOTYPE: hero background — self-hosted, muted, looping clip (a text-free 23s cut of NBO's own
 // "Embracing Vulnerability Tour" trailer) covering the viewport, photo fig as the fallback/poster.
@@ -572,17 +416,26 @@ function setHeroVideo(on){
   else { heroVid.pause(); }
 }
 
-// PROTOTYPE: dissolve-amount slider — regenerates the dissolve mask as a data-URI with the
-// noise-erosion strength (k3) mapped from the slider; logo paths fetched once from logo.svg.
-let logoPaths=null;
-fetch('logo.svg').then(r=>r.text()).then(t=>{
-  logoPaths=t.match(/<path[^>]*\/>/g).join('');
-  warmDissolveCache();   // pre-decode all levels so the scroll-linked dissolve swaps cleanly
-});
+// PROTOTYPE: dissolve generator — regenerates the active lockup's mask as a data-URI with the
+// noise-erosion strength (k3) mapped from the amount; the outlined paths are fetched once per lockup.
+// The two lockups differ in viewBox AND in how much filter margin a deep blur needs — the one-liner is
+// only 1490 units tall, so a percentage margin has to be far larger to hold a stdDeviation-200 blur —
+// so both travel with the geometry here instead of being hardcoded into the filter string.
+const MARKS={
+  '2':{file:'mark-2line.svg',vb:'0 0 12651 3506',fy:'-20%',fh:'140%'},
+  '1':{file:'mark-1line.svg',vb:'0 0 26148 1490',fy:'-60%',fh:'220%'}
+};
+let markLines='2';
+const markPaths={};
+function loadMark(n){
+  if(markPaths[n]) return Promise.resolve();
+  return fetch(MARKS[n].file).then(r=>r.text()).then(t=>{ markPaths[n]=t.match(/<path[^>]*\/>/g).join(''); });
+}
 function warmLevel(v){
-  if(!dissolveCache[v]) dissolveCache[v]=dissolveMaskURI(v/100);
+  const k=markLines+':'+v;
+  if(!dissolveCache[k]) dissolveCache[k]=dissolveMaskURI(v/100);
   const img=new Image();
-  img.src=dissolveCache[v].slice(5,-2);   // strip the url(" … ") wrapper → raw data URI
+  img.src=dissolveCache[k].slice(5,-2);   // strip the url(" … ") wrapper → raw data URI
   return img.decode ? img.decode().catch(()=>{}) : Promise.resolve();
 }
 function warmDissolveCache(){
@@ -591,27 +444,39 @@ function warmDissolveCache(){
   return Promise.all([...vs].map(warmLevel));
 }
 function dissolveMaskURI(a){   // a in [0,1] — drives blur depth, core solidity and noise bite together; 0.13 = shipped default
+  const m=MARKS[markLines];
   const std=(20+180*a).toFixed(0);          // how deep the soft zone reaches into the letter
   const k2=(2.4-0.9*a).toFixed(3);          // core solidity (lower = noise chews into the body)
   const k3=(-(0.4+1.2*a)).toFixed(3);       // noise bite
-  const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12651 3506" fill="#000"><defs>'
-    +'<filter id="d" x="-10%" y="-20%" width="120%" height="140%">'
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+m.vb+'" fill="#000"><defs>'
+    +'<filter id="d" x="-10%" y="'+m.fy+'" width="120%" height="'+m.fh+'">'
     +'<feGaussianBlur in="SourceAlpha" stdDeviation="'+std+'" result="soft"/>'
     +'<feTurbulence type="fractalNoise" baseFrequency="0.0026" numOctaves="3" seed="11" result="n">'
     +'<animate attributeName="baseFrequency" values="0.0022;0.0033;0.0022" dur="16s" repeatCount="indefinite"/>'
     +'</feTurbulence>'
     +'<feComposite in="soft" in2="n" operator="arithmetic" k1="0" k2="'+k2+'" k3="'+k3+'" k4="-0.12"/>'
-    +'</filter></defs><g filter="url(#d)">'+logoPaths+'</g></svg>';
+    +'</filter></defs><g filter="url(#d)">'+markPaths[markLines]+'</g></svg>';
   return 'url("data:image/svg+xml;utf8,'+encodeURIComponent(svg)+'")';
 }
 const dissolveCache={};
-function setDissolve(v){   // v integer 0..100; data-URIs memoized so scroll scrubbing stays cheap
-  if(!logoPaths) return;
-  if(!dissolveCache[v]) dissolveCache[v]=dissolveMaskURI(v/100);
+function setDissolve(v){   // v integer 0..100; data-URIs memoized per lockup so scroll scrubbing stays cheap
+  if(!markPaths[markLines]) return;
+  const k=markLines+':'+v;
+  if(!dissolveCache[k]) dissolveCache[k]=dissolveMaskURI(v/100);
   const mk=document.querySelector('.heromark .mk');
-  mk.style.webkitMaskImage=dissolveCache[v]; mk.style.maskImage=dissolveCache[v];
+  mk.style.webkitMaskImage=dissolveCache[k]; mk.style.maskImage=dissolveCache[k];
+}
+// swap lockups: drop back to the baked CSS mask, then re-apply the dissolve at the current scroll depth
+function setMarkLines(n){
+  markLines=n;
+  document.body.classList.toggle('marklines-1',n==='1');
+  document.body.classList.toggle('marklines-2',n==='2');
+  const mk=document.querySelector('.heromark .mk');
+  mk.style.webkitMaskImage=''; mk.style.maskImage='';
+  loadMark(n).then(()=>{ warmDissolveCache(); scrollDissolve(); });
 }
 let dissolveBase=13;
+loadMark(markLines).then(warmDissolveCache);   // pre-decode all levels so the scroll-linked dissolve swaps cleanly
 // SCROLL-LINKED DISSOLVE — the name disintegrates from the base amount toward 100 as the hero
 // scrolls out: the border dissolves as you cross it. Quantized to steps of 3 to bound the cache.
 function scrollDissolve(){
@@ -621,18 +486,8 @@ function scrollDissolve(){
   setDissolve(v);
 }
 addEventListener('scroll',()=>requestAnimationFrame(scrollDissolve),{passive:true});
-const heroVideoDefault = !reduce && !location.search.includes('photohero');
-if(!heroVideoDefault){
-  document.querySelectorAll('#herobg button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.herobg==='photo'));
-}
-setHeroVideo(heroVideoDefault);
-
-if(location.search.includes('clean')) document.body.classList.add('clean');
-if(location.search.includes('drawin')) document.body.classList.add('draw-in');
-if(location.search.includes('openpanel')) document.getElementById('tweaks').classList.add('open');
-// PROTOTYPE: ?seek=<px> pulls content up so headless top-anchored shots can reach lower sections
-const seek=new URLSearchParams(location.search).get('seek');
-if(seek){ document.body.style.marginTop='-'+parseInt(seek,10)+'px'; if(!reduce){syncPar();} }
+// ?photohero forces the still (clean screenshots); reduced-motion never autoplays
+setHeroVideo(!reduce && !location.search.includes('photohero'));
 </script>
 </body>
 </html>

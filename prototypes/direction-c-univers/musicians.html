@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Musicians — No Borders Orchestra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="c-base.css">
+<link rel="stylesheet" href="sub.css">
+<style>
+/* Musicians-only composition. ONE dataset, TWO orderings, and the tag inverts: by section
+   the tag is the city, by city the tag is the instrument. Same primitive, tag swaps role —
+   so 161 names are authored once and can never drift between the views. */
+.mu .lbl{grid-column:1/4}
+.mu .b{grid-column:4/13}
+/* the city view's monument is display type at up to ~4.7rem, so it needs a wider rail than
+   the section view's tracked-caps label — LJUBLJANA at that size is ~385px */
+.mu.city .n{grid-column:1/5}
+.mu.city .b{grid-column:5/13}
+.mu .lbl .ct{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.22em;
+  font-weight:600;margin-top:.5rem;line-height:1.3}
+.mu .lbl .no{font-family:var(--mono);font-size:.76rem;color:var(--ink-soft)}
+/* the chapter rule SEPARATES sections, so the first one has nothing to separate — there it reads
+   as a stray divider hung under the view switch. Set on #views' first child so it survives a
+   re-render when the ordering changes. */
+#views .chap:first-child{border-top:none}
+/* BY SECTION: one player per line. The chorus run (several names to a line) reads as prose and
+   makes a section hard to scan; as blocks each name owns its line, and the wide sections still
+   split into two columns so a 38-player section doesn't run the page's whole length.
+   Scoped away from .city, whose view keeps the chorus. */
+.mu:not(.city) .roster .e{display:block;margin-right:0}
+#roster{display:none}
+/* page-level column rules load after sub.css, so they beat its media block — the mobile
+   collapse has to be restated here or the rails survive onto a phone */
+@media(max-width:880px){
+  .mu .lbl,.mu .b,.mu.city .n,.mu.city .b{grid-column:1/-1}
+}
+</style>
+</head>
+<body class="sub panels-dark">
+
+<header id="nav">
+  <a href="index.html" class="logo" aria-label="No Borders Orchestra"><img src="logo.svg" alt="No Borders Orchestra"></a>
+  <nav>
+    <a href="index.html#about">About</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="index.html#who" class="active">Who we are</a>
+    <a href="index.html#media">Media</a>
+  </nav>
+  <div class="actions">
+    <a href="index.html#contact">Contact</a>
+    <a href="index.html#contact" class="donate">Donate</a>
+  </div>
+</header>
+
+<section class="phead wrap" id="top">
+  <div class="grid">
+    <div class="body" data-par="0.07">
+      <h1 class="lead reveal draw hang-l">Musicians</h1>
+      <div class="seg caps reveal" id="order">
+        <button data-order="sec" aria-pressed="true">By section</button>
+        <button data-order="city" aria-pressed="false">By city</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="views"></section>
+
+<!-- source data — authored ONCE. Home city is the first parenthetical in the source; a second,
+     slash-separated city is the player's current base and renders in the metadata voice. -->
+<ul id="roster">
+<li data-sec="1st Violin" data-city="Belgrade" data-now="Munich">Stanko Madić</li>
+  <li data-sec="1st Violin" data-city="Skopje">Vladimir Kostov</li>
+  <li data-sec="1st Violin" data-city="Maribor">Oksana Pečeny</li>
+  <li data-sec="1st Violin" data-city="Skopje" data-now="Auckland">Marko Pop-Ristov</li>
+  <li data-sec="1st Violin" data-city="Belgrade" data-now="Graz">Uros Adamovic</li>
+  <li data-sec="1st Violin" data-city="Zagreb">Lana Adamović</li>
+  <li data-sec="1st Violin" data-city="Ljubljana">Nejc Avbelj</li>
+  <li data-sec="1st Violin" data-city="Trieste" data-now="Zagreb">Davide Albanese</li>
+  <li data-sec="1st Violin" data-city="Belgrade">Vojin Aleksić</li>
+  <li data-sec="1st Violin" data-city="Pristina">Rron Bakalli</li>
+  <li data-sec="1st Violin" data-city="Maribor">Tamara Bakardžieva</li>
+  <li data-sec="1st Violin" data-city="Belgrade">Sladjana Cvejić</li>
+  <li data-sec="1st Violin" data-city="Gjakove">Pleurat Doli</li>
+  <li data-sec="1st Violin" data-city="Belgrade" data-now="Bonn">Mladen Drenić</li>
+  <li data-sec="1st Violin" data-city="Ljubljana">Žiga Faganel</li>
+  <li data-sec="1st Violin" data-city="Pristina">Festim Fanaj</li>
+  <li data-sec="1st Violin" data-city="Skopje" data-now="Ljubljana">Simeon Goshev</li>
+  <li data-sec="1st Violin" data-city="Ljubljana">Dejan Gregoric</li>
+  <li data-sec="1st Violin" data-city="Zagreb">Alina Gubajdulina</li>
+  <li data-sec="1st Violin" data-city="Pristina">Mrika Hoxha</li>
+  <li data-sec="1st Violin" data-city="Zagreb">Helena Ivezić</li>
+  <li data-sec="1st Violin" data-city="Belgrade">Bojana Jovanović</li>
+  <li data-sec="1st Violin" data-city="Skopje">Mihailo Kufojanakis</li>
+  <li data-sec="1st Violin" data-city="Zagreb">Katarina Kutnar</li>
+  <li data-sec="1st Violin" data-city="Pristina">Visar Kuqi</li>
+  <li data-sec="1st Violin" data-city="Zagreb">Marin Maras</li>
+  <li data-sec="1st Violin" data-city="Belgrade">Ivan Nesic</li>
+  <li data-sec="1st Violin" data-city="Belgrade" data-now="Vienna">Damir Oraščanin</li>
+  <li data-sec="1st Violin" data-city="Belgrade">Katarina Petković</li>
+  <li data-sec="1st Violin" data-city="Ljubljana">Matjaz Porovne</li>
+  <li data-sec="1st Violin" data-city="Ljubljana" data-now="Vienna">Alma Portic</li>
+  <li data-sec="1st Violin" data-city="Pristina">Arta Prekadini</li>
+  <li data-sec="1st Violin" data-city="Belgrade" data-now="Nuremberg">Maša Rajković</li>
+  <li data-sec="1st Violin" data-city="Zagreb" data-now="Split">Mislav Salopek</li>
+  <li data-sec="1st Violin" data-city="Belgrade">Ervin Luka Sešek</li>
+  <li data-sec="1st Violin" data-city="Ljubljana">Tim Skalar Demsar</li>
+  <li data-sec="1st Violin" data-city="Sarajevo" data-now="Brussels">Mersiha Teskeredžić</li>
+  <li data-sec="1st Violin" data-city="Belgrade" data-now="Cologne">Miljana Vujović</li>
+  <li data-sec="2nd Violin" data-city="Belgrade">Mirjana Nešković</li>
+  <li data-sec="2nd Violin" data-city="Belgrade">Jelena Dimitrijevic</li>
+  <li data-sec="2nd Violin" data-city="Skopje" data-now="Klagenfurt">Frosina Bogdanoska</li>
+  <li data-sec="2nd Violin" data-city="Belgrade">Aleksandra Milanović</li>
+  <li data-sec="2nd Violin" data-city="Ljubljana">Mojca Menoni Sikur</li>
+  <li data-sec="2nd Violin" data-city="Belgrade" data-now="Bamberg">Miloš Petrović</li>
+  <li data-sec="2nd Violin" data-city="Podgorica">Katarina Pavlović</li>
+  <li data-sec="2nd Violin" data-city="Novi Sad">Milana Bjelobaba</li>
+  <li data-sec="2nd Violin" data-city="Ljubljana">Mario Dimitrov</li>
+  <li data-sec="2nd Violin" data-city="Skopje">Martin Dimitrov</li>
+  <li data-sec="2nd Violin" data-city="Belgrade">Marija Drenić</li>
+  <li data-sec="2nd Violin" data-city="Pristina">Ferdi Fanaj</li>
+  <li data-sec="2nd Violin" data-city="Novi Sad">Bojan Glušica</li>
+  <li data-sec="2nd Violin" data-city="Ljubljana" data-now="Klagenfurt">Alma Gunzek</li>
+  <li data-sec="2nd Violin" data-city="Split">Petra Hrnjak-Skroza</li>
+  <li data-sec="2nd Violin" data-city="Vienna">Natalija Isaković</li>
+  <li data-sec="2nd Violin" data-city="Skopje">Daniel Lazarovski</li>
+  <li data-sec="2nd Violin" data-city="Ljubljana">Domen Lorenz</li>
+  <li data-sec="2nd Violin" data-city="Sarajevo" data-now="Vienna">Andrea Nikolic</li>
+  <li data-sec="2nd Violin" data-city="Novi Sad">Sonja Novčić</li>
+  <li data-sec="2nd Violin" data-city="Belgrade">Stefan Petrovic</li>
+  <li data-sec="2nd Violin" data-city="Zagreb">Barbara Polšek</li>
+  <li data-sec="2nd Violin" data-city="Belgrade">Miljana Popović</li>
+  <li data-sec="2nd Violin" data-city="Ljubljana">Aleksander Rogina</li>
+  <li data-sec="2nd Violin" data-city="Ljubljana">Marija Šimec</li>
+  <li data-sec="2nd Violin" data-city="Belgrade">Ljubomir Trujanović</li>
+  <li data-sec="2nd Violin" data-city="Banja Luka" data-now="Podgorica">Sonja Vojvodić</li>
+  <li data-sec="Viola" data-city="Belgrade">Saša Mirković</li>
+  <li data-sec="Viola" data-city="Novi Sad">Jožef Bisak</li>
+  <li data-sec="Viola" data-city="Zagreb">Aleksandar Jakopanec</li>
+  <li data-sec="Viola" data-city="Skopje" data-now="Munich">Driton Gaxha</li>
+  <li data-sec="Viola" data-city="Mitrovica">Arben Ademi</li>
+  <li data-sec="Viola" data-city="Skopje">Aleksandar Stojceski</li>
+  <li data-sec="Viola" data-city="Belgrade" data-now="Berlin">Jelena Antic</li>
+  <li data-sec="Viola" data-city="Pristina">Njomze Bislimi</li>
+  <li data-sec="Viola" data-city="Belgrade" data-now="Linz">Bogdan Dobric</li>
+  <li data-sec="Viola" data-city="Ljubljana">Ana Glišić</li>
+  <li data-sec="Viola" data-city="Pristina">Genta Hoxha</li>
+  <li data-sec="Viola" data-city="Skopje" data-now="Berlin">Aleksandar Jordanovski</li>
+  <li data-sec="Viola" data-city="Maribor">Eva Koprivsek</li>
+  <li data-sec="Viola" data-city="Zagreb">Ganna Lysenko</li>
+  <li data-sec="Viola" data-city="Banja Luka" data-now="Mannheim">Petar Obradovic</li>
+  <li data-sec="Viola" data-city="Ljubljana">Gea Pantner</li>
+  <li data-sec="Viola" data-city="Belgrade">Nataša Petrović</li>
+  <li data-sec="Viola" data-city="Belgrade">Vladimir Popović</li>
+  <li data-sec="Viola" data-city="Belgrade" data-now="Lisbon">Milan Radočaj</li>
+  <li data-sec="Viola" data-city="Pristina">Arianit Shehu</li>
+  <li data-sec="Viola" data-city="Belgrade">Aleksandra Stanić</li>
+  <li data-sec="Cello" data-city="Belgrade">Dejan Božić</li>
+  <li data-sec="Cello" data-city="Belgrade" data-now="Bamberg">Nikola Jovanović</li>
+  <li data-sec="Cello" data-city="Sarajevo">Isak Haračić</li>
+  <li data-sec="Cello" data-city="Munich">Emil Bekir</li>
+  <li data-sec="Cello" data-city="Ljubljana">Marusa Bogataj</li>
+  <li data-sec="Cello" data-city="Ljubljana">Bernardo Brizani</li>
+  <li data-sec="Cello" data-city="Maribor">Jernej Feguš</li>
+  <li data-sec="Cello" data-city="Zagreb">Janko Frankovic</li>
+  <li data-sec="Cello" data-city="Belgrade">Stefan Gavrilovic</li>
+  <li data-sec="Cello" data-city="Ljubljana">Tamara Gombac</li>
+  <li data-sec="Cello" data-city="Zagreb">Tonka Javorovic</li>
+  <li data-sec="Cello" data-city="Zagreb">Bas Jongen</li>
+  <li data-sec="Cello" data-city="Celje">Marko Kragelnik</li>
+  <li data-sec="Cello" data-city="Celje">Aleksandar Kuzmanovski</li>
+  <li data-sec="Cello" data-city="Ljubljana">Alja Mandic</li>
+  <li data-sec="Cello" data-city="Novi Sad">Marko Miletic</li>
+  <li data-sec="Cello" data-city="Belgrade">Danijela Milutinović</li>
+  <li data-sec="Cello" data-city="Belgrade">Milan Ninković</li>
+  <li data-sec="Cello" data-city="Skopje">Božidar Pejić</li>
+  <li data-sec="Cello" data-city="Belgrade" data-now="Dresden">Anja Radjenovic</li>
+  <li data-sec="Cello" data-city="Zagreb">Vinko Rucner</li>
+  <li data-sec="Cello" data-city="Podgorica" data-now="Rotterdam">Sari Sachiri</li>
+  <li data-sec="Cello" data-city="Belgrade">Pavle Savić</li>
+  <li data-sec="Cello" data-city="Ljubljana">Martin Sikur</li>
+  <li data-sec="Cello" data-city="Belgrade">Srdjan Sretenovic</li>
+  <li data-sec="Cello" data-city="Ljubljana" data-now="Graz">Jakov Voltolini</li>
+  <li data-sec="Double Bass" data-city="Skopje" data-now="Zagreb">Ilin Dime Dimovski</li>
+  <li data-sec="Double Bass" data-city="Belgrade">Goran Kostić</li>
+  <li data-sec="Double Bass" data-city="Skopje" data-now="Rijeka">Petruš Petruševski</li>
+  <li data-sec="Double Bass" data-city="Podgorica">Vasilije Gagovic</li>
+  <li data-sec="Double Bass" data-city="Novi Sad">Ivica Marusevic</li>
+  <li data-sec="Double Bass" data-city="Skopje">Dejan Mitrovik</li>
+  <li data-sec="Double Bass" data-city="Split" data-now="Luzern">Lucija Mrkonjic</li>
+  <li data-sec="Double Bass" data-city="Skopje">Aleksandar Pop Hristov</li>
+  <li data-sec="Double Bass" data-city="Zagreb">Borna Dejanovic</li>
+  <li data-sec="Double Bass" data-city="Belgrade">Uroš Jovanović</li>
+  <li data-sec="Double Bass" data-city="Belgrade">Boban Stošić</li>
+  <li data-sec="Double Bass" data-city="Podgorica">Zoran Zakrajšek</li>
+  <li data-sec="Flute" data-city="Ljubljana" data-now="Cardiff">Jasna Nadles</li>
+  <li data-sec="Flute" data-city="Zagreb">Ivana Grašić</li>
+  <li data-sec="Oboe" data-city="Ljubljana">Jonathan Mauch</li>
+  <li data-sec="Oboe" data-city="Skopje">Marina Arsova</li>
+  <li data-sec="Oboe" data-city="Belgrade">Sanja Romić</li>
+  <li data-sec="Clarinet" data-city="Novi Sad">Aleksandar Tasić</li>
+  <li data-sec="Clarinet" data-city="Belgrade">Nenad Nešić</li>
+  <li data-sec="Clarinet" data-city="Novi Sad">Saša Milosavljević</li>
+  <li data-sec="Clarinet" data-city="Niš">Miloš Mijatović</li>
+  <li data-sec="Bassoon" data-city="Ljubljana">Aleksandar Ranisavljev</li>
+  <li data-sec="Bassoon" data-city="Ljubljana">Milan Nikolić</li>
+  <li data-sec="Bassoon" data-city="Munich">Tadija Minčić</li>
+  <li data-sec="Bassoon" data-city="Belgrade">Ivan Jotić</li>
+  <li data-sec="Bassoon" data-city="Belgrade" data-now="Münster">Miloš Dopsaj</li>
+  <li data-sec="Horn" data-city="Belgrade">Milan Roksandić</li>
+  <li data-sec="Horn" data-city="Skopje">Džijan Emin</li>
+  <li data-sec="Horn" data-city="Zagreb">Viktor Kirčenkov</li>
+  <li data-sec="Horn" data-city="Belgrade">Dejan Popin</li>
+  <li data-sec="Trumpet" data-city="Belgrade">Mladen Đorđević</li>
+  <li data-sec="Trumpet" data-city="Ljubljana">Jure Gradišnik</li>
+  <li data-sec="Trumpet" data-city="Ljubljana">Jure Močilnik</li>
+  <li data-sec="Trumpet" data-city="Novi Sad">Nenad Marković</li>
+  <li data-sec="Trumpet" data-city="Podgorica">Aleksandar Arsić</li>
+  <li data-sec="Trombone" data-city="Ljubljana">Urban Turjak</li>
+  <li data-sec="Trombone" data-city="Skopje" data-now="Brussels">Viktor Ilieski</li>
+  <li data-sec="Trombone" data-city="Zagreb">Ivan Bošnjak</li>
+  <li data-sec="Trombone" data-city="Novi Sad">Nikola Milanov</li>
+  <li data-sec="Timpani" data-city="Belgrade">Boris Bunjac</li>
+  <li data-sec="Percussion" data-city="Zagreb" data-now="Brussels">Kaja Farszky</li>
+  <li data-sec="Percussion" data-city="Pristina">Patris Beriša</li>
+  <li data-sec="Percussion" data-city="Celje" data-now="Frankfurt">Spela Mastnak</li>
+  <li data-sec="Percussion" data-city="Belgrade">Srdjan Palačković</li>
+  <li data-sec="Percussion" data-city="Cape Town">Cherilee Adams</li>
+  <li data-sec="Percussion" data-city="Cape Town">Dylan Tabisher</li>
+  <li data-sec="Harp" data-city="Split" data-now="Zagreb">Nina Separovic</li>
+  <li data-sec="Harp" data-city="Belgrade">Milana Zarić</li>
+  <li data-sec="Piano" data-city="Belgrade">Natalija Mladenović</li>
+</ul>
+
+<section class="band tight wrap pnav">
+  <div class="grid">
+    <p class="lbl eyebrow">Who we are</p>
+    <div class="body">
+      <div class="sublinks">
+        <a href="index.html#who"><span>Team</span></a>
+        <a href="index.html#who"><span>Board</span></a>
+        <a href="index.html#who"><span>Partners</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap sitefoot">
+  <div class="grid sf-row">
+    <div class="socials reveal"><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">YouTube</a></div>
+    <p class="copy reveal">© 2026 NBO</p>
+  </div>
+</footer>
+
+<script src="c-base.js"></script>
+<script>
+// Read the roster once, then group it two ways. The tag inverts between views: by section the
+// tag is the player's city, by city it is their instrument.
+const SRC=[...document.querySelectorAll('#roster li')].map(li=>({
+  name:li.textContent.trim(), sec:li.dataset.sec, city:li.dataset.city, now:li.dataset.now||''
+}));
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+// city monuments are sized by how many players come from there — a typographic census, not a chart
+function weight(n){ return n>=40?6 : n>=25?5 : n>=15?4 : n>=8?3 : n>=3?2 : 1; }
+function chorus(list,tagKey){
+  return list.map(m=>'<span class="e">'+esc(m.name)
+    +'<span class="ct">'+esc(m[tagKey])+'</span>'
+    +(m.now?'<span class="now">'+esc(m.now)+'</span>':'')+'</span>')
+    // real whitespace between entries — margin alone gives the line-breaker nothing to break on
+    .join(' ');
+}
+function render(mode){
+  const g=new Map();
+  SRC.forEach(m=>{ const k=mode==='sec'?m.sec:m.city; if(!g.has(k)) g.set(k,[]); g.get(k).push(m); });
+  let rows=[...g.entries()];
+  // source order for sections (it is the score order); by count for cities, so the page
+  // reads as a diminuendo from the biggest city down to the single players
+  if(mode==='city') rows.sort((a,b)=> b[1].length-a[1].length || a[0].localeCompare(b[0]));
+  const html=rows.map(([key,list],i)=>{
+    if(mode==='sec'){
+      // two-column runs for the big sections; the small ones stay one column. The count
+      // variance IS the rhythm — 38 first violins, then a single timpanist under a full-ink
+      // rule with most of the page empty beside it. The winds are the rests.
+      const wide=list.length>8;
+      return '<section class="chap mu"><div class="grid">'
+        +'<div class="lbl"><span class="no">'+String(i+1).padStart(2,'0')+'</span>'
+        +'<span class="ct">'+esc(key)+'</span></div>'
+        +'<div class="b roster'+(wide?' cols':'')+'">'+chorus(list,'city')+'</div>'
+        +'</div></section>';
+    }
+    return '<section class="chap mu city"><div class="grid">'
+      +'<div class="n name" style="--w:'+weight(list.length)+'"><span>'+esc(key)+'</span></div>'
+      +'<div class="b roster">'+chorus(list,'sec')+'</div>'
+      +'</div></section>';
+  }).join('');
+  document.getElementById('views').innerHTML=html;
+  // new nodes are not observed by the reveal observer and carry no .reveal — they are
+  // readable immediately, which is what a roster wants. Heights changed, so re-measure.
+  if(typeof syncPar==='function' && !reduce) syncPar();
+}
+render('sec');
+wireSeg('order', btn=>render(btn.dataset.order));
+</script>
+</body>
+</html>

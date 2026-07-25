@@ -1,0 +1,238 @@
+/* ============================================================================
+   Direction C · UNIVERS — sub-page shell + typographic primitives
+   Loaded after c-base.css on every text page.
+
+   The whole system is the Lovers Tour section's grammar, generalised. That block
+   is three vertical stops and two rule strengths:
+
+     hang    −.5 × --gut   the display headline (.hang-l)
+     edge    the content column   labels, rows, lists
+     indent  +--ind        the mono line under the headline
+
+   and one sequence: label → monument → mono fact → hairline rows → label → list.
+   Small→huge→small→medium→small. "Playful" is produced by SKIPPING steps of that
+   ladder and by moving type between the three stops — never by ornament. There is
+   no colour accent, no box, no quote glyph, no bullet, no arrow anywhere below.
+
+   Weight semantics, one job each (all already in the page's font request):
+     Inter Tight 800  place      city monuments, nowhere else
+     Inter Tight 700  title      page + chapter titles, pull-quotes
+     Inter Tight 600  value      row values, work titles
+     --sans      300  voice      ledes, statements, dialogue, stairs
+     --sans      400  prose      body
+     --sans      600  label      .eyebrow (tracked caps)
+     mono        400  fact       years, dates, counts, provenance
+     mono        500  marked     the acrostic capitals, nowhere else
+
+   Rule strengths, only two: --hair between rows · --ink above a chapter.
+   ============================================================================ */
+
+/* ── SHELL ────────────────────────────────────────────────────────────────── */
+
+/* page header — the Lovers Tour opening with h1 in place of h2. No eyebrow above the
+   title on any sub-page, so it opens higher than the homepage gives #upcoming. */
+.phead{padding-block:clamp(2.6rem,6vh,5rem) clamp(2.5rem,6vh,4.5rem)}
+.phead .body{grid-column:3/10}
+/* the mono line under a display title. .season is the homepage's instance; both
+   sit in the headline's indent and carry METADATA, never prose. */
+.subline{margin-top:.9rem;font-size:.84rem;letter-spacing:.12em;text-transform:uppercase;padding-left:var(--ind)}
+/* on-page view switch — left column, indented to the same stop as the subline.
+   NOT the right margin: a right-hand off-grid label was ruled "completely lost". */
+.phead .seg{margin-top:clamp(1.8rem,4vh,2.8rem);margin-left:var(--ind);max-width:19rem}
+.seg.caps button{text-transform:uppercase;letter-spacing:.14em;font-size:.62rem;padding:.6rem .5rem}
+
+/* sibling-page nav at the foot */
+.pnav .lbl{grid-column:1/3}
+.pnav .body{grid-column:3/10}
+
+/* text-page band rhythm — the homepage cadence is far too tall for reading pages */
+.band.tight{padding-block:var(--pad-s)}
+
+/* ── PRIMITIVES ───────────────────────────────────────────────────────────── */
+
+/* reading prose. Pair with .measure (52ch) — the liner-notes column. */
+.read{font-size:var(--read);line-height:1.78}
+.read p + p{margin-top:1.15em}
+
+/* display lede — a first sentence spoken in the Light voice.
+   Deliberately NOT Inter Tight: that face is only loaded 600/700/800. */
+.dlede{font-weight:300;font-size:clamp(1.55rem,3.1vw,2.7rem);line-height:1.14;letter-spacing:-.014em;
+  max-width:30ch;text-wrap:balance}
+
+/* pull / aphorism — one notch under .lead. No rule, no quote mark: the whitespace
+   and the gutter hang do the work; a box would read as a callout. */
+.pull{font-family:"Inter Tight",var(--sans);font-weight:700;text-transform:uppercase;
+  font-size:clamp(1.8rem,4vw,3.4rem);line-height:1.02;letter-spacing:.005em;
+  max-width:20ch;padding-block:clamp(2.6rem,6vh,4.5rem)}
+/* the site's identity motif — borders that dissolve. ONE per page, and only at this
+   scale: the filter's blur destroys small text. */
+.pull.dissolve{filter:url(#edgeDissolve)}
+
+/* row modifiers (the base rule lives in c-base.css beside .gig).
+   .row is sub-page-only, so anything set here leaves the homepage's .gig — which shares the base
+   rule — at its approved size. Projects sizes its own concert and programme rows in its style
+   block; note that if you ever give a .row a second grid ROW, the base `gap` is both axes and
+   will open a 2.5rem gutter inside the row. */
+.row.light .v{font-family:var(--sans);font-weight:300;font-size:clamp(1.25rem,2.4vw,2.1rem);
+  line-height:1.16;letter-spacing:-.012em;text-transform:none}
+.row.tight{padding:1.1rem 0}
+body.panels-dark .field .row + .row{border-top-color:rgba(251,251,250,.16)}
+body.panels-dark .field .row .k,body.panels-dark .field .row .t{color:rgba(251,251,250,.62)}
+
+/* roster — a running chorus, never a column of <li>. The city is promoted from a
+   parenthetical to tracked caps, so the places become the block's visible pulse. */
+.roster{font-size:.98rem;line-height:1.9;text-wrap:pretty}
+.roster.cols{columns:2;column-gap:clamp(1.6rem,4vw,3.4rem)}
+.roster .ct{font-size:.66rem;text-transform:uppercase;letter-spacing:.2em;color:var(--ink-soft);white-space:nowrap;margin-left:.45em}
+.roster .now{font-family:var(--mono);font-size:.66rem;color:var(--ink-soft);white-space:nowrap;margin-left:.3em}
+/* a name never breaks away from its place, and the tracked-caps place IS the delimiter —
+   no dots needed between entries, and no justification: justify stretches the space inside
+   a person's name, which looks broken. */
+.roster .e{white-space:nowrap;margin-right:1.15em}
+body.panels-dark .field .roster .ct,body.panels-dark .field .roster .now{color:rgba(251,251,250,.62)}
+
+/* chapter — a monument in the label column under a full-ink rule. That rule is the
+   only structural device on a page carrying six or nineteen chapters. */
+.chap{border-top:1px solid var(--ink);padding-top:1.2rem;margin-top:var(--pad-s)}
+.chap .n{grid-column:1/3;align-self:stretch}
+.chap .n > span{position:sticky;top:6.4rem;display:block}   /* parks under the 5.2rem header + air */
+.chap .n.num > span{font-family:var(--mono);font-weight:400;font-variant-numeric:tabular-nums;
+  font-size:clamp(2.6rem,7vw,6rem);line-height:.82;letter-spacing:-.02em}
+.chap .n.name > span{font-family:"Inter Tight",var(--sans);font-weight:800;text-transform:uppercase;
+  line-height:.92;letter-spacing:.005em;
+  font-size:calc(1.05rem + var(--w,1) * clamp(.28rem,.6vw,.6rem))}   /* sized by count — a typographic census */
+.chap .b{grid-column:3/12}
+.chap .lbl{grid-column:1/4}
+
+/* composer statement — the one block using all three stops at once: work title hangs
+   left, name on the edge, the statement inset to the indent. */
+.stmt{border-top:1px solid var(--hair);padding-block:clamp(2.4rem,5vh,4rem)}
+.stmt .who{font-size:.66rem;text-transform:uppercase;letter-spacing:.26em;font-weight:600;color:var(--ink-soft)}
+.stmt .work{margin-left:calc(-.5 * var(--gut));margin-top:.6rem;font-weight:300;
+  font-size:clamp(1.4rem,2.7vw,2.3rem);line-height:1.1;letter-spacing:-.014em}
+.stmt .say{margin-left:var(--ind);margin-top:1.2rem;max-width:52ch;font-size:var(--read);line-height:1.78}
+.stmt .say p + p{margin-top:1.15em}
+
+/* ── FOUR EXPRESSIVE VOICES ───────────────────────────────────────────────── */
+
+/* STAIR — successive lines each step further right. Extends .lead .l2, the site's
+   existing signature, from two lines to n. */
+.stair > *{display:block;font-weight:300;font-size:clamp(1.45rem,3.2vw,2.7rem);line-height:1.12;
+  letter-spacing:-.014em;margin-left:calc(var(--n,0) * clamp(1.1rem,3vw,2.75rem))}
+.stair.caps > *{font-family:"Inter Tight",var(--sans);font-weight:700;text-transform:uppercase;
+  font-size:clamp(1.6rem,3.6vw,3rem);line-height:1.04;letter-spacing:.005em}
+
+/* DIALOGUE — two voices, two stops, two greys. The colour move that isn't colour.
+   One grid PER TURN with a fixed speaker column: a single grid over all the spans lets
+   auto-placement spread turns sideways, and an `auto` first track can't align across rows. */
+/* A fixed speaker track is what keeps the lines aligned down the column, but left-aligned
+   speakers leave the track's slack between "I said" (3.28rem) and its own line while "He said"
+   (3.83rem) sits tighter — two different gaps. Setting the speaker flush RIGHT collapses that:
+   both labels end on one edge, so the gap is exactly column-gap for every turn, and it reads as
+   a word space rather than a column. Same move .refrain makes with its clauses.
+   The gap is tuned so the measured distance equals one word space in the line's own font
+   (7.6px at 1440): .59rem of column-gap less the .16em tracking pulled back below. */
+.dlg .turn{display:grid;grid-template-columns:4.15rem 1fr;column-gap:.59rem;
+  align-items:baseline}
+.dlg .turn + .turn{margin-top:clamp(.4rem,1vh,.85rem)}
+/* flush right, and the trailing letter-space of the .16em tracking is pulled back so the last
+   GLYPH lands on the edge — otherwise the tracking, not the letterform, sets the gap */
+.dlg .sp{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--ink-soft);text-align:right;margin-right:-.16em}
+.dlg .ln{font-weight:300;font-size:clamp(1.1rem,2.1vw,1.7rem);line-height:1.24;letter-spacing:-.012em}
+.dlg .turn.a .ln{color:var(--ink-soft)}   /* the questioner recedes */
+/* the poem resolves into the tour title — a step up from the other turns, not a jump */
+.dlg .turn:last-child .ln{font-size:clamp(1.2rem,2.4vw,1.95rem)}
+
+/* ACROSTIC — mono, so 1ch is exactly one character: per-line offsets stack the
+   capitals into one column, with a hairline down its left edge. The ALIGNMENT is
+   the reveal; no size gimmick needed. */
+.acro{list-style:none;padding:0;position:relative;font-family:var(--mono);font-weight:400;
+  font-size:clamp(.82rem,1.6vw,1.3rem);line-height:2}
+.acro li{margin-left:calc(var(--i,0) * 1ch)}
+.acro b{font-weight:500}
+.acro::before{content:"";position:absolute;left:15ch;top:.2em;bottom:.2em;border-left:1px solid var(--hair)}
+
+/* REFRAIN — clauses flush RIGHT, the repeated phrase flush LEFT in an auto column
+   so every instance starts at the same x. The refrain crescendos; when the clauses
+   run out the page empties into pure pulse. */
+.refrain{display:grid;grid-template-columns:1fr auto;column-gap:clamp(.6rem,1.6vw,1.2rem);
+  row-gap:clamp(.5rem,1.2vh,.95rem);align-items:baseline}
+.refrain .cl{grid-column:1;text-align:right;color:var(--ink-soft);font-size:var(--read)}
+.refrain .bt{grid-column:2;font-family:"Inter Tight",var(--sans);font-weight:700;line-height:1.02;
+  letter-spacing:-.01em;font-size:calc(clamp(1rem,1.9vw,1.5rem) * var(--s,1))}
+
+/* ANAPHORA — hanging indent, so every repeated opening starts flush and the
+   continuations indent: the repetition becomes a visible vertical edge. */
+.anaph p{text-indent:calc(-1 * var(--ind));padding-left:var(--ind);font-size:var(--read);line-height:1.78}
+.anaph p + p{margin-top:.5em}
+
+/* ── PROJECTS: PLATES + THE GRID VIEW ─────────────────────────────────────── */
+
+/* a plate is a designed print object — MOUNTED, never cropped. C's .fig .img
+   defaults to cover; cropping a poster would be a real design error. */
+/* --ar is the plate's real ratio, set per tile: contain + the true ratio means a designed print
+   object is mounted whole, never cropped. Without the ratio the box has no height at all. */
+.plate .img{background-size:contain;background-repeat:no-repeat;background-position:center;
+  width:100%;aspect-ratio:var(--ar,1)}
+.plate figcaption{font-family:var(--mono);font-size:.7rem;color:var(--ink-soft);margin-top:.85rem;letter-spacing:.03em}
+
+/* Text ↔ Grid is ONE DOM re-laid out by CSS — no second content tree, so the two views cannot
+   drift apart. display:contents chains the chapter and its plate row open, so each YEAR's plate
+   becomes a direct child of .chaps and can take its own span — a two-year chapter yields two
+   tiles. The chapter box disappears with it, so its full-ink rule doesn't survive into the wall. */
+.pl .cap{display:none}
+body.view-grid .chaps{display:grid;grid-template-columns:repeat(12,1fr);
+  column-gap:clamp(1rem,2vw,2rem);row-gap:clamp(3.5rem,8vh,7rem);align-items:start}
+body.view-grid .chap,body.view-grid .plates{display:contents}
+body.view-grid .grid.txt{display:none}
+body.view-grid .pl .cap{display:block;font-family:var(--mono);font-size:.72rem;color:var(--ink-soft);
+  letter-spacing:.03em;margin-top:.8rem;line-height:1.5}
+body.view-grid .pl .cap .tn{display:block;color:var(--ink)}
+/* scattered plates, varied spans and staggered drops — C's .media .gal grammar applied to
+   posters, not a flush tile wall */
+body.view-grid .g1{grid-column:2/7}
+body.view-grid .g2{grid-column:8/12;margin-top:clamp(3rem,7vh,6rem)}
+body.view-grid .g3{grid-column:1/5}
+body.view-grid .g4{grid-column:6/9;margin-top:clamp(2rem,5vh,4rem)}
+body.view-grid .g5{grid-column:10/13;margin-top:clamp(5rem,11vh,9rem)}
+body.view-grid .g6{grid-column:2/5}
+body.view-grid .g7{grid-column:6/11;margin-top:clamp(2rem,5vh,4rem)}
+body.view-grid .g8{grid-column:2/8;margin-top:clamp(3rem,7vh,6rem)}
+/* the year with no visual becomes a TYPE tile — a missing poster joins the wall as a
+   typographic member rather than leaving a hole. */
+body.view-grid .typetile{display:grid;place-items:start;aspect-ratio:1;border:1px solid var(--hair);padding:1.2rem}
+body.view-grid .typetile .ty{font-family:var(--mono);font-size:clamp(1.6rem,3.4vw,2.6rem);line-height:1}
+body.view-grid .typetile .tt{font-family:"Inter Tight",var(--sans);font-weight:600;
+  font-size:clamp(1rem,1.7vw,1.3rem);line-height:1.1;text-transform:uppercase;align-self:end}
+.typetile{display:none}
+
+/* ── RESPONSIVE ───────────────────────────────────────────────────────────── */
+
+@media(max-width:880px){
+  .phead .body,.pnav .lbl,.pnav .body,.chap .n,.chap .b,.chap .lbl{grid-column:1/-1}
+  .phead .seg{margin-left:0}
+  .chap .n{margin-bottom:1.4rem}
+  .chap .n > span{position:static}
+  .chap .n.num > span{font-size:clamp(2.2rem,9vw,3.4rem)}
+  .chap .n.name > span{font-size:calc(1rem + var(--w,1) * .34rem)}
+  .roster.cols{columns:1}
+  /* a name + city + diaspora city is wider than a phone column, so the entry has to be
+     allowed to break; the name and each tag stay unbreakable individually */
+  .roster .e{white-space:normal}
+  .stmt .work{margin-left:0}
+  .stmt .say{margin-left:0}
+  /* 15ch of offset cannot survive a phone: the acrostic reads by weight, not by column */
+  .acro li{margin-left:0}
+  .acro b{font-size:1.5em;line-height:0}
+  .acro::before{display:none}
+  /* the beat indents instead of aligning — the pulse survives, the geometry doesn't */
+  .refrain{grid-template-columns:1fr}
+  .refrain .cl{text-align:left}
+  .refrain .bt{grid-column:1;margin-left:var(--ind)}
+  .dlg{grid-template-columns:1fr}
+  .dlg .sp{padding-top:.4em}
+  .stair > *{margin-left:calc(var(--n,0) * .8rem)}
+  .anaph p{text-indent:0;padding-left:0}
+  body.view-grid .chaps > *{grid-column:1/-1!important;margin-top:0!important}
+}
