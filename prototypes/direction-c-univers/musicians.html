@@ -11,33 +11,36 @@
 <link rel="stylesheet" href="c-base.css">
 <link rel="stylesheet" href="sub.css">
 <style>
-/* Musicians-only composition. ONE dataset, TWO orderings, and the tag inverts: by section
-   the tag is the city, by city the tag is the instrument. Same primitive, tag swaps role —
-   so 161 names are authored once and can never drift between the views. */
+/* Musicians-only composition. ONE dataset grouped by section, one player per line.
+   The By-city ordering was removed on 2026-07-28 (client: "izbaciti opciju By City") — with it went
+   the city monument, which was display type at six discrete sizes and the single biggest source of
+   the "too many fonts and styles" the client saw on this page. */
 .mu .lbl{grid-column:1/4}
 .mu .b{grid-column:4/13}
-/* the city view's monument is display type at up to ~4.7rem, so it needs a wider rail than
-   the section view's tracked-caps label — LJUBLJANA at that size is ~385px */
-.mu.city .n{grid-column:1/5}
-.mu.city .b{grid-column:5/13}
-.mu .lbl .ct{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.22em;
-  font-weight:600;margin-top:.5rem;line-height:1.3}
-.mu .lbl .no{font-family:var(--mono);font-size:.76rem;color:var(--ink-soft)}
+/* ONE micro-caps recipe on this page — .66rem / uppercase / .26em / 600, exactly .eyebrow's — and
+   INK is the only thing that separates a structural label from a per-player tag. It used to be three
+   near-identical styles at three trackings (.22em / .20em / .26em) and two weights, which is what
+   read as "too many fonts and styles". */
+.mu .lbl .ct{display:block;margin-top:.5rem;line-height:1.3;
+  font-size:.66rem;text-transform:uppercase;letter-spacing:.26em;font-weight:600;color:var(--ink)}
 /* the chapter rule SEPARATES sections, so the first one has nothing to separate — there it reads
-   as a stray divider hung under the view switch. Set on #views' first child so it survives a
-   re-render when the ordering changes. */
+   as a stray divider hung under the page title. Set on #views' first child so it survives a
+   re-render. */
 #views .chap:first-child{border-top:none}
-/* BY SECTION: one player per line. The chorus run (several names to a line) reads as prose and
-   makes a section hard to scan; as blocks each name owns its line, and the wide sections still
-   split into two columns so a 38-player section doesn't run the page's whole length.
-   Scoped away from .city, whose view keeps the chorus. */
-.mu:not(.city) .roster .e{display:block;margin-right:0}
+/* one player per line. The chorus run (several names to a line) reads as prose and makes a section
+   hard to scan; as blocks each name owns its line, and the wide sections still split into two
+   columns so a 38-player section doesn't run the page's whole length. */
+.mu .roster .e{display:block;margin-right:0}
 #roster{display:none}
 /* page-level column rules load after sub.css, so they beat its media block — the mobile
    collapse has to be restated here or the rails survive onto a phone */
 @media(max-width:880px){
-  .mu .lbl,.mu .b,.mu.city .n,.mu.city .b{grid-column:1/-1}
+  .mu .lbl,.mu .b{grid-column:1/-1}
 }
+/* ?names=caps — the client asked whether the names should be all-caps. Shipped in natural case
+   (they are the only sentence-case text left, which is what makes them read as content rather than
+   as labels); this flag renders the alternative so they can judge it live. */
+body.names-caps .roster .e{text-transform:uppercase}
 </style>
 </head>
 <body class="sub panels-dark">
@@ -59,11 +62,8 @@
 <section class="phead wrap" id="top">
   <div class="grid">
     <div class="body" data-par="0.07">
+      <a class="back hang-l" href="index.html#who"><span class="ar" aria-hidden="true">&#8592;</span>Back</a>
       <h1 class="lead reveal draw hang-l">Musicians</h1>
-      <div class="seg caps reveal" id="order">
-        <button data-order="sec" aria-pressed="true">By section</button>
-        <button data-order="city" aria-pressed="false">By city</button>
-      </div>
     </div>
   </div>
 </section>
@@ -236,19 +236,6 @@
   <li data-sec="Piano" data-city="Belgrade">Natalija Mladenović</li>
 </ul>
 
-<section class="band tight wrap pnav">
-  <div class="grid">
-    <p class="lbl eyebrow">Who we are</p>
-    <div class="body">
-      <div class="sublinks">
-        <a href="index.html#who"><span>Team</span></a>
-        <a href="index.html#who"><span>Board</span></a>
-        <a href="index.html#who"><span>Partners</span></a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <footer class="wrap sitefoot">
   <div class="grid sf-row">
     <div class="socials reveal"><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">YouTube</a></div>
@@ -258,43 +245,32 @@
 
 <script src="c-base.js"></script>
 <script>
-// Read the roster once, then group it two ways. The tag inverts between views: by section the
-// tag is the player's city, by city it is their instrument.
+// Read the roster once, then group it by section. Each player carries their home city as a tag and,
+// where they live elsewhere now, a second city — both set in the same tag voice, so the same city
+// name never renders in two different faces (client: "npr. berlin/munich").
 const SRC=[...document.querySelectorAll('#roster li')].map(li=>({
   name:li.textContent.trim(), sec:li.dataset.sec, city:li.dataset.city, now:li.dataset.now||''
 }));
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
-// city monuments are sized by how many players come from there — a typographic census, not a chart
-function weight(n){ return n>=40?6 : n>=25?5 : n>=15?4 : n>=8?3 : n>=3?2 : 1; }
-function chorus(list,tagKey){
+function chorus(list){
   return list.map(m=>'<span class="e">'+esc(m.name)
-    +'<span class="ct">'+esc(m[tagKey])+'</span>'
+    +'<span class="ct">'+esc(m.city)+'</span>'
     +(m.now?'<span class="now">'+esc(m.now)+'</span>':'')+'</span>')
     // real whitespace between entries — margin alone gives the line-breaker nothing to break on
     .join(' ');
 }
-function render(mode){
+function render(){
   const g=new Map();
-  SRC.forEach(m=>{ const k=mode==='sec'?m.sec:m.city; if(!g.has(k)) g.set(k,[]); g.get(k).push(m); });
-  let rows=[...g.entries()];
-  // source order for sections (it is the score order); by count for cities, so the page
-  // reads as a diminuendo from the biggest city down to the single players
-  if(mode==='city') rows.sort((a,b)=> b[1].length-a[1].length || a[0].localeCompare(b[0]));
-  const html=rows.map(([key,list],i)=>{
-    if(mode==='sec'){
-      // two-column runs for the big sections; the small ones stay one column. The count
-      // variance IS the rhythm — 38 first violins, then a single timpanist under a full-ink
-      // rule with most of the page empty beside it. The winds are the rests.
-      const wide=list.length>8;
-      return '<section class="chap mu"><div class="grid">'
-        +'<div class="lbl"><span class="no">'+String(i+1).padStart(2,'0')+'</span>'
-        +'<span class="ct">'+esc(key)+'</span></div>'
-        +'<div class="b roster'+(wide?' cols':'')+'">'+chorus(list,'city')+'</div>'
-        +'</div></section>';
-    }
-    return '<section class="chap mu city"><div class="grid">'
-      +'<div class="n name" style="--w:'+weight(list.length)+'"><span>'+esc(key)+'</span></div>'
-      +'<div class="b roster">'+chorus(list,'sec')+'</div>'
+  SRC.forEach(m=>{ if(!g.has(m.sec)) g.set(m.sec,[]); g.get(m.sec).push(m); });
+  // source order — it is the score order
+  const html=[...g.entries()].map(([key,list])=>{
+    // two-column runs for the big sections; the small ones stay one column. The count variance IS
+    // the rhythm — 38 first violins, then a single timpanist under a full-ink rule with most of the
+    // page empty beside it. The winds are the rests.
+    const wide=list.length>8;
+    return '<section class="chap mu"><div class="grid">'
+      +'<div class="lbl"><span class="ct">'+esc(key)+'</span></div>'
+      +'<div class="b roster'+(wide?' cols':'')+'">'+chorus(list)+'</div>'
       +'</div></section>';
   }).join('');
   document.getElementById('views').innerHTML=html;
@@ -302,8 +278,8 @@ function render(mode){
   // readable immediately, which is what a roster wants. Heights changed, so re-measure.
   if(typeof syncPar==='function' && !reduce) syncPar();
 }
-render('sec');
-wireSeg('order', btn=>render(btn.dataset.order));
+render();
+if(location.search.includes('names=caps')) document.body.classList.add('names-caps');
 </script>
 </body>
 </html>

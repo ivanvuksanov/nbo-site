@@ -33,6 +33,18 @@
    title on any sub-page, so it opens higher than the homepage gives #upcoming. */
 .phead{padding-block:clamp(2.6rem,6vh,5rem) clamp(2.5rem,6vh,4.5rem)}
 .phead .body{grid-column:3/10}
+/* BACK, above the page title. A real href to the homepage section that owns this page — not
+   history.back(), which has nothing to go back to on a page opened cold from a link or a bookmark.
+   It carries .hang-l so it starts on the title's own left edge, not the body column's: the h1 hangs
+   half a gutter left of the text, and a back link indented from it would look like a mistake.
+   Deliberately quiet — soft grey going ink on hover: it is navigation chrome above a 76px title, not
+   content. No .reveal, so it is there the moment the page paints. */
+.back{display:inline-block;margin-bottom:clamp(.9rem,2.2vh,1.5rem);font-family:var(--mono);
+  font-size:.78rem;letter-spacing:.05em;color:var(--ink-soft);transition:color .3s}
+.back:hover{color:var(--ink)}
+.back .ar{display:inline-block;margin-right:.5em;transition:transform .3s}
+.back:hover .ar{transform:translateX(-.2em)}
+.back:focus-visible{outline:1px solid var(--ink);outline-offset:.4rem}
 /* the mono line under a display title. .season is the homepage's instance; both
    sit in the headline's indent and carry METADATA, never prose. */
 .subline{margin-top:.9rem;font-size:.84rem;letter-spacing:.12em;text-transform:uppercase;padding-left:var(--ind)}
@@ -40,10 +52,6 @@
    NOT the right margin: a right-hand off-grid label was ruled "completely lost". */
 .phead .seg{margin-top:clamp(1.8rem,4vh,2.8rem);margin-left:var(--ind);max-width:19rem}
 .seg.caps button{text-transform:uppercase;letter-spacing:.14em;font-size:.62rem;padding:.6rem .5rem}
-
-/* sibling-page nav at the foot */
-.pnav .lbl{grid-column:1/3}
-.pnav .body{grid-column:3/10}
 
 /* text-page band rhythm — the homepage cadence is far too tall for reading pages */
 .band.tight{padding-block:var(--pad-s)}
@@ -59,14 +67,15 @@
 .dlede{font-weight:300;font-size:clamp(1.55rem,3.1vw,2.7rem);line-height:1.14;letter-spacing:-.014em;
   max-width:30ch;text-wrap:balance}
 
-/* pull / aphorism — one notch under .lead. No rule, no quote mark: the whitespace
-   and the gutter hang do the work; a box would read as a callout. */
-.pull{font-family:"Inter Tight",var(--sans);font-weight:700;text-transform:uppercase;
-  font-size:clamp(1.8rem,4vw,3.4rem);line-height:1.02;letter-spacing:.005em;
-  max-width:20ch;padding-block:clamp(2.6rem,6vh,4.5rem)}
-/* the site's identity motif — borders that dissolve. ONE per page, and only at this
-   scale: the filter's blur destroys small text. */
-.pull.dissolve{filter:url(#edgeDissolve)}
+/* THE EMPHASIS VOICE — one size for everything the page lifts out of running prose. No rule, no
+   quote mark: the whitespace and the gutter hang do the work; a box would read as a callout.
+   .pull and .stair.caps were the identical face, weight and case at two different sizes (3.4rem vs
+   3rem) and two line-heights — so "emphasis" meant two things depending on the block. The client
+   asked for one ("ako se nesto istice, mozda uvek istim vecim fontom"), so both now share these
+   three declarations and only .lead sits above them. */
+.pull,.stair.caps > *{font-family:"Inter Tight",var(--sans);font-weight:700;
+  text-transform:uppercase;font-size:clamp(1.6rem,3.6vw,3rem);line-height:1.04;letter-spacing:.005em}
+.pull{max-width:20ch;padding-block:clamp(2.6rem,6vh,4.5rem)}
 
 /* row modifiers (the base rule lives in c-base.css beside .gig).
    .row is sub-page-only, so anything set here leaves the homepage's .gig — which shares the base
@@ -83,8 +92,17 @@ body.panels-dark .field .row .k,body.panels-dark .field .row .t{color:rgba(251,2
    parenthetical to tracked caps, so the places become the block's visible pulse. */
 .roster{font-size:.98rem;line-height:1.9;text-wrap:pretty}
 .roster.cols{columns:2;column-gap:clamp(1.6rem,4vw,3.4rem)}
-.roster .ct{font-size:.66rem;text-transform:uppercase;letter-spacing:.2em;color:var(--ink-soft);white-space:nowrap;margin-left:.45em}
-.roster .now{font-family:var(--mono);font-size:.66rem;color:var(--ink-soft);white-space:nowrap;margin-left:.3em}
+/* ONE tag voice for both cities. The home city was tracked caps and the second city was mono, so
+   the same place rendered in two unrelated faces and never looked like itself (client: "npr.
+   berlin/munich"). The tracking matches .eyebrow, so the page now has a single micro-caps style
+   rather than three near-identical ones. */
+.roster .ct,.roster .now{font-size:.66rem;text-transform:uppercase;letter-spacing:.26em;
+  font-weight:600;color:var(--ink-soft);white-space:nowrap}
+.roster .ct{margin-left:.45em}
+.roster .now{margin-left:.5em}
+/* the second city is the same voice, set apart by a thin rule rather than a different font */
+.roster .now::before{content:"";display:inline-block;width:.5em;height:1px;vertical-align:.28em;
+  margin-right:.5em;background:currentColor;opacity:.55}
 /* a name never breaks away from its place, and the tracked-caps place IS the delimiter —
    no dots needed between entries, and no justification: justify stretches the space inside
    a person's name, which looks broken. */
@@ -98,9 +116,6 @@ body.panels-dark .field .roster .ct,body.panels-dark .field .roster .now{color:r
 .chap .n > span{position:sticky;top:6.4rem;display:block}   /* parks under the 5.2rem header + air */
 .chap .n.num > span{font-family:var(--mono);font-weight:400;font-variant-numeric:tabular-nums;
   font-size:clamp(2.6rem,7vw,6rem);line-height:.82;letter-spacing:-.02em}
-.chap .n.name > span{font-family:"Inter Tight",var(--sans);font-weight:800;text-transform:uppercase;
-  line-height:.92;letter-spacing:.005em;
-  font-size:calc(1.05rem + var(--w,1) * clamp(.28rem,.6vw,.6rem))}   /* sized by count — a typographic census */
 .chap .b{grid-column:3/12}
 .chap .lbl{grid-column:1/4}
 
@@ -119,26 +134,16 @@ body.panels-dark .field .roster .ct,body.panels-dark .field .roster .now{color:r
    existing signature, from two lines to n. */
 .stair > *{display:block;font-weight:300;font-size:clamp(1.45rem,3.2vw,2.7rem);line-height:1.12;
   letter-spacing:-.014em;margin-left:calc(var(--n,0) * clamp(1.1rem,3vw,2.75rem))}
-.stair.caps > *{font-family:"Inter Tight",var(--sans);font-weight:700;text-transform:uppercase;
-  font-size:clamp(1.6rem,3.6vw,3rem);line-height:1.04;letter-spacing:.005em}
+/* .stair.caps takes the shared emphasis voice — see the .pull block above */
 
 /* DIALOGUE — two voices, two stops, two greys. The colour move that isn't colour.
    One grid PER TURN with a fixed speaker column: a single grid over all the spans lets
    auto-placement spread turns sideways, and an `auto` first track can't align across rows. */
-/* A fixed speaker track is what keeps the lines aligned down the column, but left-aligned
-   speakers leave the track's slack between "I said" (3.28rem) and its own line while "He said"
-   (3.83rem) sits tighter — two different gaps. Setting the speaker flush RIGHT collapses that:
-   both labels end on one edge, so the gap is exactly column-gap for every turn, and it reads as
-   a word space rather than a column. Same move .refrain makes with its clauses.
-   The gap is tuned so the measured distance equals one word space in the line's own font
-   (7.6px at 1440): .59rem of column-gap less the .16em tracking pulled back below. */
-.dlg .turn{display:grid;grid-template-columns:4.15rem 1fr;column-gap:.59rem;
-  align-items:baseline}
+/* The speaker labels are gone (client, 2026-07-28) — they read as machinery beside the poem. What
+   they were doing typographically was holding a fixed left track so every line started on one
+   edge; without them the lines simply own the column and that alignment is free. The two GREYS
+   below now carry the alternation on their own. */
 .dlg .turn + .turn{margin-top:clamp(.4rem,1vh,.85rem)}
-/* flush right, and the trailing letter-space of the .16em tracking is pulled back so the last
-   GLYPH lands on the edge — otherwise the tracking, not the letterform, sets the gap */
-.dlg .sp{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;
-  color:var(--ink-soft);text-align:right;margin-right:-.16em}
 .dlg .ln{font-weight:300;font-size:clamp(1.1rem,2.1vw,1.7rem);line-height:1.24;letter-spacing:-.012em}
 .dlg .turn.a .ln{color:var(--ink-soft)}   /* the questioner recedes */
 /* the poem resolves into the tour title — a step up from the other turns, not a jump */
@@ -210,12 +215,11 @@ body.view-grid .typetile .tt{font-family:"Inter Tight",var(--sans);font-weight:6
 /* ── RESPONSIVE ───────────────────────────────────────────────────────────── */
 
 @media(max-width:880px){
-  .phead .body,.pnav .lbl,.pnav .body,.chap .n,.chap .b,.chap .lbl{grid-column:1/-1}
+  .phead .body,.chap .n,.chap .b,.chap .lbl{grid-column:1/-1}
   .phead .seg{margin-left:0}
   .chap .n{margin-bottom:1.4rem}
   .chap .n > span{position:static}
   .chap .n.num > span{font-size:clamp(2.2rem,9vw,3.4rem)}
-  .chap .n.name > span{font-size:calc(1rem + var(--w,1) * .34rem)}
   .roster.cols{columns:1}
   /* a name + city + diaspora city is wider than a phone column, so the entry has to be
      allowed to break; the name and each tag stay unbreakable individually */
@@ -230,8 +234,6 @@ body.view-grid .typetile .tt{font-family:"Inter Tight",var(--sans);font-weight:6
   .refrain{grid-template-columns:1fr}
   .refrain .cl{text-align:left}
   .refrain .bt{grid-column:1;margin-left:var(--ind)}
-  .dlg{grid-template-columns:1fr}
-  .dlg .sp{padding-top:.4em}
   .stair > *{margin-left:calc(var(--n,0) * .8rem)}
   .anaph p{text-indent:0;padding-left:0}
   body.view-grid .chaps > *{grid-column:1/-1!important;margin-top:0!important}

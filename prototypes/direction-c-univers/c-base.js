@@ -18,7 +18,10 @@ if(header && sentinel){
 // PROTOTYPE: logo occupies ~20% of the screen width at the top and shrinks to its normal corner size on scroll
 const logo=header && header.querySelector('.logo');
 const logoImg=logo && logo.querySelector('img');
-const LOGO_SMALL=116, LOGO_TH=360;   // 116px ≈ 52px tall on the 3-line lockup — sits inside the 5.2rem header
+// 140px ≈ 63px tall on the 3-line lockup — still clears the 5.2rem (83px) header with its .9rem
+// padding. Raised from 116 on 2026-07-28 at the client's request; keep in step with c-base.css's
+// .logo img width, which this inline style overrides.
+const LOGO_SMALL=140, LOGO_TH=360;
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 function sizeLogo(){
   if(!logoImg) return;

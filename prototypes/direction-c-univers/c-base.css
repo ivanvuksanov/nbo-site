@@ -44,7 +44,7 @@ header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:clam
   min-height:5.2rem;padding:.9rem var(--gut);background:var(--paper);transition:box-shadow .4s ease}
 header.solid{box-shadow:0 1px 0 var(--hair)}
 .logo{position:absolute;left:var(--gut);top:.9rem;z-index:60;display:block}
-.logo img{display:block;width:116px;height:auto}   /* outlined wordmark (3-line lockup, aspect 2.21); JS sizes width big→small on scroll */
+.logo img{display:block;width:140px;height:auto}   /* outlined wordmark (3-line lockup, aspect 2.21); JS sizes width big→small on scroll */
 nav{margin-left:auto;display:flex;gap:clamp(1rem,2.6vw,2.6rem)}
 nav a{font-size:.82rem;text-transform:uppercase;letter-spacing:.18em;font-weight:500;padding-bottom:.4rem;
   border-bottom:1px solid transparent;transition:border-color .3s,opacity .3s}

@@ -22,10 +22,114 @@
    two-column rail, so the rail is three columns and the body starts at four */
 .pr .n{grid-column:1/4}
 .pr .b{grid-column:4/12}
-/* a tour title is a CHAPTER head, not the page title — it must sit clearly below the h1
-   (which keeps .lead's full clamp(2.4rem,5.4vw,4.8rem)) */
+/* THE YEAR is the chapter head — the orchestra's own site is organised that way, and it is the only
+   heading 2013 and 2012 have (their concert groups carry no project name at all). It sits clearly
+   below the h1, which keeps .lead's full clamp(2.4rem,5.4vw,4.8rem). */
 .pr .b > .lead{font-size:clamp(1.7rem,3.4vw,2.9rem)}
-.pr .liner{margin-left:calc(2 * (100% / 8));margin-top:clamp(3rem,7vh,5.5rem)}   /* the liner inset */
+/* the project title is a step DOWN from the year: PROJECTS 76px → 2025 46px → Turning Point 32px, so
+   the three levels are legible as a hierarchy rather than as three competing display sizes. */
+.ptitle{font-family:"Inter Tight",var(--sans);font-weight:700;text-transform:uppercase;
+  font-size:clamp(1.25rem,2.4vw,2rem);line-height:1.06;letter-spacing:-.01em;
+  margin-top:clamp(1.6rem,3.5vh,2.6rem)}
+/* a SECOND project in the same year (2018, 2016, 2015) and each further concert group in 2013/2012.
+   A hairline, because the chapter's full-ink rule is what separates one YEAR from the next — using
+   the same rule here would say "new year" about something that is still 2016. */
+.pblk2{border-top:1px solid var(--hair);margin-top:clamp(2.8rem,6vh,4.4rem);
+  padding-top:clamp(2.4rem,5vh,3.6rem)}
+/* an untitled group (2013, 2012) opens straight on its dates, so its first eyebrow must not also
+   carry the full inter-section gap on top of the block's own padding */
+.pblk2 > .eyebrow.blk:first-child{margin-top:0}
+.pblk > .ptitle:first-child{margin-top:clamp(1.1rem,2.4vh,1.8rem)}
+/* the season line names the YEAR, which is what a reader scans for — it was .84rem and lost against
+   the tour title above it (client: "Balkan Season i godina mogli da budu malo veci"). Scoped to .pr
+   so Manifesto and Musicians keep sub.css's smaller subline. */
+.pr .subline{font-size:1.1rem;letter-spacing:.1em}
+
+/* ── PROJECT DETAILS, IN A MODAL ─────────────────────────────────────────────────────────────
+   A native <dialog> shown with showModal(). It renders in the top layer, so no ancestor transform,
+   overflow or z-index on the page can reach it — which is the whole reason the in-place disclosure
+   needed care and this doesn't.
+   THE READING MEASURE IS HELD AT 592px — the width the inline liner had at 6/12 of the chapter grid
+   at 1440 (12 tracks of 74.2px, gaps of 28.8px, inside a 1207px content box). Every hand-set block
+   in there is measured against that band: the acrostic's 15ch rule and its 1ch step offsets, the
+   refrain's flush-right clauses, the values stair. Holding the width means none of them re-wrap
+   just because their container changed. It is also WIDER than the band at 1280/1024, where the
+   acrostic was verified — so those cases only get safer.
+   BOTH AXES SCROLL, deliberately: .stmt .work hangs half a gutter into the left margin, and an
+   overflow-x:hidden here would clip it. The inline padding is ≥ that hang (4.5rem vs 3rem at the
+   top of both clamps), so the hang lands inside the padding, nothing overflows and no horizontal
+   bar appears. */
+/* margin:auto is what CENTRES a modal dialog, and it is the UA's — c-base.css's reset (*{margin:0})
+   wipes it, which parks the dialog in the top-left corner. It has to be written back by hand. */
+.pdlg{margin:auto;width:min(94vw,736px);max-width:none;max-height:88svh;padding:0;border:0;
+  background:var(--paper);color:var(--ink);box-shadow:0 24px 70px rgba(0,0,0,.24)}
+.pdlg::backdrop{background:rgba(16,18,20,.62)}
+/* THE DIALOG IS A FLEX COLUMN and the head is OUTSIDE the scroll area, so it stays put through
+   2000px of prose without needing position:sticky (which would have done nothing anyway — sticky
+   needs the scroll container as an ANCESTOR, and .pdhead is the scroller's sibling). The head also
+   names the chapter you opened, because inside a modal the page's own context is gone.
+   .pdbody needs BOTH flex:1 and min-height:0: a flex item's min-height defaults to auto, which
+   refuses to shrink below its content — so without it the prose spills straight past the dialog's
+   max-height and overflow:auto never engages. */
+.pdlg[open]{display:flex;flex-direction:column}
+.pdhead{flex:none;display:flex;align-items:flex-start;justify-content:space-between;
+  gap:clamp(1rem,3vw,2rem);background:var(--paper);border-bottom:1px solid var(--hair);
+  padding:clamp(1.4rem,3vh,2rem) clamp(1.5rem,4vw,4.5rem)}
+.pdt{font-family:"Inter Tight",var(--sans);font-weight:700;text-transform:uppercase;
+  font-size:clamp(1.15rem,2.2vw,1.6rem);line-height:1.06;letter-spacing:-.01em}
+.pdsub{margin-top:.45rem;font-size:.9rem;letter-spacing:.1em}
+/* the reading area takes focus on open (autofocus in the markup). Without it showModal() focuses the
+   first tabbable thing, which is Close — so the modal opened with a focus ring drawn round the exit.
+   tabindex="-1" keeps it out of the tab sequence while still letting the arrow keys scroll it, and
+   the ring is suppressed because a scroll container is not a control. */
+.pdbody{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;
+  padding:clamp(2rem,5vh,3.2rem) clamp(1.5rem,4vw,4.5rem) clamp(2.6rem,7vh,4.5rem)}
+.pdbody:focus,.pdbody:focus-visible{outline:none}
+/* BOTTOM FADE — the scroll edge used to cut a sentence mid-word against a hard line, which reads as
+   broken rather than as "more below" (macOS overlay scrollbars fade out, so there was no other hint).
+   It sits on the DIALOG, not the scroller: a mask on .pdbody would fight the negative-gutter hang.
+   Shown only while something is still below (see pdFade), so the last line is never left under a
+   veil once you reach the end. The gradient ends on --paper AT ALPHA 0 rather than `transparent`,
+   which some engines interpolate through transparent-black and grey the fade. */
+.pdlg::after{content:"";position:absolute;left:0;right:0;bottom:0;height:clamp(2.4rem,7vh,4.5rem);
+  background:linear-gradient(to top,var(--paper),rgba(251,251,250,0));
+  opacity:0;transition:opacity .3s;pointer-events:none}
+.pdlg.pd-fade::after{opacity:1}
+.pdbody .liner{max-width:592px}
+/* a .stmt opens with its own hairline, which would double the head's rule */
+.pdbody .liner > .stmt:first-child{border-top:0;padding-top:0}
+/* one-shot entrance in the page's own curve. Closing is immediate — a dialog that lingers on the
+   way out reads as lag, not as motion. */
+.pdlg[open]{animation:pdIn .42s cubic-bezier(.16,1,.3,1)}
+.pdlg[open]::backdrop{animation:pdBd .42s ease}
+@keyframes pdIn{from{opacity:0;transform:translateY(14px)}}
+@keyframes pdBd{from{opacity:0}}
+@media(prefers-reduced-motion:reduce){.pdlg[open],.pdlg[open]::backdrop{animation:none}}
+/* the page must not scroll behind the modal. overflow:hidden collapses the scrollbar, which shifts
+   the layout by its width wherever one reserves space (not macOS, which overlays) — --sbw is
+   measured before the lock and hands that width back. */
+html.pdlg-open,html.pdlg-open body{overflow:hidden}
+html.pdlg-open body{padding-right:var(--sbw,0px)}
+
+/* THE CONTROLS. .yrnav a is already this page's "mono thing you can click" voice, so reusing it
+   verbatim introduces no new vocabulary — and no +/− glyph, which sub.css's own doctrine forbids.
+   The button closes the facts column; the poster is a second hit area for the same dialog (its own
+   caption is display:none in text view, so cursor is the only affordance it can carry). */
+.lnbtn{display:block;margin-top:clamp(1.6rem,4vh,2.6rem);background:none;border:0;padding:0;
+  font:inherit;color:inherit;text-align:left;cursor:pointer;appearance:none;-webkit-appearance:none}
+/* ONE recipe for both controls, and it is deliberately NOT the footnote's. The commission note sits
+   directly above this button in the same mono at the same size in --ink-soft, so a soft label with
+   only a hover underline read as a SECOND FOOTNOTE — nothing said it could be clicked. Full ink plus
+   a standing hairline underline is this page's own "you can click this" grammar (the year index marks
+   its current tour the same way), and it keeps grey as the passive voice. Hover darkens the rule. */
+.lnlbl,.pdx{font-family:var(--mono);font-size:.78rem;letter-spacing:.05em;color:var(--ink);
+  padding-bottom:.15rem;border-bottom:1px solid var(--hair);transition:border-color .3s}
+.pdx{flex:none;margin-top:.2rem;background:none;border-width:0 0 1px;border-style:solid;
+  border-color:var(--hair);cursor:pointer;appearance:none;-webkit-appearance:none}
+.lnbtn:hover .lnlbl,.pdx:hover{border-bottom-color:currentColor}
+.lnbtn:focus-visible,.pdx:focus-visible{outline:1px solid var(--ink);outline-offset:.4rem}
+.pl.lnhit{cursor:pointer}
+body.view-grid .lnbtn{display:none}   /* a poster wall has no chapter to open */
 /* the chapter rule SEPARATES chapters, so the first one has nothing to separate — there it reads
    as a stray divider hung under the page title */
 .chaps > .chap:first-child{border-top:none}
@@ -43,9 +147,12 @@
    Deliberately a <div role=navigation>, not a <nav>: as a <nav> it inherited c-base.css's HEADER
    rules (margin-left:auto, uppercase, weight 500) and c-base.js's active-nav observer hijacked the
    .active class, allowing only one copy to light up. */
-.yrnav{display:none;grid-template-columns:repeat(4,max-content);
+/* THREE columns, no hand-placed spans. Every label is now a single four-character year, so three fit
+   inside the three-column rail (3 × 32px + 2 × 18px = 130px of 280px) and 14 years land in 5 rows
+   instead of 7 — a shorter block to read and less of the rail's height taken while it is stuck under
+   the header. max-content columns mean adding a year needs no edit here. */
+.yrnav{display:none;grid-template-columns:repeat(3,max-content);
   gap:.45rem clamp(.6rem,1.5vw,1.1rem)}
-.yrnav a:nth-child(1),.yrnav a:nth-child(2){grid-column:span 2}
 .yrnav a{font-family:var(--mono);font-size:.82rem;letter-spacing:.05em;color:var(--ink-soft);
   padding-bottom:.15rem;border-bottom:1px solid transparent;transition:color .3s,border-color .3s}
 .yrnav a:hover{color:var(--ink)}
@@ -55,8 +162,14 @@ body.rail-index .pr .n > span{display:none}
 body.rail-index .pr .n .yrnav{display:grid;position:sticky;top:6.6rem}
 body.view-grid .yrnav{display:none!important}   /* the grid wall has no chapters to jump between */
 .eyebrow.blk{display:block;margin-top:clamp(2.4rem,5vh,3.6rem);margin-bottom:.6rem}
-.pr .cm{font-size:.7em;vertical-align:.5em;color:var(--ink-soft);margin-left:.15em}
-.pr .fn{font-family:var(--mono);font-size:.7rem;color:var(--ink-soft);letter-spacing:.03em;margin-top:1.1rem}
+/* The commission mark and its footnote are the same character, but the footnote is IBM Plex Mono —
+   whose asterisk is a large centred glyph — while inline it inherited Helvetica at .7em RAISED off
+   the baseline and greyed, which put it on the cap line as a near-invisible speck (client: "tackica
+   i jedva vidljiva"). Same font, same ink, on the baseline: now the two read as one mark. */
+.pr .cm{font-family:var(--mono);font-size:.85em;color:var(--ink);margin-left:.2em}
+/* .pdbody is named too: the production credits are .fn and they travel INTO the modal, which is
+   outside .pr — the commission footnote under the programme is the copy that stays on the page */
+.pr .fn,.pdbody .fn{font-family:var(--mono);font-size:.7rem;color:var(--ink-soft);letter-spacing:.03em;margin-top:1.1rem}
 /* a year with a monument and an empty rail — the most restrained thing on the page */
 .silence{font-weight:300;font-size:clamp(1.15rem,2.2vw,1.7rem);line-height:1.3;letter-spacing:-.012em;
   max-width:40ch;color:var(--ink-soft);padding-block:1.2rem}
@@ -67,10 +180,20 @@ body.view-grid .yrnav{display:none!important}   /* the grid wall has no chapters
    AND row padding move together (shrinking the type alone barely buys any height back); the page
    is ~6% shorter for it. Scoped to .pr so only tour chapters are affected. */
 .pr .row{padding:1.05rem 0}
-/* the date track has to hold "19 September 2023" — 17 mono characters ≈ 8.9rem — on ONE line.
-   At the inherited 7rem it wrapped, which cost back exactly the height the inline year saved.
+/* the date track has to hold the LONGEST date on ONE line, and now that the year has moved to the
+   chapter heading that is a multi-day stop, not a single date: "15, 16, 18, 19 September" is 24
+   characters of IBM Plex Mono at 13.44px — 0.6em advance plus .2688px tracking — so ~200px, hence
+   12.6rem. Measured by LINE COUNT, not by a cloned span: cloning through getComputedStyle().font
+   dropped the mono face and under-read the width by 20px, which is how 11.4rem looked sufficient
+   while three rows were visibly still wrapping.
+   It costs the venue column 51px of 506px; the widest venue that fits on one line needs 445px, so
+   none is affected — the six that wrap were wrapping at the old width too.
    Not applied to .prog: the programme's track carries a 2-digit number and stays 3.2rem. */
-.pr .row:not(.prog){--c1:9.4rem}
+.pr .row:not(.prog){--c1:12.6rem}
+/* a description standing in for a venue (2012, 2013) — sentence case at the metadata size, because
+   the venue's tracked uppercase turns a 150-character clause into a shouted three-line paragraph */
+.pr .row .t.note{text-transform:none;letter-spacing:0;font-family:var(--sans);font-weight:400;
+  font-size:.88rem;line-height:1.45;color:var(--ink-soft);max-width:34ch;justify-self:end}
 .pr .row .v{font-size:clamp(1.2rem,2.1vw,1.85rem)}
 /* Programme, DEFAULT — the concert row's own grammar with a number track in place of a date:
    01 · composer · work flush right, all on one line. The composer speaks in the reading face, not
@@ -100,14 +223,17 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
   font-size:inherit;text-transform:none;letter-spacing:0;margin:0 0 0 .35em;line-height:1.4}
 /* plates in TEXT view sit in the chapter's own grid, in the body's column band */
 .plates{margin-top:clamp(2.5rem,6vh,4.5rem)}
-.plates .pl:nth-child(1){grid-column:3/8}
-.plates .pl:nth-child(2){grid-column:8/13}
+/* one tile per chapter now, so it takes the body's own column band */
+.plates .pl{grid-column:3/8}
 .pl .cap{display:none}
 @media(max-width:880px){
-  .yrnav{grid-template-columns:repeat(2,max-content)}
+  /* the index keeps its three columns here too — the override that dropped it to two existed for the
+     old two-year RANGE labels ("2018–2017", 9 characters). But the rail is only 3 of 12 tracks, which
+     at 390px is 74px, and three years need ~136px: it fitted only because nothing clipped it. The
+     rail takes the full width on mobile, where it is already its own row above the body. */
+  .pr .n{grid-column:1/-1}
   .pr .b{grid-column:1/-1}
-  .pr .liner{margin-left:0}
-  .plates .pl:nth-child(1),.plates .pl:nth-child(2){grid-column:1/-1}
+  .plates .pl{grid-column:1/-1}
   .plates .pl + .pl{margin-top:2rem}
 }
 </style>
@@ -131,6 +257,7 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 <section class="phead wrap" id="top">
   <div class="grid">
     <div class="body" data-par="0.07">
+      <a class="back hang-l" href="index.html#projects"><span class="ar" aria-hidden="true">&#8592;</span>Back</a>
       <h1 class="lead reveal draw hang-l">Projects</h1>
     </div>
   </div>
@@ -139,50 +266,78 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 <div class="wrap"><div class="chaps">
 <section class="chap pr" id="y2025">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a tour"><a href="#y2025">2025–2024</a><a href="#y2023">2023–2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a></div><span>2025<br>2024</span></div>
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2025</span></div>
     <div class="b">
-      <h2 class="lead reveal draw">Turning Point</h2><p class="subline metanum soft">Balkan Season 2025 · 2024</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">30 August 2025</span><span class="v">Mostar</span><span class="t">Kosača</span></div>
-        <div class="row"><span class="k metanum">4 September 2025</span><span class="v">Priština</span><span class="t">Palace of Youth and Sport</span></div>
-        <div class="row"><span class="k metanum">5 September 2025</span><span class="v">Skopje</span><span class="t">Macedonian Philharmonics</span></div>
-        <div class="row"><span class="k metanum">31 October 2025</span><span class="v">Tirana</span><span class="t">University of Arts Main Hall</span></div>
-        <div class="row"><span class="k metanum">4 September 2024</span><span class="v">Sarajevo</span><span class="t">City Hall</span></div>
-        <div class="row"><span class="k metanum">6 September 2024</span><span class="v">Novi Sad</span><span class="t">Synagogue</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Nina Perović</span><span class="t">Bubbling</span></div>
+      <h2 class="lead reveal draw">2025</h2><div class="pblk"><p class="ptitle">Turning Point Tour</p><p class="subline metanum soft">Balkan Season 2025</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">30 August</span><span class="v">Mostar</span><span class="t">Kosača</span></div>
+        <div class="row"><span class="k metanum">4 September</span><span class="v">Priština</span><span class="t">Palace of Youth and Sport</span></div>
+        <div class="row"><span class="k metanum">5 September</span><span class="v">Skopje</span><span class="t">Macedonian Philharmonics</span></div>
+        <div class="row"><span class="k metanum">31 October</span><span class="v">Tirana</span><span class="t">University of Arts Main Hall</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Nina Perović</span><span class="t">Bubbling<span class="cm">*</span></span></div>
         <div class="row prog"><span class="k metanum">02</span><span class="v">Arnold Schoenberg</span><span class="t">Verklärte Nacht</span></div>
         <div class="row prog"><span class="k metanum">03</span><span class="v">Davor Branimir Vincze</span><span class="t">Ckrsch!<span class="cm">*</span></span></div>
         <div class="row prog"><span class="k metanum">04</span><span class="v">Gustav Mahler</span><span class="t">Adagietto</span></div>
         <div class="row prog"><span class="k metanum">05</span><span class="v">Darija Andovska</span><span class="t">Apoptotic Bodies<span class="cm">*</span></span></div>
         <div class="row prog"><span class="k metanum">06</span><span class="v">Richard Strauss</span><span class="t">Metamorphosen</span></div>
-        <div class="row prog"><span class="k metanum">07</span><span class="v">Marko Nikodijević</span><span class="t">Last Inscription<span class="cm">*</span></span></div></div><p class="fn">* commissioned by NBO</p>
-      <div class="liner"><div class="read measure"><p>The Turning Point traverses the aesthetic crossroads of Schoenberg, Strauss, and Mahler, composers whose works are emblematic of a pivotal era straddling the late Romantic tradition and the onset of Modernism. At the same time, the Tour mirrors our own era's critical juncture, resonating with the perspectives of contemporary thinkers, politicians, and philosophers who see striking parallels between the world today and the tumultuous period preceding World War I. That period, much like our own, was a world in crisis, oscillating between the untenable Old and the necessary but uncharted New, a world searching for meaning in the midst of meaninglessness. Through this thematic exploration, the project confronts our present-day challenges, mirroring a world once teetering on the edge. Yet, amidst this somber reflection, the Turning Point embodies a message of hope, imploring us not to let history repeat its darkest chapters but rather to transcend our mistakes and forge a path toward a more enlightened and united civilization. This powerful narrative is not just a reminiscence of a world at the brink, but a beacon of optimism, guiding us to emerge from these troubling times as a stronger, more harmonious society.</p><p>Wars, increasing social inequalities, pollution, climate change and the destruction of remaining natural zones, has brought the world to a breaking point. There is a need for transformation on many levels. NBO sees this crisis as an opportunity, a chance to grow as a society and unite in the fight for peace and understanding. It is necessary to open ourselves to others and to profoundly transform the way of living. It is crucial to act now!</p><p>Accompanying these historical masterpieces there are four newly commissioned contemporary works, from leading composers from the region: Nina Perovic (Montenegro), Davor Branimir Vincze (Croatia), Darija Andovska (North Macedonia) and Marko Nikodijevic (Serbia). These pieces serve as a thematic bridges within the program, highlighting the ongoing dialogue between the past and the present, thematize explicitly the dramatic situation in which the world is right now and pointing towards the future.</p></div><section class="stmt"><p class="who">Nina Perovic</p><p class="work">Bubbling</p><div class="say"><p>Aligning with the narrative of the Turning Point project, the imagery of bubbling water reflects ongoing tension and potential for change. The movement and music evoke the currents of water, symbolizing turbulence and fluidity and reflect the struggle between the old and the new, resonating with themes of societal upheaval and transformation. The recording of audio sounds from rivers, seas, bubbles and other sources created the sonic material for the piece, while the movement of the musicians was shaped based on a hexagon, which represents a fundamental aspect of the solid forms of water.</p></div></section><section class="stmt"><p class="who">Davor Branimir Vincze</p><p class="work">Ckrsch!</p><div class="say"><p>With this piece I wanted to create something primordial: a raw sound of the electronics, which gets dubbed by the string orchestra. Out of shivering noise emerges a strong gravity presence. Like musical chameleon, the sound shape-shifts as it passes you by, and disappears leaving the space echoing the flutter of its distant wings.</p></div></section><section class="stmt"><p class="who">Darija Andovska</p><p class="work">Apoptotic Bodies</p><div class="say"><p>Apoptotic bodies (ApoBDs) are a peculiar type of extracellular vesicle that are the remnants of cells having undergone apoptosis, or programmed cell death.</p><p>Apoptosis, the programmed cell death, is actually a way of cells committing suicide in order to destroy a sick tissue or let other tissues develop, which is the major process responsible for the metamorphosis.</p><p>The apoptotic bodies are capable of delivering genetic information and other useful materials to healthy recipient cells, bolstering essential processes such as immune response and tissue regeneration.</p><p>The formation of ApoBDs is the result of a highly coordinated cell disassembly operation, although researchers have yet to unravel the mechanisms behind this cellular decision-making.</p></div></section><section class="stmt"><p class="who">Marko Nikodijevic</p><p class="work">Last inscription</p><div class="say"><p>Last inscription is a study for string orchestra. its harmonies are based on selective transcription of synthesized sounds.</p></div></section></div>
+        <div class="row prog"><span class="k metanum">07</span><span class="v">Marko Nikodijević</span><span class="t">Last Inscription<span class="cm">*</span></span></div></div><p class="fn">* commissioned by NBO</p><button class="lnbtn" type="button" data-dlg="turning-point-dlg"><span class="sr-only">Turning Point Tour — </span><span class="lnlbl">Project Details</span></button></div>
     </div>
   </div>
-  <div class="plates grid"><div class="pl g1"><figure class="fig plate"><div class="img" style="--ar:1.0;background-image:url('plates/2025.jpg')"></div></figure><p class="cap"><span class="tn">Turning Point</span>2025</p></div><div class="pl g2"><figure class="fig plate"><div class="img" style="--ar:0.9212;background-image:url('plates/2024.jpg')"></div></figure><p class="cap"><span class="tn">Turning Point</span>2024</p></div></div>
+  <div class="plates grid"><div class="pl g1 lnhit" data-dlg="turning-point-dlg"><figure class="fig plate"><div class="img" style="--ar:1.0;background-image:url('plates/2025.jpg')"></div></figure><p class="cap"><span class="tn">Turning Point Tour</span>2025</p></div></div>
+</section>
+<section class="chap pr" id="y2024">
+  <div class="grid txt">
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2024</span></div>
+    <div class="b">
+      <h2 class="lead reveal draw">2024</h2><div class="pblk"><p class="ptitle">Turning Point Tour</p><p class="subline metanum soft">Balkan Season 2024</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">4 September</span><span class="v">Sarajevo</span><span class="t">City Hall</span></div>
+        <div class="row"><span class="k metanum">6 September</span><span class="v">Novi Sad</span><span class="t">Synagogue</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Nina Perović</span><span class="t">Bubbling<span class="cm">*</span></span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Arnold Schoenberg</span><span class="t">Verklärte Nacht</span></div>
+        <div class="row prog"><span class="k metanum">03</span><span class="v">Davor Branimir Vincze</span><span class="t">Ckrsch!<span class="cm">*</span></span></div>
+        <div class="row prog"><span class="k metanum">04</span><span class="v">Gustav Mahler</span><span class="t">Adagietto</span></div>
+        <div class="row prog"><span class="k metanum">05</span><span class="v">Darija Andovska</span><span class="t">Apoptotic Bodies<span class="cm">*</span></span></div>
+        <div class="row prog"><span class="k metanum">06</span><span class="v">Richard Strauss</span><span class="t">Metamorphosen</span></div>
+        <div class="row prog"><span class="k metanum">07</span><span class="v">Marko Nikodijević</span><span class="t">Last Inscription<span class="cm">*</span></span></div></div><p class="fn">* commissioned by NBO</p><button class="lnbtn" type="button" data-dlg="turning-point-dlg"><span class="sr-only">Turning Point Tour — </span><span class="lnlbl">Project Details</span></button></div>
+    </div>
+  </div>
 </section>
 <section class="chap pr" id="y2023">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a tour"><a href="#y2025">2025–2024</a><a href="#y2023">2023–2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a></div><span>2023<br>2022</span></div>
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2023</span></div>
     <div class="b">
-      <h2 class="lead reveal draw">Embracing Vulnerability</h2><p class="subline metanum soft">Balkan Season 2023 · 2022</p><p class="dlede" style="margin-top:clamp(1.4rem,3vh,2.2rem);max-width:30ch">The wound is the place where the light enters you</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">15 September 2023</span><span class="v">Mostar</span><span class="t">OKC Abrasevic</span></div>
-        <div class="row"><span class="k metanum">17 September 2023</span><span class="v">Novi Sad</span><span class="t">Synagogue</span></div>
-        <div class="row"><span class="k metanum">19 September 2023</span><span class="v">Maribor</span><span class="t">Union Hall, Festival Maribor</span></div>
-        <div class="row"><span class="k metanum">29 August 2022</span><span class="v">Zagreb</span><span class="t">Lauba</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Johann Sebastian Bach</span><span class="t">O Haupt Voll Blut und Wunden</span></div>
-        <div class="row prog"><span class="k metanum">02</span><span class="v">Davor Branimir Vincze</span><span class="t">The Wound is the Place where the Light enters You — Movement I: In my dreams I'm dying all the time<span class="cm">*</span></span></div>
+      <h2 class="lead reveal draw">2023</h2><div class="pblk"><p class="ptitle">Embracing Vulnerability Tour</p><p class="subline metanum soft">Balkan Season 2023</p><p class="dlede" style="margin-top:clamp(1.2rem,2.6vh,1.9rem);max-width:30ch">The wound is the place where the light enters you</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">15 September</span><span class="v">Mostar</span><span class="t">OKC Abrasevic</span></div>
+        <div class="row"><span class="k metanum">17 September</span><span class="v">Novi Sad</span><span class="t">Synagogue</span></div>
+        <div class="row"><span class="k metanum">19 September</span><span class="v">Maribor</span><span class="t">Union Hall, Festival Maribor</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Johann Sebastian Bach</span><span class="t">O Haupt Voll Blut und Wunden</span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Davor Branimir Vincze</span><span class="t">The Wound is the Place where the Light enters You — Movement I: In my dreams I’m dying all the time<span class="cm">*</span></span></div>
         <div class="row prog"><span class="k metanum">03</span><span class="v">Isidora Zebeljan</span><span class="t">Deserted Village</span></div>
         <div class="row prog"><span class="k metanum">04</span><span class="v">Steve Reich</span><span class="t">Different Trains – Europe-During the War — Movement II: Suture hors-temps</span></div>
         <div class="row prog"><span class="k metanum">05</span><span class="v">Arvo Pärt</span><span class="t">Cantus in memoriam Benjamin Britten — Movement III: Der Prozess</span></div>
         <div class="row prog"><span class="k metanum">06</span><span class="v">Franz Schubert</span><span class="t">String Quintet in C major, D. 956 – Adagio</span></div>
         <div class="row prog"><span class="k metanum">07</span><span class="v">Gustav Mahler</span><span class="t">Adagietto — Movement IV: Mì alma (stuck in a loop)</span></div>
-        <div class="row prog"><span class="k metanum">08</span><span class="v">Edward Elgar</span><span class="t">Nimrod — Movement V: Lux ex Tenebris</span></div></div><p class="fn">* commissioned by NBO</p>
-      <div class="liner"><div class="read measure"><p>The global pandemic left the world in a shaken and vulnerable state. Even as it seemed the world was regaining its bearings and pulling out of the crisis, another devastating and unthinkable event occurred – the war in Ukraine.</p><p>It is important for all of us to understand where we are right now and to gain the courage to face our current social, physical, economic, and environmental insecurities and vulnerabilities.</p><p>Vulnerability is “uncertainty, risk, and emotional exposure.” It is the unstable feeling we get when we step out of our comfort zone or do something that forces us to loosen control.</p><p>With this tour NBO proposes not to deny our present situation, not to run away, not to be a victim, but rather invites us to see this crisis as an opportunity to embrace our vulnerabilities, open ourselves to others and to profoundly transform our way of living. To embrace our vulnerabilities means to use them as a chance to grow as a society and unite in the fight for peace and understanding.</p><p>Choosing courage and vulnerability can open us up to love, joy and belonging, and bring us closer to “wholehearted living.”</p><p>The inspiration for the title of this year’s tour comes from the Sufi teacher and philosopher Rumi's famous poem:</p></div><div class="poem"><div class="dlg"><p class="turn a"><span class="sp">I said</span><span class="ln">what about my eyes?</span></p><p class="turn b"><span class="sp">He said</span><span class="ln">Keep them on the road.</span></p><p class="turn a"><span class="sp">I said</span><span class="ln">What about my passion?</span></p><p class="turn b"><span class="sp">He said</span><span class="ln">Keep it burning.</span></p><p class="turn a"><span class="sp">I said</span><span class="ln">What about my heart?</span></p><p class="turn b"><span class="sp">He said</span><span class="ln">Tell me what you hold inside it?</span></p><p class="turn a"><span class="sp">I said</span><span class="ln">Pain and sorrow.</span></p><p class="turn b"><span class="sp">He said</span><span class="ln">Stay with it. The wound is the place where the Light enters you.</span></p></div></div></div>
+        <div class="row prog"><span class="k metanum">08</span><span class="v">Edward Elgar</span><span class="t">Nimrod — Movement V: Lux ex Tenebris</span></div></div><p class="fn">* commissioned by NBO</p><button class="lnbtn" type="button" data-dlg="embracing-vulnerability-dlg"><span class="sr-only">Embracing Vulnerability Tour — </span><span class="lnlbl">Project Details</span></button></div>
     </div>
   </div>
-  <div class="plates grid"><div class="pl g3"><figure class="fig plate"><div class="img" style="--ar:1.0;background-image:url('plates/2023.jpg')"></div></figure><p class="cap"><span class="tn">Embracing Vulnerability</span>2023</p></div><div class="pl g4"><figure class="fig plate"><div class="img" style="--ar:0.7073;background-image:url('plates/2022.jpg')"></div></figure><p class="cap"><span class="tn">Embracing Vulnerability</span>2022</p></div></div>
+  <div class="plates grid"><div class="pl g2 lnhit" data-dlg="embracing-vulnerability-dlg"><figure class="fig plate"><div class="img" style="--ar:1.0;background-image:url('plates/2023.jpg')"></div></figure><p class="cap"><span class="tn">Embracing Vulnerability Tour</span>2023</p></div></div>
+</section>
+<section class="chap pr" id="y2022">
+  <div class="grid txt">
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2022</span></div>
+    <div class="b">
+      <h2 class="lead reveal draw">2022</h2><div class="pblk"><p class="ptitle">Embracing Vulnerability Tour</p><p class="subline metanum soft">Balkan Season 2022</p><p class="dlede" style="margin-top:clamp(1.2rem,2.6vh,1.9rem);max-width:30ch">The wound is the place where the light enters you</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">24 August</span><span class="v">Podgorica</span><span class="t">Podgorica Cultural Summer</span></div>
+        <div class="row"><span class="k metanum">26 August</span><span class="v">Sarajevo</span><span class="t">City Hall</span></div>
+        <div class="row"><span class="k metanum">28 August</span><span class="v">Rijeka</span><span class="t">Export Drvo</span></div>
+        <div class="row"><span class="k metanum">29 August</span><span class="v">Zagreb</span><span class="t">Lauba</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Johann Sebastian Bach</span><span class="t">O Haupt Voll Blut und Wunden</span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Davor Branimir Vincze</span><span class="t">The Wound is the Place where the Light enters You — Movement I: In my dreams I’m dying all the time<span class="cm">*</span></span></div>
+        <div class="row prog"><span class="k metanum">03</span><span class="v">Isidora Zebeljan</span><span class="t">Deserted Village</span></div>
+        <div class="row prog"><span class="k metanum">04</span><span class="v">Steve Reich</span><span class="t">Different Trains – Europe-During the War — Movement II: Suture hors-temps</span></div>
+        <div class="row prog"><span class="k metanum">05</span><span class="v">Arvo Pärt</span><span class="t">Cantus in memoriam Benjamin Britten — Movement III: Der Prozess</span></div>
+        <div class="row prog"><span class="k metanum">06</span><span class="v">Franz Schubert</span><span class="t">String Quintet in C major, D. 956 – Adagio</span></div>
+        <div class="row prog"><span class="k metanum">07</span><span class="v">Gustav Mahler</span><span class="t">Adagietto — Movement IV: Mì alma (stuck in a loop)</span></div>
+        <div class="row prog"><span class="k metanum">08</span><span class="v">Edward Elgar</span><span class="t">Nimrod — Movement V: Lux ex Tenebris</span></div></div><p class="fn">* commissioned by NBO</p><button class="lnbtn" type="button" data-dlg="embracing-vulnerability-dlg"><span class="sr-only">Embracing Vulnerability Tour — </span><span class="lnlbl">Project Details</span></button></div>
+    </div>
+  </div>
 </section>
 <section class="chap pr" id="y2021">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a tour"><a href="#y2025">2025–2024</a><a href="#y2023">2023–2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a></div><span>2021</span></div>
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2021</span></div>
     <div class="b">
-      <h2 class="lead reveal draw">No Return to Normality</h2><p class="subline metanum soft">Balkan Season 2021</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">23 August</span><span class="v">Rijeka</span><span class="t">Export Drvo</span></div>
+      <h2 class="lead reveal draw">2021</h2><div class="pblk"><p class="ptitle">No Return to Normality Tour</p><p class="subline metanum soft">Balkan Season 2021</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">23 August</span><span class="v">Rijeka</span><span class="t">Export Drvo</span></div>
         <div class="row"><span class="k metanum">25 August</span><span class="v">Zagreb</span><span class="t">Lauba</span></div>
         <div class="row"><span class="k metanum">27 August</span><span class="v">Sarajevo</span><span class="t">Army Hall</span></div>
         <div class="row"><span class="k metanum">25 September</span><span class="v">Maribor</span><span class="t">Union Hall</span></div>
@@ -190,31 +345,27 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
         <div class="row"><span class="k metanum">24 October</span><span class="v">Belgrade</span><span class="t">Museum of Yugoslavia</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">John Adams</span><span class="t">Shaker Loops</span></div>
         <div class="row prog"><span class="k metanum">02</span><span class="v">Max Richter</span><span class="t">Vivaldi recomposed (Vladimir Kostov, solo violin)</span></div>
         <div class="row prog"><span class="k metanum">03</span><span class="v">Ivan Bozicevic</span><span class="t">Rethink! – trailer<span class="cm">*</span></span></div>
-        <div class="row prog"><span class="k metanum">04</span><span class="v">Richard Strauss</span><span class="t">Metamorphosen</span></div></div><p class="fn">* commissioned by NBO</p>
-      <div class="liner"><div class="read measure"><p>The NBO "No Return to Normality" Tour invites people to think about life after the pandemic. With systemic problems such as climate change, social inequality, hyper-productivity and consumerism we need to ask ourselves if we want to return to the way things were before the pandemic. NBO is a testament to the need and possibility of music overcoming national and communal differences for the sake of the common good. This spirit is needed more than ever in the world during and after the corona pandemic. Humanity needs to come together and develop an overriding common purpose.</p><p>We believe our experience of bringing people together, through music, in the Balkans is relevant for the rest of the world. At the beginning of the corona pandemic a group of more than 200 high-profile artists, scientists, and thought leaders signed a call to arms, asking citizens and leaders not to return to the "normal" that led us to the brink of this pandemic. With this tour NBO joins them in this urge to avoid post-lockdown “return to normal”. We need transformation, a profound overhaul of our goals, beliefs and values. We are building the reality for which we will all be equally responsible. We must act now.</p><p>OPEN LETTER
-The Covid-19 pandemic is a tragedy. This crisis is, however, inviting us to examine what is essential. And what we see is simple: “adjustments” are not enough. The problem is systemic. The ongoing ecological catastrophe is a meta-crisis: the massive extinction of life on Earth is no longer in doubt, and all indicators point to a direct existential threat. Unlike a pandemic, however severe, a global ecological collapse will have immeasurable consequences. We therefore solemnly call upon leaders — and all of us as citizens – to leave behind the unsustainable logic that still prevails and to undertake a profound overhaul of our goals, values and economies. The pursuit of consumerism and an obsession with productivity have led us to deny the value of life itself: that of plants, that of animals, and that of a great number of human beings. Pollution, climate change, and the destruction of our remaining natural zones has brought the world to a breaking point. For these reasons, along with increasing social inequalities, we believe it is unthinkable to ‘go back to normal’. The radical transformation we need – at all levels – demands boldness and courage. It will not happen without a massive and determined commitment. We must act now. It is as much a matter of survival as one of dignity and coherence.</p></div></div>
+        <div class="row prog"><span class="k metanum">04</span><span class="v">Richard Strauss</span><span class="t">Metamorphosen</span></div></div><p class="fn">* commissioned by NBO</p><p class="fn">More information about the tour here</p><button class="lnbtn" type="button" data-dlg="no-return-to-normality-dlg"><span class="sr-only">No Return to Normality Tour — </span><span class="lnlbl">Project Details</span></button></div>
     </div>
   </div>
-  <div class="plates grid"><div class="pl g5"><figure class="fig plate"><div class="img" style="--ar:1.0;background-image:url('plates/2021.jpg')"></div></figure><p class="cap"><span class="tn">No Return to Normality</span>2021</p></div></div>
+  <div class="plates grid"><div class="pl g3 lnhit" data-dlg="no-return-to-normality-dlg"><figure class="fig plate"><div class="img" style="--ar:1.0;background-image:url('plates/2021.jpg')"></div></figure><p class="cap"><span class="tn">No Return to Normality Tour</span>2021</p></div></div>
 </section>
 <section class="chap pr" id="y2020">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a tour"><a href="#y2025">2025–2024</a><a href="#y2023">2023–2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a></div><span>2020</span></div>
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2020</span></div>
     <div class="b">
-      <h2 class="lead reveal draw">Balkan Season 2020</h2><p class="eyebrow blk">Concerts</p><p class="silence">Due to the corona pandemic, the Balkan Season 2020 Tour, with planned concerts in RIJEKA, ZAGREB, SARAJEVO, PODGORICA, PRISTINA, SKOPJE and NOVI SAD, is postponed until next year.</p><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">John Adams</span><span class="t">Shaker Loops</span></div>
+      <h2 class="lead reveal draw">2020</h2><div class="pblk"><p class="ptitle">Balkan Season 2020</p><p class="eyebrow blk">Concerts</p><p class="silence">Due to the corona pandemic, the Balkan Season 2020 Tour, with planned concerts in RIJEKA, ZAGREB, SARAJEVO, PODGORICA, PRISTINA, SKOPJE and NOVI SAD, is postponed until next year.</p><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">John Adams</span><span class="t">Shaker Loops</span></div>
         <div class="row prog"><span class="k metanum">02</span><span class="v">Max Richter</span><span class="t">Vivaldi recomposed (Stanko Madic, solo violin)</span></div>
         <div class="row prog"><span class="k metanum">03</span><span class="v">Ivan Bozicevic</span><span class="t">Rethink! – trailer</span></div>
-        <div class="row prog"><span class="k metanum">04</span><span class="v">Richard Strauss</span><span class="t">Metamorphosen</span></div></div>
-      <div class="liner"></div>
+        <div class="row prog"><span class="k metanum">04</span><span class="v">Richard Strauss</span><span class="t">Metamorphosen</span></div></div></div>
     </div>
   </div>
-  <div class="plates grid"><div class="pl g6 typetile"><span class="ty">2020</span><span class="tt">Balkan Season 2020</span></div></div>
 </section>
 <section class="chap pr" id="y2019">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a tour"><a href="#y2025">2025–2024</a><a href="#y2023">2023–2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a></div><span>2019</span></div>
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2019</span></div>
     <div class="b">
-      <h2 class="lead reveal draw">B Matinee</h2><p class="subline metanum soft">Balkan Season 2019</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">28 July</span><span class="v">Tivat</span><span class="t">Kotorart Festival</span></div>
+      <h2 class="lead reveal draw">2019</h2><div class="pblk"><p class="ptitle">B Matinee Tour</p><p class="subline metanum soft">Balkan Season 2019</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">28 July</span><span class="v">Tivat</span><span class="t">Kotorart Festival</span></div>
         <div class="row"><span class="k metanum">30 July</span><span class="v">Prizren</span><span class="t">Lumbardhi Stage</span></div>
         <div class="row"><span class="k metanum">1 August</span><span class="v">Sarajevo</span><span class="t">Cinemas Sloga</span></div>
         <div class="row"><span class="k metanum">19 September</span><span class="v">Maribor</span><span class="t">Maribor Festival</span></div>
@@ -226,23 +377,123 @@ The Covid-19 pandemic is a tragedy. This crisis is, however, inviting us to exam
         <div class="row prog"><span class="k metanum">04</span><span class="v">Davor Branimir Vincze</span><span class="t">darkroom<span class="cm">*</span></span></div>
         <div class="row prog"><span class="k metanum">05</span><span class="v">Samuel Barber</span><span class="t">Adagio for Strings</span></div>
         <div class="row prog"><span class="k metanum">06</span><span class="v">Darija Andovska</span><span class="t">FairVent<span class="cm">*</span></span></div>
-        <div class="row prog"><span class="k metanum">07</span><span class="v">Danijel Zontar</span><span class="t">Afterparty (electronica: DJ MKDSL)<span class="cm">*</span></span></div></div><p class="fn">* commissioned by NBO</p>
-      <div class="liner"><div class="read measure"><p>Building on a successful tour of the Balkans during summer 2018 the No Borders Orchestra string ensemble, accompanied by percussions and electronica, follow up in summer 2019 with another international tour around the Western Balkans and Europe called B Matinee. This project, whose name suggests new beginnings, brings together contemporary classical music and clubbing culture, and features cutting-edge new compositions by five exciting young composers from the Balkan region. These new, contemporary, experimental compositions are inspired by Berghain, the famous Berlin club. The 2019 B Matinee tour also commemorates thirty years of the Fall of the Berlin Wall and celebrates the tearing down of walls between classical and clubbing music. By communicating with contemporary techno sound, our composers cross genres, surmounting the borders between different styles of music. The result is a new and fresh sound that has no limits celebrating new paths and possibilities.</p></div><section class="stmt"><p class="who">Drasko Adzic</p><div class="say wide"><p class="dlede" style="max-width:34ch">B. matinée is about morning, when a gust of wind which appears from nowhere envelopes you whole after hours of dancing.</p><div class="anaph" style="margin-top:clamp(1.6rem,3.5vh,2.6rem)"><p>It’s about the joy of being capable to see happiness suspended in time, right in front of you, palpable, for hours on end.</p><p>It’s about swapping night and day.</p><p>It’s about the tingling of anticipation when you see a journey starting to unfold before your eyes and you crave to find out where it will lead, knowing all along that you will get there.</p><p>It’s about pixelization of sound and space.</p><p>It’s about the eternaly young skin, glistening against the warmth of the dark.</p><p>It’s about a hypersexual serotonin-based superorganism.</p><p>It’s about the choice to feel free.</p><p>It’s about introspection and change.</p></div><div class="stair" style="margin-top:clamp(2rem,4.5vh,3.4rem)"><span style="--n:0">It’s about beginning.</span><span style="--n:1">It’s about being.</span><span style="--n:2">It’s about beyond.</span><span style="--n:3">It’s about Berghain.</span></div></div></section><section class="stmt"><p class="who">Drinor Zymberi</p><div class="say"><p>One of my goals during the composing process is to catch some sounds and organize it in a way that someone can experience the feeling of ecstasy, and for me the synthesis between classical contemporary music and EDM music elements offers the possibility of experiencing that feeling.</p></div></section><section class="stmt"><p class="who">Davor Branimir Vincze</p><div class="say"><p>While I briefly lived in Berlin in 2013, I was flabbergasted by Berlin and its techno scene, organized in vast spaces filled with music and streams of people. Thus for me, the opportunity to work on a Berghain inspired project, had an instant allure. The techno of Berghain and my music might seem miles apart, but we share some common fascinations - technology and cultural intertwinedness.</p><p>Microllage – compositional technique I developed – fragments musical pieces into snippets and then reshuffles them to form different kinds of gestures and phrases. By doing so it re-contextualises the music of others, building on commonalities between disparate styles, much like a DJ’s remix of various musical elements during a late night session.</p><p>‘darkroom’ describes a hypothetical musical space - mystical, huge, open and liberating; such that allows your body and soul to roam free. You can’t see, so you have to listen! It might sound scary, but the trick is to let go...</p></div></section><section class="stmt"><p class="who">Darija Andovska</p><div class="say wide"><div class="refrain"><span class="cl">It’s what we carry inside of us since the dawn of time.</span><span class="bt" style="--s:1.0">The beat.</span><span class="cl">It’s a catharsic ritual.</span><span class="bt" style="--s:1.16">The beat.</span><span class="cl">It’s a special tribe of handpicked people.</span><span class="bt" style="--s:1.31">The beat.</span><span class="cl">It’s the two divine forces, interlocked, repeating in a circle - the Eros and Thanatos.</span><span class="bt" style="--s:1.47">The beat.</span><span class="cl">It’s transcending.</span><span class="bt" style="--s:1.63">The beat.</span><span class="cl"></span><span class="bt" style="--s:1.79">The beat.</span><span class="cl"></span><span class="bt" style="--s:1.94">The beat.</span><span class="cl"></span><span class="bt" style="--s:2.1">The beat.</span></div></div></section><section class="stmt"><p class="who">Danijel Zontar</p><div class="say wide"><ul class="acro"><li style="--i:14">s<b>T</b>ripped-down aesthetics</li><li style="--i:14">r<b>E</b>petitive</li><li style="--i:7">introspe<b>C</b>tion</li><li style="--i:8">static <b>H</b>armony</li><li style="--i:15"><b>N</b>on-narattive</li><li style="--i:0">...my inspirati<b>O</b>n</li></ul></div></section></div>
+        <div class="row prog"><span class="k metanum">07</span><span class="v">Danijel Zontar</span><span class="t">Afterparty (electronica: DJ MKDSL)<span class="cm">*</span></span></div></div><p class="fn">* commissioned by NBO</p><p class="fn">More information about the tour here</p><button class="lnbtn" type="button" data-dlg="b-matinee-dlg"><span class="sr-only">B Matinee Tour — </span><span class="lnlbl">Project Details</span></button></div>
     </div>
   </div>
-  <div class="plates grid"><div class="pl g7"><figure class="fig plate"><div class="img" style="--ar:1.0;background-image:url('plates/2019.jpg')"></div></figure><p class="cap"><span class="tn">B Matinee</span>2019</p></div></div>
+  <div class="plates grid"><div class="pl g4 lnhit" data-dlg="b-matinee-dlg"><figure class="fig plate"><div class="img" style="--ar:1.0;background-image:url('plates/2019.jpg')"></div></figure><p class="cap"><span class="tn">B Matinee Tour</span>2019</p></div></div>
 </section>
 <section class="chap pr" id="y2018">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a tour"><a href="#y2025">2025–2024</a><a href="#y2023">2023–2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a></div><span>2018</span></div>
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2018</span></div>
     <div class="b">
-      <h2 class="lead reveal draw">I exist – to Rajasthan</h2><p class="subline metanum soft">2018</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">4 November</span><span class="v">Belgrade</span><span class="t">National Theatre</span></div>
+      <h2 class="lead reveal draw">2018</h2><div class="pblk"><p class="ptitle">I exist – to Rajasthan</p><p class="fn">Production: Marc Sinan Company</p><p class="fn">Composer: Marc Sinan</p><p class="fn">Marc Sinan, Iva Bittova, Raju Bhopa, Dayam Khan, Papamir, NBO and Dresdner Sinfoniker</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">4 November</span><span class="v">Belgrade</span><span class="t">National Theatre</span></div>
         <div class="row"><span class="k metanum">6 November</span><span class="v">Pecs</span><span class="t">Zsolnay Cultural Quarter, E78</span></div>
-        <div class="row"><span class="k metanum">9, 10 November</span><span class="v">Berlin</span><span class="t">TAK theatre, Aufbau-Haus</span></div></div>
-      <div class="liner"><p class="eyebrow">No Borders Orchestra stands for</p><div class="stair caps" style="margin-top:clamp(1.4rem,3vh,2.2rem)"><span style="--n:0">amazing music</span><span style="--n:1">unity in diversity</span><span style="--n:2">tolerance and togetherness</span><span style="--n:3">in the Balkans &amp; beyond</span></div><div class="read measure"><p>In the region at the very heart of Europe that has for decades stood for crisis, conflict and divisiveness, there is a group of young people that embodies a different story. Their passion is togetherness, their bond is friendship, their language is music. No Borders Orchestra is their story!</p><p>As we see every day in the news, what is happening in the Balkans is happening in the world: that is why NBO’s impact is not regional, its reach is universal!</p><p>With its excellent music making, No Borders Orchestra breaks down borders of all kinds: between countries, classes and ethnicities, between the classical concert halls of the elites and the rocking stages of the people. Made up of the best professional musicians from every country, religious and ethnic group of the former Yugoslavia, the orchestra is a living embodiment of everything that matters to modern Europe: diversity, integration and the spirit of friendship. Hence the commitment to excellence: the quality of our music is a direct expression of what we believe the Western Balkans – and Europe – can achieve when united by tolerance and togetherness.</p><p>To spread their powerful message, No Borders Orchestra is establishing the annual Balkan Season tour in the region.</p></div><p class="fn">Production: Marc Sinan Company; Composer: Marc Sinan</p><p class="fn">Marc Sinan, Iva Bittova, Raju Bhopa, Dayam Khan, Papamir, NBO and Dresdner Sinfoniker</p></div>
+        <div class="row"><span class="k metanum">9, 10 November</span><span class="v">Berlin</span><span class="t">TAK theatre, Aufbau-Haus</span></div></div></div><div class="pblk pblk2"><p class="ptitle">Balkan Season 2018</p><p class="subline metanum soft">annual regional summer tour</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">17 August</span><span class="v">Budva</span><span class="t">Theatre City</span></div>
+        <div class="row"><span class="k metanum">18 August</span><span class="v">Prizren</span><span class="t">Lumbardhi Stage</span></div>
+        <div class="row"><span class="k metanum">20 August</span><span class="v">Sarajevo</span><span class="t">Army Hall</span></div>
+        <div class="row"><span class="k metanum">22 August</span><span class="v">Belgrade</span><span class="t">Centre for Cultural Decontamination</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Pjotr Ilyitch Tchaikovsky</span><span class="t">Serenade</span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Aleksandra Vrebalov</span><span class="t">Pannonia Boundless</span></div>
+        <div class="row prog"><span class="k metanum">03</span><span class="v">Johann Sebastian Bach</span><span class="t">Concerto for violin and viola in C minor (soloists: Stanko Madić, violin &amp; Saša Mirković, viola)</span></div>
+        <div class="row prog"><span class="k metanum">04</span><span class="v">Arnold Schoenberg</span><span class="t">Transfigured night</span></div></div><p class="fn">More information about the tour here</p><button class="lnbtn" type="button" data-dlg="balkan-season-2018-dlg"><span class="sr-only">Balkan Season 2018 — </span><span class="lnlbl">Project Details</span></button></div>
     </div>
   </div>
-  <div class="plates grid"><div class="pl g8"><figure class="fig plate"><div class="img" style="--ar:1.0;background-image:url('plates/2018.jpg')"></div></figure><p class="cap"><span class="tn">I exist – to Rajasthan</span>2018</p></div></div>
+  <div class="plates grid"><div class="pl g5 lnhit" data-dlg="balkan-season-2018-dlg"><figure class="fig plate"><div class="img" style="--ar:1.0;background-image:url('plates/2018.jpg')"></div></figure><p class="cap"><span class="tn">Balkan Season 2018</span>2018</p></div></div>
+</section>
+<section class="chap pr" id="y2017">
+  <div class="grid txt">
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2017</span></div>
+    <div class="b">
+      <h2 class="lead reveal draw">2017</h2><div class="pblk"><p class="ptitle">I exist – to Rajasthan</p><p class="fn">Production: Marc Sinan Company</p><p class="fn">Composer: Marc Sinan</p><p class="fn">Marc Sinan, Iva Bittova, Raju Bhopa, Dayam Khan, Papamir, NBO and Dresdner Sinfoniker</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">31 March</span><span class="v">Dresden</span><span class="t">Festspielhaus Hellerau</span></div>
+        <div class="row"><span class="k metanum">2 April</span><span class="v">Berlin</span><span class="t">Radialsystem V</span></div>
+        <div class="row"><span class="k metanum">3 April</span><span class="v">Munich</span><span class="t">white BOX</span></div></div></div>
+    </div>
+  </div>
+</section>
+<section class="chap pr" id="y2016">
+  <div class="grid txt">
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2016</span></div>
+    <div class="b">
+      <h2 class="lead reveal draw">2016</h2><div class="pblk"><p class="ptitle">Verdi/Cassol: Macbeth</p><p class="fn">Directed by: Brett Bailey</p><p class="fn">Production: Third World Bun Fight, Cape Town</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">11, 12, 13 February</span><span class="v">Brussels</span><span class="t">KVS</span></div>
+        <div class="row"><span class="k metanum">17, 18, February</span><span class="v">Poitiers</span><span class="t">Theatre et auditorium de Poitiers</span></div>
+        <div class="row"><span class="k metanum">23 February</span><span class="v">Ljubljana</span><span class="t">Cankarjev Dom</span></div>
+        <div class="row"><span class="k metanum">28, 29 May</span><span class="v">Macao</span><span class="t">China, Macao Arts Festival, Grand Auditorium, Macao Cultural Centre</span></div>
+        <div class="row"><span class="k metanum">24 June</span><span class="v">Naples</span><span class="t">Napoli Teatro Festival Italia, Auditorium RAI Domenico Scarlatti</span></div>
+        <div class="row"><span class="k metanum">28, 29 June</span><span class="v">Marseilles</span><span class="t">Festival de Marseilles/Festival d`Aix-en-Provence, Les Espaces culturels du Silo d`Arenc</span></div>
+        <div class="row"><span class="k metanum">22, 23 July</span><span class="v">Athens</span><span class="t">Epidaurus Festival</span></div>
+        <div class="row"><span class="k metanum">4, 5 October</span><span class="v">Quimper</span><span class="t">Le Theatre de Cornouaille</span></div></div></div><div class="pblk pblk2"><p class="ptitle">Aghet – The Great Catastrophe</p><p class="fn">Production: Dresdner Sinfoniker</p><p class="fn">No Borders Orchestra together with musicians from Dresdner Sinfoniker, Dresdner Kammerchor, AuditivVokal and musicians from Turkey and Armenia.</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">29, 30 April</span><span class="v">Dresden</span><span class="t">Hellerau, Europäisches Zentrum der Künste</span></div>
+        <div class="row"><span class="k metanum">5 November</span><span class="v">Belgrade</span><span class="t">Yugoslav Drama Theatre</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Zeynep Gedizlioglu</span><span class="t">Notes from the Silent One</span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Vache Sharafyan</span><span class="t">Surgite Gloriae</span></div>
+        <div class="row prog"><span class="k metanum">03</span><span class="v">Helmut Oehring</span><span class="t">Massaker, hört ihr MASSAKER!</span></div></div><button class="lnbtn" type="button" data-dlg="aghet-great-catastrophe-dlg"><span class="sr-only">Aghet – The Great Catastrophe — </span><span class="lnlbl">Project Details</span></button></div>
+    </div>
+  </div>
+</section>
+<section class="chap pr" id="y2015">
+  <div class="grid txt">
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2015</span></div>
+    <div class="b">
+      <h2 class="lead reveal draw">2015</h2><div class="pblk"><p class="ptitle">Verdi/Cassol: Macbeth</p><p class="fn">Directed by: Brett Bailey</p><p class="fn">Production: Third World Bun Fight, Cape Town</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">10, 11 September</span><span class="v">Gwangju</span><span class="t">South Korea, Opening Festival of the Asian Culture Complex Arts Theater</span></div>
+        <div class="row"><span class="k metanum">15, 16, 18, 19 September</span><span class="v">Brisbane</span><span class="t">Australia, Brisbane Festival</span></div>
+        <div class="row"><span class="k metanum">24, 25, 26 September</span><span class="v">Hamburg</span><span class="t">Kampnagel Internationale Kulturfabrik</span></div></div></div><div class="pblk pblk2"><p class="ptitle">Aghet – The Great Catastrophe</p><p class="fn">Production: Dresdner Sinfoniker</p><p class="fn">No Borders Orchestra together with musicians from Dresdner Sinfoniker, Dresdner Kammerchor, AuditivVokal and musicians from Turkey and Armenia.</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">27, 28 November</span><span class="v">Berlin</span><span class="t">Radial System</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Zeynep Gedizlioglu</span><span class="t">Notes from the Silent One</span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Vache Sharafyan</span><span class="t">Surgite Gloriae</span></div>
+        <div class="row prog"><span class="k metanum">03</span><span class="v">Helmut Oehring</span><span class="t">Massaker, hört ihr MASSAKER!</span></div></div><button class="lnbtn" type="button" data-dlg="aghet-great-catastrophe-dlg"><span class="sr-only">Aghet – The Great Catastrophe — </span><span class="lnlbl">Project Details</span></button></div>
+    </div>
+  </div>
+</section>
+<section class="chap pr" id="y2014">
+  <div class="grid txt">
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2014</span></div>
+    <div class="b">
+      <h2 class="lead reveal draw">2014</h2><div class="pblk"><p class="ptitle">Verdi/Cassol: Macbeth</p><p class="fn">Directed by: Brett Bailey</p><p class="fn">Production: Third World Bun Fight, Cape Town</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">13, 15, 16 May</span><span class="v">Brussels</span><span class="t">Kunstenfestivaldesarts at KVS Theatre</span></div>
+        <div class="row"><span class="k metanum">19, 20 May</span><span class="v">Rotterdam</span><span class="t">Operadagen</span></div>
+        <div class="row"><span class="k metanum">24, 25, 27, 28 May</span><span class="v">Vienna</span><span class="t">Wiener Festwochen</span></div>
+        <div class="row"><span class="k metanum">11, 12 June</span><span class="v">Braunschweig</span><span class="t">Festival Theaterformen</span></div>
+        <div class="row"><span class="k metanum">16, 17, 19, 20 September</span><span class="v">London</span><span class="t">Barbican</span></div>
+        <div class="row"><span class="k metanum">17, 18 October</span><span class="v">Girona</span><span class="t">Theatre Municipal</span></div>
+        <div class="row"><span class="k metanum">22, 23 October</span><span class="v">Lisbon</span><span class="t">Maria Matos Teatro Municipal</span></div>
+        <div class="row"><span class="k metanum">30, 31 October</span><span class="v">Tarbes</span><span class="t">Le Parvis</span></div>
+        <div class="row"><span class="k metanum">4, 5, 7, 8 November</span><span class="v">Toulouse</span><span class="t">Theatre Garonne</span></div>
+        <div class="row"><span class="k metanum">12, 14, 15 November</span><span class="v">Strasbourg</span><span class="t">Le Maillon</span></div>
+        <div class="row"><span class="k metanum">18, 19, 21, 22 November</span><span class="v">Paris</span><span class="t">Festival d’Automne at Noveau Theatre de Montreuil</span></div>
+        <div class="row"><span class="k metanum">25, 26 November</span><span class="v">Paris</span><span class="t">Festival d’Automne at La Ferme Du Buisson</span></div>
+        <div class="row"><span class="k metanum">29 November</span><span class="v">Douai</span><span class="t">L’hippodrome</span></div></div></div>
+    </div>
+  </div>
+</section>
+<section class="chap pr" id="y2013">
+  <div class="grid txt">
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2013</span></div>
+    <div class="b">
+      <h2 class="lead reveal draw">2013</h2><div class="pblk"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">20 October</span><span class="v">Berlin</span><span class="t">Radial System</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Isidora Žebeljan</span><span class="t">Horses of Saint Mark</span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Lera Auerbach</span><span class="t">Sogno di Stabat Mater (soloists: Stanko Madic, violin &amp; Sasa Mirkovic, viola)</span></div>
+        <div class="row prog"><span class="k metanum">03</span><span class="v">Richard Wagner</span><span class="t">Siegfried-Idyll</span></div>
+        <div class="row prog"><span class="k metanum">04</span><span class="v">Zoltán Kodály</span><span class="t">Dances of Galanta</span></div></div></div><div class="pblk pblk2"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">10 October</span><span class="v">Priština</span><span class="t">The Cathedral of Blessed Mother Teresa</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Franz Schubert</span><span class="t">Symphony No. 7 “Unfinished”</span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Richard Wagner</span><span class="t">Siegfried-Idyll</span></div>
+        <div class="row prog"><span class="k metanum">03</span><span class="v">Zoltán Kodály</span><span class="t">Dances of Galanta</span></div></div></div><div class="pblk pblk2"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">21 August</span><span class="v">Ljubljana</span><span class="t">Ljubljana Festival</span></div>
+        <div class="row"><span class="k metanum">17 August</span><span class="v">Trebinje</span><span class="t">Old Town Square</span></div>
+        <div class="row"><span class="k metanum">15 August</span><span class="v">Herceg Novi</span><span class="t">Guitar Art Summer Fest</span></div>
+        <div class="row"><span class="k metanum">13 August</span><span class="v">Kotor</span><span class="t">Kotor Art Festival</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Sergei Prokofiev</span><span class="t">Symphonie classique</span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Isidora Žebeljan</span><span class="t">Horses of Saint Mark</span></div>
+        <div class="row prog"><span class="k metanum">03</span><span class="v">Joaquin Rodrigo</span><span class="t">Concierto de Aranjuez (soloist Miloš Karadaglić, guitar)</span></div>
+        <div class="row prog"><span class="k metanum">04</span><span class="v">Richard Wagner</span><span class="t">Siegfried-Idyll</span></div>
+        <div class="row prog"><span class="k metanum">05</span><span class="v">Zoltán Kodály</span><span class="t">Dances of Galanta</span></div></div></div><div class="pblk pblk2"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">17 March</span><span class="v">Belgrade</span><span class="t note">in the framework of the annual European Festival Association Collective and Affiliate Members Meeting (CAMM) and the 14th edition of the Guitar Art Festival</span></div>
+        <div class="row"><span class="k metanum">16 March</span><span class="v">Novi Sad</span><span class="t">Synagogue</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Isidora Žebeljan</span><span class="t">The Horses of Saint Mark</span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Albeniz/Leo Brouwer</span><span class="t">Iberia (soloist: Edin Karamazov, guitar)</span></div>
+        <div class="row prog"><span class="k metanum">03</span><span class="v">Kodaly</span><span class="t">Dances of Galanta</span></div></div></div>
+    </div>
+  </div>
+</section>
+<section class="chap pr" id="y2012">
+  <div class="grid txt">
+    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2012</span></div>
+    <div class="b">
+      <h2 class="lead reveal draw">2012</h2><div class="pblk"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">11 October</span><span class="v">Belgrade</span><span class="t note">inauguration concert at the gala opening of the 44th BEMUS Festival</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Sergei Prokofiev</span><span class="t">Symphonie classique</span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Ludwig van Beethoven</span><span class="t">Piano Concerto No.5 in E-flat major Op.73 – “Emperor” (soloist: Hinrich Alpers, piano)</span></div>
+        <div class="row prog"><span class="k metanum">03</span><span class="v">Charles Ives</span><span class="t">The Unanswered Question</span></div>
+        <div class="row prog"><span class="k metanum">04</span><span class="v">Zoltán Kodály</span><span class="t">Dances of Galánta</span></div></div></div><div class="pblk pblk2"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">9 October</span><span class="v">Kanjiza</span><span class="t note">the first public appearance of No Borders Orchestra</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Sergei Prokofiev</span><span class="t">Symphonie classique</span></div>
+        <div class="row prog"><span class="k metanum">02</span><span class="v">Charles Ives</span><span class="t">The Unanswered Question</span></div>
+        <div class="row prog"><span class="k metanum">03</span><span class="v">Zoltán Kodály</span><span class="t">Dances of Galánta</span></div></div></div>
+    </div>
+  </div>
 </section>
 </div></div>
 
@@ -278,6 +529,50 @@ The Covid-19 pandemic is a tragedy. This crisis is, however, inviting us to exam
     </div>
   </div>
 </div>
+
+<dialog class="pdlg" id="turning-point-dlg" aria-labelledby="turning-point-dlg-h">
+  <div class="pdhead">
+    <div><p class="pdt" id="turning-point-dlg-h">Turning Point Tour</p><p class="pdsub metanum soft">2025 · 2024</p></div>
+    <button class="pdx" type="button" data-pdclose>Close</button>
+  </div>
+  <div class="pdbody" tabindex="-1" autofocus><div class="liner"><div class="read measure"><p>The Turning Point traverses the aesthetic crossroads of Schoenberg, Strauss, and Mahler, composers whose works are emblematic of a pivotal era straddling the late Romantic tradition and the onset of Modernism. At the same time, the Tour mirrors our own era's critical juncture, resonating with the perspectives of contemporary thinkers, politicians, and philosophers who see striking parallels between the world today and the tumultuous period preceding World War I. That period, much like our own, was a world in crisis, oscillating between the untenable Old and the necessary but uncharted New, a world searching for meaning in the midst of meaninglessness. Through this thematic exploration, the project confronts our present-day challenges, mirroring a world once teetering on the edge. Yet, amidst this somber reflection, the Turning Point embodies a message of hope, imploring us not to let history repeat its darkest chapters but rather to transcend our mistakes and forge a path toward a more enlightened and united civilization. This powerful narrative is not just a reminiscence of a world at the brink, but a beacon of optimism, guiding us to emerge from these troubling times as a stronger, more harmonious society.</p><p>Wars, increasing social inequalities, pollution, climate change and the destruction of remaining natural zones, has brought the world to a breaking point. There is a need for transformation on many levels. NBO sees this crisis as an opportunity, a chance to grow as a society and unite in the fight for peace and understanding. It is necessary to open ourselves to others and to profoundly transform the way of living. It is crucial to act now!</p><p>Accompanying these historical masterpieces there are four newly commissioned contemporary works, from leading composers from the region: Nina Perovic (Montenegro), Davor Branimir Vincze (Croatia), Darija Andovska (North Macedonia) and Marko Nikodijevic (Serbia). These pieces serve as a thematic bridges within the program, highlighting the ongoing dialogue between the past and the present, thematize explicitly the dramatic situation in which the world is right now and pointing towards the future.</p></div><section class="stmt"><p class="who">Nina Perović</p><p class="work">Bubbling</p><div class="say"><p>Aligning with the narrative of the Turning Point project, the imagery of bubbling water reflects ongoing tension and potential for change. The movement and music evoke the currents of water, symbolizing turbulence and fluidity and reflect the struggle between the old and the new, resonating with themes of societal upheaval and transformation. The recording of audio sounds from rivers, seas, bubbles and other sources created the sonic material for the piece, while the movement of the musicians was shaped based on a hexagon, which represents a fundamental aspect of the solid forms of water.</p></div></section><section class="stmt"><p class="who">Davor Branimir Vincze</p><p class="work">Ckrsch!</p><div class="say"><p>With this piece I wanted to create something primordial: a raw sound of the electronics, which gets dubbed by the string orchestra. Out of shivering noise emerges a strong gravity presence. Like musical chameleon, the sound shape-shifts as it passes you by, and disappears leaving the space echoing the flutter of its distant wings.</p></div></section><section class="stmt"><p class="who">Darija Andovska</p><p class="work">Apoptotic Bodies</p><div class="say"><p>Apoptotic bodies (ApoBDs) are a peculiar type of extracellular vesicle that are the remnants of cells having undergone apoptosis, or programmed cell death.</p><p>Apoptosis, the programmed cell death, is actually a way of cells committing suicide in order to destroy a sick tissue or let other tissues develop, which is the major process responsible for the metamorphosis.</p><p>The apoptotic bodies are capable of delivering genetic information and other useful materials to healthy recipient cells, bolstering essential processes such as immune response and tissue regeneration.</p><p>The formation of ApoBDs is the result of a highly coordinated cell disassembly operation, although researchers have yet to unravel the mechanisms behind this cellular decision-making.</p></div></section><section class="stmt"><p class="who">Marko Nikodijević</p><p class="work">Last Inscription</p><div class="say"><p>Last inscription is a study for string orchestra. its harmonies are based on selective transcription of synthesized sounds.</p></div></section></div></div>
+</dialog>
+<dialog class="pdlg" id="embracing-vulnerability-dlg" aria-labelledby="embracing-vulnerability-dlg-h">
+  <div class="pdhead">
+    <div><p class="pdt" id="embracing-vulnerability-dlg-h">Embracing Vulnerability Tour</p><p class="pdsub metanum soft">2023 · 2022</p></div>
+    <button class="pdx" type="button" data-pdclose>Close</button>
+  </div>
+  <div class="pdbody" tabindex="-1" autofocus><div class="liner"><div class="read measure"><p>The global pandemic left the world in a shaken and vulnerable state. Even as it seemed the world was regaining its bearings and pulling out of the crisis, another devastating and unthinkable event occurred – the war in Ukraine.</p><p>It is important for all of us to understand where we are right now and to gain the courage to face our current social, physical, economic, and environmental insecurities and vulnerabilities.</p><p>Vulnerability is “uncertainty, risk, and emotional exposure.” It is the unstable feeling we get when we step out of our comfort zone or do something that forces us to loosen control.</p><p>With this tour NBO proposes not to deny our present situation, not to run away, not to be a victim, but rather invites us to see this crisis as an opportunity to embrace our vulnerabilities, open ourselves to others and to profoundly transform our way of living. To embrace our vulnerabilities means to use them as a chance to grow as a society and unite in the fight for peace and understanding.</p><p>Choosing courage and vulnerability can open us up to love, joy and belonging, and bring us closer to “wholehearted living.”</p><p>The inspiration for the title of this year’s tour comes from the Sufi teacher and philosopher Rumi's famous poem:</p></div><div class="poem"><div class="dlg"><p class="turn a"><span class="ln">I said: what about my eyes?</span></p><p class="turn b"><span class="ln">He said: Keep them on the road.</span></p><p class="turn a"><span class="ln">I said: What about my passion?</span></p><p class="turn b"><span class="ln">He said: Keep it burning.</span></p><p class="turn a"><span class="ln">I said: What about my heart?</span></p><p class="turn b"><span class="ln">He said: Tell me what you hold inside it?</span></p><p class="turn a"><span class="ln">I said: Pain and sorrow.</span></p><p class="turn b"><span class="ln">He said: Stay with it. The wound is the place where the Light enters you.</span></p></div></div></div></div>
+</dialog>
+<dialog class="pdlg" id="no-return-to-normality-dlg" aria-labelledby="no-return-to-normality-dlg-h">
+  <div class="pdhead">
+    <div><p class="pdt" id="no-return-to-normality-dlg-h">No Return to Normality Tour</p><p class="pdsub metanum soft">2021</p></div>
+    <button class="pdx" type="button" data-pdclose>Close</button>
+  </div>
+  <div class="pdbody" tabindex="-1" autofocus><div class="liner"><div class="read measure"><p>The NBO "No Return to Normality" Tour invites people to think about life after the pandemic. With systemic problems such as climate change, social inequality, hyper-productivity and consumerism we need to ask ourselves if we want to return to the way things were before the pandemic. NBO is a testament to the need and possibility of music overcoming national and communal differences for the sake of the common good. This spirit is needed more than ever in the world during and after the corona pandemic. Humanity needs to come together and develop an overriding common purpose.</p><p>We believe our experience of bringing people together, through music, in the Balkans is relevant for the rest of the world. At the beginning of the corona pandemic a group of more than 200 high-profile artists, scientists, and thought leaders signed a call to arms, asking citizens and leaders not to return to the "normal" that led us to the brink of this pandemic. With this tour NBO joins them in this urge to avoid post-lockdown “return to normal”. We need transformation, a profound overhaul of our goals, beliefs and values. We are building the reality for which we will all be equally responsible. We must act now.</p><p>OPEN LETTER
+The Covid-19 pandemic is a tragedy. This crisis is, however, inviting us to examine what is essential. And what we see is simple: “adjustments” are not enough. The problem is systemic. The ongoing ecological catastrophe is a meta-crisis: the massive extinction of life on Earth is no longer in doubt, and all indicators point to a direct existential threat. Unlike a pandemic, however severe, a global ecological collapse will have immeasurable consequences. We therefore solemnly call upon leaders — and all of us as citizens – to leave behind the unsustainable logic that still prevails and to undertake a profound overhaul of our goals, values and economies. The pursuit of consumerism and an obsession with productivity have led us to deny the value of life itself: that of plants, that of animals, and that of a great number of human beings. Pollution, climate change, and the destruction of our remaining natural zones has brought the world to a breaking point. For these reasons, along with increasing social inequalities, we believe it is unthinkable to ‘go back to normal’. The radical transformation we need – at all levels – demands boldness and courage. It will not happen without a massive and determined commitment. We must act now. It is as much a matter of survival as one of dignity and coherence.</p></div></div></div>
+</dialog>
+<dialog class="pdlg" id="b-matinee-dlg" aria-labelledby="b-matinee-dlg-h">
+  <div class="pdhead">
+    <div><p class="pdt" id="b-matinee-dlg-h">B Matinee Tour</p><p class="pdsub metanum soft">2019</p></div>
+    <button class="pdx" type="button" data-pdclose>Close</button>
+  </div>
+  <div class="pdbody" tabindex="-1" autofocus><div class="liner"><div class="read measure"><p>Building on a successful tour of the Balkans during summer 2018 the No Borders Orchestra string ensemble, accompanied by percussions and electronica, follow up in summer 2019 with another international tour around the Western Balkans and Europe called B Matinee. This project, whose name suggests new beginnings, brings together contemporary classical music and clubbing culture, and features cutting-edge new compositions by five exciting young composers from the Balkan region. These new, contemporary, experimental compositions are inspired by Berghain, the famous Berlin club. The 2019 B Matinee tour also commemorates thirty years of the Fall of the Berlin Wall and celebrates the tearing down of walls between classical and clubbing music. By communicating with contemporary techno sound, our composers cross genres, surmounting the borders between different styles of music. The result is a new and fresh sound that has no limits celebrating new paths and possibilities.</p></div><section class="stmt"><p class="who">Drasko Adzic</p><div class="say wide"><p class="dlede" style="max-width:34ch">B. matinée is about morning, when a gust of wind which appears from nowhere envelopes you whole after hours of dancing.</p><div class="anaph" style="margin-top:clamp(1.6rem,3.5vh,2.6rem)"><p>It’s about the joy of being capable to see happiness suspended in time, right in front of you, palpable, for hours on end.</p><p>It’s about swapping night and day.</p><p>It’s about the tingling of anticipation when you see a journey starting to unfold before your eyes and you crave to find out where it will lead, knowing all along that you will get there.</p><p>It’s about pixelization of sound and space.</p><p>It’s about the eternaly young skin, glistening against the warmth of the dark.</p><p>It’s about a hypersexual serotonin-based superorganism.</p><p>It’s about the choice to feel free.</p><p>It’s about introspection and change.</p></div><div class="stair" style="margin-top:clamp(2rem,4.5vh,3.4rem)"><span style="--n:0">It’s about beginning.</span><span style="--n:1">It’s about being.</span><span style="--n:2">It’s about beyond.</span><span style="--n:3">It’s about Berghain.</span></div></div></section><section class="stmt"><p class="who">Drinor Zymberi</p><div class="say"><p>One of my goals during the composing process is to catch some sounds and organize it in a way that someone can experience the feeling of ecstasy, and for me the synthesis between classical contemporary music and EDM music elements offers the possibility of experiencing that feeling.</p></div></section><section class="stmt"><p class="who">Davor Branimir Vincze</p><div class="say"><p>While I briefly lived in Berlin in 2013, I was flabbergasted by Berlin and its techno scene, organized in vast spaces filled with music and streams of people. Thus for me, the opportunity to work on a Berghain inspired project, had an instant allure. The techno of Berghain and my music might seem miles apart, but we share some common fascinations - technology and cultural intertwinedness.</p><p>Microllage – compositional technique I developed – fragments musical pieces into snippets and then reshuffles them to form different kinds of gestures and phrases. By doing so it re-contextualises the music of others, building on commonalities between disparate styles, much like a DJ’s remix of various musical elements during a late night session.</p><p>‘darkroom’ describes a hypothetical musical space - mystical, huge, open and liberating; such that allows your body and soul to roam free. You can’t see, so you have to listen! It might sound scary, but the trick is to let go...</p></div></section><section class="stmt"><p class="who">Darija Andovska</p><div class="say wide"><div class="refrain"><span class="cl">It’s what we carry inside of us since the dawn of time.</span><span class="bt" style="--s:1.0">The beat.</span><span class="cl">It’s a catharsic ritual.</span><span class="bt" style="--s:1.16">The beat.</span><span class="cl">It’s a special tribe of handpicked people.</span><span class="bt" style="--s:1.31">The beat.</span><span class="cl">It’s the two divine forces, interlocked, repeating in a circle - the Eros and Thanatos.</span><span class="bt" style="--s:1.47">The beat.</span><span class="cl">It’s transcending.</span><span class="bt" style="--s:1.63">The beat.</span><span class="cl"></span><span class="bt" style="--s:1.79">The beat.</span><span class="cl"></span><span class="bt" style="--s:1.94">The beat.</span><span class="cl"></span><span class="bt" style="--s:2.1">The beat.</span></div></div></section><section class="stmt"><p class="who">Danijel Zontar</p><div class="say wide"><ul class="acro"><li style="--i:14">s<b>T</b>ripped-down aesthetics</li><li style="--i:14">r<b>E</b>petitive</li><li style="--i:7">introspe<b>C</b>tion</li><li style="--i:8">static <b>H</b>armony</li><li style="--i:15"><b>N</b>on-narattive</li><li style="--i:0">...my inspirati<b>O</b>n</li></ul></div></section></div></div>
+</dialog>
+<dialog class="pdlg" id="balkan-season-2018-dlg" aria-labelledby="balkan-season-2018-dlg-h">
+  <div class="pdhead">
+    <div><p class="pdt" id="balkan-season-2018-dlg-h">Balkan Season 2018</p><p class="pdsub metanum soft">2018</p></div>
+    <button class="pdx" type="button" data-pdclose>Close</button>
+  </div>
+  <div class="pdbody" tabindex="-1" autofocus><div class="liner"><p class="eyebrow">No Borders Orchestra stands for</p><div class="stair caps" style="margin-top:clamp(1.4rem,3vh,2.2rem)"><span style="--n:0">amazing music</span><span style="--n:1">unity in diversity</span><span style="--n:2">tolerance and togetherness</span><span style="--n:3">in the Balkans &amp; beyond</span></div><div class="read measure"><p>In the region at the very heart of Europe that has for decades stood for crisis, conflict and divisiveness, there is a group of young people that embodies a different story. Their passion is togetherness, their bond is friendship, their language is music. No Borders Orchestra is their story!</p><p>As we see every day in the news, what is happening in the Balkans is happening in the world: that is why NBO’s impact is not regional, its reach is universal!</p><p>With its excellent music making, No Borders Orchestra breaks down borders of all kinds: between countries, classes and ethnicities, between the classical concert halls of the elites and the rocking stages of the people. Made up of the best professional musicians from every country, religious and ethnic group of the former Yugoslavia, the orchestra is a living embodiment of everything that matters to modern Europe: diversity, integration and the spirit of friendship. Hence the commitment to excellence: the quality of our music is a direct expression of what we believe the Western Balkans – and Europe – can achieve when united by tolerance and togetherness.</p><p>To spread their powerful message, No Borders Orchestra is establishing the annual Balkan Season tour in the region.</p></div></div></div>
+</dialog>
+<dialog class="pdlg" id="aghet-great-catastrophe-dlg" aria-labelledby="aghet-great-catastrophe-dlg-h">
+  <div class="pdhead">
+    <div><p class="pdt" id="aghet-great-catastrophe-dlg-h">Aghet – The Great Catastrophe</p><p class="pdsub metanum soft">2016 · 2015</p></div>
+    <button class="pdx" type="button" data-pdclose>Close</button>
+  </div>
+  <div class="pdbody" tabindex="-1" autofocus><div class="liner"><div class="read measure"><p>No Borders Orchestra together with musicians from Dresdner Sinfoniker, Dresdner Kammerchor, AuditivVokal and musicians from Turkey and Armenia.</p></div></div></div>
+</dialog>
 
 <script src="c-base.js"></script>
 <script>
@@ -330,6 +625,63 @@ if(location.search.includes('prog=rows')){           // the non-default; plain s
   document.body.classList.remove('prog-plain');
   document.querySelectorAll('#prog button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.prog==='rows'));
   if(typeof syncPar==='function') syncPar();
+}
+
+// PROJECT DETAILS — the narrative opens in a MODAL. showModal() is what makes this small: the focus
+// trap, the inert background, Esc-to-close and focus-return to the opener are the platform's.
+// Chapter heights no longer change when details open, which is why nothing here calls syncPar() —
+// the parallax bases stay valid for the life of the page.
+// the bottom fade is on only while there is something still below — 4px of slack, because a
+// fractional device-pixel scrollHeight otherwise never quite reaches the end and the veil sticks
+function pdFade(dlg){
+  const b = dlg.querySelector('.pdbody');
+  dlg.classList.toggle('pd-fade', b.scrollHeight - b.clientHeight - b.scrollTop > 4);
+}
+
+function openPdlg(id){
+  const dlg = document.getElementById(id);
+  if(!dlg || dlg.open) return;
+  // hand back the scrollbar's width BEFORE the lock collapses it, or the page shifts by it
+  document.documentElement.style.setProperty('--sbw', (innerWidth - document.documentElement.clientWidth) + 'px');
+  document.documentElement.classList.add('pdlg-open');
+  dlg.showModal();
+  dlg.querySelector('.pdbody').scrollTop = 0;   // a re-opened dialog would keep its old scroll
+  pdFade(dlg);   // only measurable once it is laid out, which showModal() has just done
+}
+
+document.querySelectorAll('.pdlg').forEach(dlg=>{
+  dlg.querySelector('.pdbody').addEventListener('scroll', ()=>pdFade(dlg), {passive:true});
+  addEventListener('resize', ()=>{ if(dlg.open) pdFade(dlg); });
+  // the backdrop is NOT a child, so a click that lands on the dialog element itself is a click
+  // outside its content — the standard dismissal. The <dialog> carries no padding of its own, so
+  // there is no dead band inside it that could swallow a genuine content click.
+  dlg.addEventListener('click', e=>{ if(e.target === dlg) dlg.close(); });
+  dlg.querySelectorAll('[data-pdclose]').forEach(b=>b.addEventListener('click', ()=>dlg.close()));
+  // 'close' fires for Esc and for the backdrop alike, so the page lock is released in ONE place
+  dlg.addEventListener('close', ()=>document.documentElement.classList.remove('pdlg-open'));
+});
+
+// Every opener names its dialog. Two carry it: the button in the facts column, and the poster —
+// which opens nothing in the poster wall, where there is no chapter to read.
+document.querySelectorAll('[data-dlg]').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    if(el.classList.contains('pl') && document.body.classList.contains('view-grid')) return;
+    openPdlg(el.dataset.dlg);
+  });
+});
+
+// review flag — open one Project Details on load, for a screenshot. Takes EITHER a project slug
+// (?open=b-matinee) or a year (?open=2013, ?open=y2018), since the dialogs are keyed by project while
+// the chapters are keyed by year: a year resolves to whatever its first block opens.
+const wantOpen = (new URLSearchParams(location.search).get('open') || '').replace(/^#/, '');
+if(wantOpen){
+  let id = wantOpen + '-dlg';
+  if(!document.getElementById(id)){
+    const chap = document.getElementById(/^[0-9]{4}$/.test(wantOpen) ? 'y' + wantOpen : wantOpen);
+    const first = chap && chap.querySelector('[data-dlg]');
+    id = first ? first.dataset.dlg : id;
+  }
+  openPdlg(id);
 }
 </script>
 </body>

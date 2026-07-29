@@ -15,17 +15,20 @@
    one measure: that migration, three lifted sentences and the question catalogue are the
    whole design. The two densest paragraphs get nothing — a page where every paragraph is
    designed has no playfulness left. */
-.m-lede{grid-column:3/9}
-.m-prem{grid-column:3/10}
-.m-q .body{grid-column:2/11}
+/* ONE prose band. The page used to start each block on a slightly different column — 3/9, 3/10,
+   2/11, 2/10, 3/11 — which is most of what read as "too many changes" (client, 2026-07-28). The
+   reading blocks now share one edge; only the deliberately WIDE gestures — the two pull-quotes and the
+   photo row — still break out of it. The closing statement used to as well, as a big uppercase stair;
+   it is plain prose on the shared edge now. */
+.m-lede,.m-prem,.m-q .body,.m-body{grid-column:3/10}
 .m-q .qline{font-weight:300;font-size:clamp(1.05rem,2vw,1.6rem);line-height:1.34;letter-spacing:-.008em}
 .m-q .qline + .qline{margin-top:.85em}
-.m-body{grid-column:3/9}
+/* one lede measure, rather than three inline max-widths on the same class */
+.dlede{max-width:30ch}
 /* the essay's outward turn — the only photo on the page, text pushed right beside it */
 .m-wedo .figwrap{grid-column:1/5}
 .m-wedo .figwrap .img{aspect-ratio:4/5}
 .m-wedo .b{grid-column:5/13}
-.m-close{grid-column:2/12}
 
 /* ── ONE VERTICAL RHYTHM ──────────────────────────────────────────────────────────────────
    Each text block is an .erow that contributes NO padding of its own, and the gap between two
@@ -35,20 +38,28 @@
    This replaces per-section padding plus ad-hoc `padding-top:0` overrides, which compounded
    differently at every join: the two pulls measured 27px and 103px from their neighbours, and
    paragraph gaps ranged 99–215px. */
-body{--gap-b:clamp(3rem,6.6vh,5.2rem);      /* paragraph → paragraph */
+body{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the same argument continuing */
+     --gap-b:clamp(3rem,6.6vh,5.2rem);      /* block → block: prose to a photo band, a catalogue, … */
      --gap-p:clamp(4rem,8.6vh,6.4rem)}      /* around a pull-quote — a step more, both sides */
 .erow{padding-block:0}
 .erow + .erow{margin-top:var(--gap-b)}
+/* --gap-b is a BLOCK gap: it separates a paragraph from a photo band, from the question catalogue,
+   from a pull-quote row. Two consecutive PLAIN PARAGRAPHS are not that — they are one argument
+   continuing, and at 59px they read as though the page had changed subject. The page's own answer for
+   two paragraphs is 1.15em (19px, `.read p + p`); this sits between the two, because these are still
+   separate blocks on a deliberately airy page. Only 2 joins on the page qualify, both near the close. */
+.erow:has(> .grid > .m-body) + .erow:has(> .grid > .m-body){margin-top:var(--gap-t)}
 .erow.pullrow + .erow,.erow + .erow.pullrow{margin-top:0}
 .pull{padding-block:var(--gap-p)}
-/* The dark panel is a .band, not an .erow, so the rhythm above can't reach across it: it inherited
-   --pad (150px) INSIDE while its faces butted straight onto the paragraphs above and below — 5px and
-   4px, effectively stuck. It now carries its own white air as MARGIN (matching the photo band's ~95px,
-   the page's established gap for a big element) and a smaller interior. */
-.m-q{padding-block:clamp(4.5rem,10vh,7.5rem);margin-block:clamp(4.5rem,9.5vh,7.2rem)}
+/* The question catalogue is no longer a dark panel (client, 2026-07-28: "izbaciti crno, kvari flow")
+   — the black broke the page's flow. All twelve questions stay; only the treatment goes.
+   It needed its own margins ONLY to hold air against the full-bleed dark face. As a plain .erow it
+   takes --gap-b from its neighbours like every other block, so it needs no spacing rule at all —
+   which is also the only way it stays symmetric: `.erow + .erow` (0,2,0) would outrank a `.m-q`
+   margin (0,1,0) on the top side and leave the bottom side wider. */
 </style>
 </head>
-<body class="sub panels-dark">
+<body class="sub">
 
 <header id="nav">
   <a href="index.html" class="logo" aria-label="No Borders Orchestra"><img src="logo.svg" alt="No Borders Orchestra"></a>
@@ -68,6 +79,7 @@ body{--gap-b:clamp(3rem,6.6vh,5.2rem);      /* paragraph → paragraph */
 <section class="phead wrap" id="top">
   <div class="grid">
     <div class="body" data-par="0.07">
+      <a class="back hang-l" href="index.html#about"><span class="ar" aria-hidden="true">&#8592;</span>Back</a>
       <h1 class="lead reveal draw hang-l">Manifesto</h1>
     </div>
   </div>
@@ -91,12 +103,12 @@ body{--gap-b:clamp(3rem,6.6vh,5.2rem);      /* paragraph → paragraph */
   </div>
 </section>
 
-<!-- THE QUESTION CATALOGUE — the page's one dark band. Twelve rhetorical questions run
-     together in the source; set as a numbered catalogue, a torrent becomes an index. -->
-<section class="band wrap field m-q">
+<!-- THE QUESTION CATALOGUE — twelve rhetorical questions that run together in the source; set as a
+     catalogue, a torrent becomes an index. -->
+<section class="erow wrap m-q">
   <div class="grid">
     <div class="body">
-      <p class="dlede reveal" style="max-width:38ch">We are asking questions and with our performances we offer some answers:</p>
+      <p class="dlede reveal">We are asking questions and with our performances we offer some answers:</p>
       <div class="reveal" style="margin-top:clamp(2.4rem,5vh,3.6rem)">
         <p class="qline">Why a symphony orchestra in 21st century?</p>
         <p class="qline">Why classical music at all?</p>
@@ -133,7 +145,7 @@ body{--gap-b:clamp(3rem,6.6vh,5.2rem);      /* paragraph → paragraph */
 <section class="erow wrap">
   <div class="grid">
     <div style="grid-column:3/11">
-      <p class="dlede reveal" style="max-width:26ch">Our main interest is the connection between music and life!</p>
+      <p class="dlede reveal">Our main interest is the connection between music and life!</p>
       <div class="read reveal measure" style="margin-top:clamp(1.6rem,3.5vh,2.6rem)"><p>The fundamental word in our language is communication. Communication means consciousness that together we can do more than individually. NBO is call for regional cooperation and communication being made to artists and intellectuals of different profiles: philosophers, sociologists, musicians, visual artists, writers, architects, directors, choreographers, performers…</p></div>
     </div>
   </div>
@@ -162,7 +174,7 @@ body{--gap-b:clamp(3rem,6.6vh,5.2rem);      /* paragraph → paragraph */
      dissolve; here the sentence ABOUT borders dissolves at its edges. -->
 <section class="erow wrap pullrow">
   <div class="grid">
-    <p class="pull dissolve hang-l reveal" style="grid-column:2/11">Border is the other name for prejudice.</p>
+    <p class="pull hang-l reveal" style="grid-column:2/10">Border is the other name for prejudice.</p>
   </div>
 </section>
 
@@ -180,39 +192,14 @@ body{--gap-b:clamp(3rem,6.6vh,5.2rem);      /* paragraph → paragraph */
 </section>
 
 
-<!-- p10 — the close, stepping right, the ellipsis carried into the gutter. A text page
-     ends in the same voice as the homepage footer. Uses the text-page band rhythm
-     (.tight), not the homepage's taller --pad. -->
+<!-- p10 — the close, in the page's reading voice. It was a three-line stair in big uppercase
+     display type, stepping right with the ellipsis hung into the gutter; the source
+     (content/manifesto.md:25) has it as ONE sentence on one line, so the three lines and their
+     indents were the page's invention, not the text's. As regular prose it flows as one paragraph
+     on the same reading edge as every other one (.m-body, cols 3/10). -->
 <section class="erow wrap">
   <div class="grid">
-    <div class="m-close stair caps reveal hang-l">
-      <span style="--n:0">No Borders Orchestra is about making a decision</span>
-      <span style="--n:1">that art should represent the change</span>
-      <span style="--n:2" class="hang-r">that we wish to see in the world…</span>
-    </div>
-  </div>
-</section>
-
-<!-- shared SVG filter — the dissolving-borders language, scaled to text pixels -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-  <filter id="edgeDissolve" x="-10%" y="-30%" width="120%" height="160%">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="soft"/>
-    <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="4" seed="11" result="n"/>
-    <feComposite in="soft" in2="n" operator="arithmetic" k1="0" k2="2.8" k3="-1.3" k4="-0.25" result="a"/>
-    <feComposite in="SourceGraphic" in2="a" operator="in"/>
-  </filter>
-</defs></svg>
-
-<!-- sibling pages -->
-<section class="band tight wrap pnav">
-  <div class="grid">
-    <p class="lbl eyebrow">About</p>
-    <div class="body">
-      <div class="sublinks">
-        <a href="index.html#about"><span>Mission</span></a>
-        <a href="index.html#about"><span>NBO CV</span></a>
-      </div>
-    </div>
+    <div class="m-body read reveal"><p>No Borders Orchestra is about making a decision that art should represent the change that we wish to see in the world…</p></div>
   </div>
 </section>
 

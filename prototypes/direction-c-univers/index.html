@@ -17,14 +17,10 @@
 /* (full-bleed plate styles removed — C returned to contained images) */
 /* about — contained photo (~centered, well short of the edges), text beside it on the right */
 
-/* tweak: the About and Who-we-are photos trade places. They carry their own aspect ratios with them
-   (Dragstor is 4:3, the lying-down shot is 16:9), so the ratio travels with the source — otherwise a
-   swap would crop one of them badly. Swapping changes block heights, so the JS re-measures parallax. */
-/* DEFAULT: Who we are takes Dragstor, About takes the lying-down shot. .photos-swapped is the
-   other way round — so the class now means "lying down in Who we are". */
-body{--about-img:url('../../fotografije/Home%20fotka.jpg');--about-ar:16/9;
-     --who-img:url('../../fotografije/Dragstor%20640x480.jpg');--who-ar:4/3}
-body.photos-swapped{--about-img:url('../../fotografije/Dragstor%20640x480.jpg');--about-ar:4/3;
+/* The client chose the pairing (2026-07-28): About takes Dragstor, Who we are takes the lying-down
+   shot. Each photo carries its own aspect ratio with it (Dragstor is 4:3, the lying-down shot is
+   16:9) so the ratio travels with the source — a mismatched pair would crop one of them badly. */
+body{--about-img:url('../../fotografije/Dragstor%20640x480.jpg');--about-ar:4/3;
      --who-img:url('../../fotografije/Home%20fotka.jpg');--who-ar:16/9}
 .aboutimg{background-image:var(--about-img);aspect-ratio:var(--about-ar)}
 .whoimg{background-image:var(--who-img);aspect-ratio:var(--who-ar)}
@@ -43,11 +39,10 @@ body.hero-full .open{min-height:100svh;display:block;padding:0;overflow:hidden}
 body.hero-full .open .fig{position:absolute;inset:-14% 0;width:auto;margin:0;z-index:0}   /* oversized so parallax drift never reveals an edge; poster beneath the video */
 body.hero-full .open .fig .img{width:100%;height:100%;aspect-ratio:auto}
 /* header-legibility gradient (top) + a flat scrim over the whole hero to darken the video/photo.
-   tweak: three overlay strengths — the scrim, the video blur and the stencil's brightness all scale
-   together, so "none" is genuinely untreated footage and the mark stays legible at every level. */
-body{--scrim:.5;--heroblur:1px;--mkbright:2.4;--mkfloor:.09}
-body.overlay-half{--scrim:.25;--heroblur:.5px;--mkbright:1.9;--mkfloor:.13}
-body.overlay-none{--scrim:0;--heroblur:0px;--mkbright:1.5;--mkfloor:.17}   /* no scrim to punch through, so the white floor carries more of the mark */
+   The client chose NO overlay (2026-07-28: "svezije je" — fresher): untreated footage, no scrim, no
+   blur. With no scrim to punch through, the stencil's own white floor carries more of the mark, so
+   its brightness lift comes down and the floor goes up. */
+body{--scrim:0;--heroblur:0px;--mkbright:1.5;--mkfloor:.17}
 body.hero-full .open::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
   background:linear-gradient(180deg,rgba(16,18,20,var(--scrim)),rgba(16,18,20,0) 45%),
              linear-gradient(rgba(16,18,20,var(--scrim)),rgba(16,18,20,var(--scrim)))}
@@ -61,24 +56,20 @@ body.hero-video-on .hero-video{display:block}
    stencil = letters punch through the scrim (backdrop-filter re-brightens the video inside the mask);
    invert  = letters invert the footage beneath (white fill + mix-blend-mode:difference);
    ghost   = faint white watermark. Sits above the scrim (z3), below the ticker's old slot.
-   Two LOCKUPS (tweak: marklines-2 / marklines-1) — the two-line stack, or the whole name on one
-   wide line. These are separate files from logo.svg, which now carries the three-line header mark. */
+   The client chose the ONE-LINE lockup (2026-07-28: "izgleda cistije slika" — the picture reads
+   cleaner), a wide thin band of type. Separate files from logo.svg, which carries the three-line
+   header mark — the header and the hero are deliberately different lockups. */
 .heromark{position:absolute;inset:0;z-index:3;pointer-events:none;display:none}
 .heromark .mk{position:absolute;left:50%;bottom:80px;transform:translateX(-50%);
   -webkit-mask:var(--markfile) center/contain no-repeat;mask:var(--markfile) center/contain no-repeat;
   animation:markIn .7s ease both}   /* plain fade-in, same entrance window as the header */
-body.marklines-2 .heromark .mk{width:min(62.4vw,909px);aspect-ratio:12651/3506}   /* two-line stack, a further 20% down from the shipped size */
-body.marklines-1 .heromark .mk{width:min(94vw,1720px);aspect-ratio:26148/1490}    /* one line — a wide, thin band of type */
+.heromark .mk{width:min(94vw,1720px);aspect-ratio:26148/1490}    /* one line — a wide, thin band of type */
 @keyframes markIn{from{opacity:0}to{opacity:1}}   /* opacity-only, so .mk keeps its own transform */
-/* mark edge treatments: ripple = SMIL displacement; dissolve = noise-eroded edges that break up and
-   reform (the shipped default); sharp = the raw lockup paths. Compounded with the lockup class so
-   neither pair can win on source order — JS overwrites --markfile inline once the paths are fetched. */
-body.marklines-2 .heromark .mk{--markfile:url(hero-mask.svg)}
-body.marklines-1 .heromark .mk{--markfile:url(mark-1line.svg)}
-body.marklines-2.markedge-dissolve .heromark .mk{--markfile:url(hero-mask-dissolve.svg)}
-body.marklines-1.markedge-dissolve .heromark .mk{--markfile:url(mark-1line-dissolve.svg)}
-body.marklines-2.markedge-sharp .heromark .mk{--markfile:url(mark-2line.svg)}
-body.marklines-1.markedge-sharp .heromark .mk{--markfile:url(mark-1line.svg)}
+/* mark edge treatments: dissolve = noise-eroded edges that break up and reform (the shipped
+   default); sharp = the raw lockup paths. JS overwrites --markfile inline once the paths are fetched. */
+.heromark .mk{--markfile:url(mark-1line.svg)}
+body.markedge-dissolve .heromark .mk{--markfile:url(mark-1line-dissolve.svg)}
+body.markedge-sharp .heromark .mk{--markfile:url(mark-1line.svg)}
 body.heromark-stencil .heromark,body.heromark-invert .heromark,body.heromark-ghost .heromark{display:block}
 body.heromark-stencil .heromark .mk{-webkit-backdrop-filter:brightness(var(--mkbright)) saturate(1.2) contrast(1.05);
   backdrop-filter:brightness(var(--mkbright)) saturate(1.2) contrast(1.05);
@@ -172,7 +163,7 @@ body.heromark-ghost .heromark .mk{background:#fff;opacity:.22}
 }
 </style>
 </head>
-<body class="panels-dark hero-full hero-video-on heromark-stencil markedge-dissolve marklines-2">
+<body class="panels-dark hero-full hero-video-on heromark-stencil markedge-dissolve">
 
 <!-- PROTOTYPE: nav on paper -->
 <header id="nav">
@@ -266,7 +257,7 @@ body.heromark-ghost .heromark .mk{background:#fff;opacity:.22}
       <div class="body" style="grid-column:1/7">
         <h2 class="lead reveal draw">Projects</h2>
         <div class="sublinks reveal">
-          <a href="projects.html"><span>2018–2025</span></a>
+          <a href="projects.html"><span>2012–2025</span></a>
         </div>
       </div>
     </div>
@@ -365,45 +356,17 @@ body.heromark-ghost .heromark .mk{background:#fff;opacity:.22}
   <div class="panel">
     <h4>Tweaks</h4>
     <div class="ttl">Direction C · UNIVERS</div>
-    <div class="tw-group">
-      <label>Hero overlay</label>
-      <div class="seg" id="overlay">
-        <button data-overlay="full" aria-pressed="true">Full</button>
-        <button data-overlay="half" aria-pressed="false">Half</button>
-        <button data-overlay="none" aria-pressed="false">None</button>
-      </div>
-      <p class="hint">Darkening + blur over the hero footage. Half is 50% of the shipped amount; None leaves the video untreated.</p>
-    </div>
-    <div class="tw-group">
-      <label>Big letters</label>
-      <div class="seg" id="marklines">
-        <button data-marklines="2" aria-pressed="true">2 lines</button>
-        <button data-marklines="1" aria-pressed="false">1 line</button>
-      </div>
-      <p class="hint">The two-line stack (20% smaller than before), or the whole name on one wide line.</p>
-    </div>
-    <div class="tw-group">
-      <label>Who we are photo</label>
-      <div class="seg" id="whophoto">
-        <button data-whophoto="dragstor" aria-pressed="true">Dragstor</button>
-        <button data-whophoto="lying" aria-pressed="false">Lying down</button>
-      </div>
-      <p class="hint">The two photos trade places — About always takes the other one.</p>
-    </div>
+    <p class="hint">The hero overlay, the wordmark lockup and the About/Who-we-are photo pairing were
+    all decided on 2026-07-28 — no overlay, one line, Dragstor in About — so they now ship as the
+    only state rather than as forks.</p>
   </div>
 </div>
 
 <script src="c-base.js"></script>
 <script>
-// PROTOTYPE: homepage-only behaviour — hero video, the hero mark's two lockups + scroll-linked
-// dissolve, the overlay levels and the About/Who photo swap. The header, reveals, parallax engine
-// (syncPar), active-nav, tweaks gear, wireSeg and URL flags all come from c-base.js.
-wireSeg('overlay', btn=>{ document.body.classList.remove('overlay-half','overlay-none');
-  if(btn.dataset.overlay!=='full') document.body.classList.add('overlay-'+btn.dataset.overlay); });
-wireSeg('marklines', btn=>setMarkLines(btn.dataset.marklines));
-// swapping the pair changes both blocks' heights, so the parallax bases have to be re-measured
-wireSeg('whophoto', btn=>{ document.body.classList.toggle('photos-swapped', btn.dataset.whophoto==='lying');
-  if(!reduce) syncPar(); });
+// PROTOTYPE: homepage-only behaviour — hero video and the hero mark's scroll-linked dissolve. The
+// header, reveals, parallax engine (syncPar), active-nav, tweaks gear, wireSeg and URL flags all
+// come from c-base.js.
 
 // PROTOTYPE: hero background — self-hosted, muted, looping clip (a text-free 23s cut of NBO's own
 // "Embracing Vulnerability Tour" trailer) covering the viewport, photo fig as the fallback/poster.
@@ -416,26 +379,21 @@ function setHeroVideo(on){
   else { heroVid.pause(); }
 }
 
-// PROTOTYPE: dissolve generator — regenerates the active lockup's mask as a data-URI with the
-// noise-erosion strength (k3) mapped from the amount; the outlined paths are fetched once per lockup.
-// The two lockups differ in viewBox AND in how much filter margin a deep blur needs — the one-liner is
-// only 1490 units tall, so a percentage margin has to be far larger to hold a stdDeviation-200 blur —
-// so both travel with the geometry here instead of being hardcoded into the filter string.
-const MARKS={
-  '2':{file:'mark-2line.svg',vb:'0 0 12651 3506',fy:'-20%',fh:'140%'},
-  '1':{file:'mark-1line.svg',vb:'0 0 26148 1490',fy:'-60%',fh:'220%'}
-};
-let markLines='2';
-const markPaths={};
-function loadMark(n){
-  if(markPaths[n]) return Promise.resolve();
-  return fetch(MARKS[n].file).then(r=>r.text()).then(t=>{ markPaths[n]=t.match(/<path[^>]*\/>/g).join(''); });
+// PROTOTYPE: dissolve generator — regenerates the wordmark's mask as a data-URI with the
+// noise-erosion strength (k3) mapped from the amount; the outlined paths are fetched once.
+// The one-line lockup is only 1490 units tall, so the filter's percentage margin has to be far larger
+// than it looks to hold a stdDeviation-200 blur — hence fy/fh travelling with the geometry here
+// instead of being hardcoded into the filter string.
+const MARK={file:'mark-1line.svg',vb:'0 0 26148 1490',fy:'-60%',fh:'220%'};
+let markPath=null;
+function loadMark(){
+  if(markPath) return Promise.resolve();
+  return fetch(MARK.file).then(r=>r.text()).then(t=>{ markPath=t.match(/<path[^>]*\/>/g).join(''); });
 }
 function warmLevel(v){
-  const k=markLines+':'+v;
-  if(!dissolveCache[k]) dissolveCache[k]=dissolveMaskURI(v/100);
+  if(!dissolveCache[v]) dissolveCache[v]=dissolveMaskURI(v/100);
   const img=new Image();
-  img.src=dissolveCache[k].slice(5,-2);   // strip the url(" … ") wrapper → raw data URI
+  img.src=dissolveCache[v].slice(5,-2);   // strip the url(" … ") wrapper → raw data URI
   return img.decode ? img.decode().catch(()=>{}) : Promise.resolve();
 }
 function warmDissolveCache(){
@@ -444,7 +402,7 @@ function warmDissolveCache(){
   return Promise.all([...vs].map(warmLevel));
 }
 function dissolveMaskURI(a){   // a in [0,1] — drives blur depth, core solidity and noise bite together; 0.13 = shipped default
-  const m=MARKS[markLines];
+  const m=MARK;
   const std=(20+180*a).toFixed(0);          // how deep the soft zone reaches into the letter
   const k2=(2.4-0.9*a).toFixed(3);          // core solidity (lower = noise chews into the body)
   const k3=(-(0.4+1.2*a)).toFixed(3);       // noise bite
@@ -455,28 +413,18 @@ function dissolveMaskURI(a){   // a in [0,1] — drives blur depth, core solidit
     +'<animate attributeName="baseFrequency" values="0.0022;0.0033;0.0022" dur="16s" repeatCount="indefinite"/>'
     +'</feTurbulence>'
     +'<feComposite in="soft" in2="n" operator="arithmetic" k1="0" k2="'+k2+'" k3="'+k3+'" k4="-0.12"/>'
-    +'</filter></defs><g filter="url(#d)">'+markPaths[markLines]+'</g></svg>';
+    +'</filter></defs><g filter="url(#d)">'+markPath+'</g></svg>';
   return 'url("data:image/svg+xml;utf8,'+encodeURIComponent(svg)+'")';
 }
 const dissolveCache={};
-function setDissolve(v){   // v integer 0..100; data-URIs memoized per lockup so scroll scrubbing stays cheap
-  if(!markPaths[markLines]) return;
-  const k=markLines+':'+v;
-  if(!dissolveCache[k]) dissolveCache[k]=dissolveMaskURI(v/100);
+function setDissolve(v){   // v integer 0..100; data-URIs memoized so scroll scrubbing stays cheap
+  if(!markPath) return;
+  if(!dissolveCache[v]) dissolveCache[v]=dissolveMaskURI(v/100);
   const mk=document.querySelector('.heromark .mk');
-  mk.style.webkitMaskImage=dissolveCache[k]; mk.style.maskImage=dissolveCache[k];
-}
-// swap lockups: drop back to the baked CSS mask, then re-apply the dissolve at the current scroll depth
-function setMarkLines(n){
-  markLines=n;
-  document.body.classList.toggle('marklines-1',n==='1');
-  document.body.classList.toggle('marklines-2',n==='2');
-  const mk=document.querySelector('.heromark .mk');
-  mk.style.webkitMaskImage=''; mk.style.maskImage='';
-  loadMark(n).then(()=>{ warmDissolveCache(); scrollDissolve(); });
+  mk.style.webkitMaskImage=dissolveCache[v]; mk.style.maskImage=dissolveCache[v];
 }
 let dissolveBase=13;
-loadMark(markLines).then(warmDissolveCache);   // pre-decode all levels so the scroll-linked dissolve swaps cleanly
+loadMark().then(warmDissolveCache);   // pre-decode all levels so the scroll-linked dissolve swaps cleanly
 // SCROLL-LINKED DISSOLVE — the name disintegrates from the base amount toward 100 as the hero
 // scrolls out: the border dissolves as you cross it. Quantized to steps of 3 to bound the cache.
 function scrollDissolve(){
