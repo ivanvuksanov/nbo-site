@@ -148,6 +148,10 @@ if(new URLSearchParams(location.search).get('reveal')==='all'){
   document.querySelectorAll('.reveal-opt').forEach(el=>{ el.classList.add('reveal'); revObs.observe(el); });
 }
 
+// ?cta=solid — the Donate button filled (paper on ink) instead of the sanctioned hairline box.
+// Default is the box: it is the header .donate chip promoted to page scale, so it adds no new
+// vocabulary, where a filled block is a second departure from sub.css's no-ornament rule.
+if(location.search.includes('cta=solid')) document.body.classList.add('cta-solid');
 if(location.search.includes('clean')) document.body.classList.add('clean');
 if(location.search.includes('drawin')) document.body.classList.add('draw-in');
 if(location.search.includes('openpanel') && tw) tw.classList.add('tw-open');

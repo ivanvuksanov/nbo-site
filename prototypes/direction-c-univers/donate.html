@@ -16,10 +16,10 @@
      The mechanism itself is the client's real PayPal form: POST to cgi-bin/webscr with the same
      cmd=_s-xclick and hosted_button_id=D7DFJN3QPUW3Y hidden fields, kept exactly because it is known
      to work. Only the submit control changes — PayPal's own image button is replaced by a real
-     <button type="submit">. .lnbtn/.lnlbl — the clickable mono line — was moved out of projects.html's
-     inline <style> into the shared sub.css so this button and Projects' "Project Details" control are
-     literally the same object: a line of mono, full ink, standing hairline underline, no button chrome
-     at all. A <button> and an <a> render identically under it. The client's 1×1 PayPal tracking pixel is dropped. -->
+     <button type="submit"> carrying .cta (sub.css), the site's donate grammar: c-base.css's header
+     .donate chip at page scale. It deliberately does NOT share Projects' .lnbtn underlined-mono-line
+     recipe — that is a disclosure control, this is the one action the page exists to produce.
+     ?cta=solid shows the filled alternative. The client's 1×1 PayPal tracking pixel is dropped. -->
 </head>
 <body class="sub textpage">
 
@@ -58,14 +58,14 @@
   </div>
 </section>
 
-<section class="erow cont wrap">
+<section class="erow cont wrap cta-row">
   <div class="grid">
     <div class="tcol read reveal-opt">
       <p>Any donations would be very gratefully received and can be made at:</p>
       <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
         <input type="hidden" name="cmd" value="_s-xclick">
         <input type="hidden" name="hosted_button_id" value="D7DFJN3QPUW3Y">
-        <button class="lnbtn" type="submit"><span class="lnlbl">Donate with PayPal</span></button>
+        <button class="cta" type="submit">Donate with PayPal</button>
       </form>
     </div>
   </div>

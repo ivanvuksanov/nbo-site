@@ -12,7 +12,8 @@
    and one sequence: label → monument → mono fact → hairline rows → label → list.
    Small→huge→small→medium→small. "Playful" is produced by SKIPPING steps of that
    ladder and by moving type between the three stops — never by ornament. There is
-   no colour accent, no box, no quote glyph, no bullet, no arrow anywhere below.
+   no colour accent, no quote glyph, no bullet, no arrow anywhere below. The ONE box is .cta, the
+   donate call-to-action, which inherits c-base.css's already-sanctioned header chip.
 
    Weight semantics, one job each (all already in the page's font request):
      Inter Tight 800  place      city monuments, nowhere else
@@ -165,6 +166,26 @@ body.textpage{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the sam
    so it has to stay AFTER it to win. A row that opens a new labelled section is never .cont. */
 .textpage .erow.cont{margin-top:var(--gap-t)}
 
+/* ── THE FOOTER SITS ON THE BOTTOM, EVEN WHEN THE PAGE IS SHORT ──────────────────────────────
+   Donate is 900px of content in a 900px viewport and left 203px of bare paper UNDER the footer;
+   Board (1048), Team (1125), Discography (1503) and NBO CV (1507) do the same on any tall monitor.
+   A footer floating mid-screen with blank paper below it reads as a page that failed to finish
+   loading rather than as a page that ended.
+   body.sub — NOT body: index.html is not a sub-page, carries no .sitefoot, and its hero/panel
+   composition must not be turned into flex items. On a long page margin-top:auto resolves to 0, so
+   this is inert on all ten pages that already overflow the viewport.
+   ⚠️ svh, not vh. On mobile vh is the LARGEST viewport (browser chrome retracted), so 100vh
+   overshoots by the toolbar's height and puts a scrollbar on a page that actually fits.
+   ⚠️ AND `width:100%` on the sections is LOAD-BEARING, for a reason that is easy to miss:
+   `.wrap` carries `margin-inline:auto`, and an AUTO MARGIN IN THE CROSS AXIS DISABLES
+   `align-self:stretch`. Without this line every section stopped filling the body and shrink-wrapped
+   to its own content, which moved the one text edge off 322px on all ten pages and changed their
+   heights. Scoped to `> .wrap` and NOT `> *`: `body.sub > *` would outrank `.pdlg` on specificity
+   and blow up Projects' modal width. */
+body.sub{display:flex;flex-direction:column;min-height:100svh}
+body.sub > .wrap{width:100%}
+body.sub .sitefoot{margin-top:auto}
+
 /* ── THE THREE SHORT LINES, AND WHY NONE OF THEM IS A SECOND VOICE ─────────────────────────
    A text page needs three kinds of short line that are not paragraphs: a SECTION NAME, a QUOTE
    ATTRIBUTION, and — on the list pages — a CREDIT above a person's name. All three are plain
@@ -249,6 +270,35 @@ body.textpage{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the sam
   border-color:var(--hair);cursor:pointer;appearance:none;-webkit-appearance:none}
 .lnbtn:hover .lnlbl,.pdx:hover{border-bottom-color:currentColor}
 .lnbtn:focus-visible,.pdx:focus-visible{outline:1px solid var(--ink);outline-offset:.4rem}
+
+/* ── THE DONATE CTA ──────────────────────────────────────────────────────────────────────────
+   The one box in this file, and it is the box c-base.css ALREADY sanctions — the header's .donate
+   chip, whose own comment reads "Donate = the page's one call-to-action — hairline box sets it
+   apart from wayfinding". This is that exception at PAGE scale, not a second one.
+   Donate stops sharing .lnbtn's underlined-mono-line recipe because the two do different jobs: a
+   "Project Details" line is a disclosure you may ignore, while this is the only action the page
+   exists to produce, and an underlined line of mono gave the page no visible action at all.
+   Same type recipe as the header chip (sans, .82rem, 500, uppercase, .18em) so the promotion adds
+   NO new vocabulary; square, because the tweaks gear is the site's only radius.
+   Hover FILLS rather than fading opacity like the header's items: a chip among six can afford to
+   fade, but a lone CTA fading on hover reads as going away instead of as responding.
+   ?cta=solid shows the filled reading side by side — kept behind a flag because starting filled
+   would be a second departure from this file's "no box, no ornament" rule, not just a louder one. */
+.cta{display:inline-block;margin-top:clamp(1.6rem,4vh,2.6rem);
+  font-family:var(--sans);font-size:.82rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.18em;color:var(--ink);
+  padding:1.05rem 2.2rem;border:1px solid var(--ink);background:none;
+  cursor:pointer;appearance:none;-webkit-appearance:none;transition:background .3s,color .3s}
+.cta:hover{background:var(--ink);color:var(--paper)}
+.cta:focus-visible{outline:1px solid var(--ink);outline-offset:.4rem}
+body.cta-solid .cta{background:var(--ink);color:var(--paper)}
+body.cta-solid .cta:hover{background:none;color:var(--ink)}
+
+/* The CTA needs clearance from the footer — an action pressed against the socials row reads as part
+   of the page furniture rather than as the thing the page is asking for. Its own property, not a
+   third template tier: every other text page ends in prose, which needs nothing. This also holds
+   the gap on a SHORT viewport, where the sticky footer above has no slack left to give. */
+.textpage .cta-row{padding-bottom:clamp(2.5rem,6vh,4.5rem)}
 
 /* ── THE STORE BADGE ROW ─────────────────────────────────────────────────────────────────────
    Six vendor badges are the ONE place this site shows another brand's artwork — the client's own
