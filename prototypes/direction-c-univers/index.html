@@ -60,10 +60,15 @@ body.hero-video-on .hero-video{display:block}
    cleaner), a wide thin band of type. Separate files from logo.svg, which carries the three-line
    header mark — the header and the hero are deliberately different lockups. */
 .heromark{position:absolute;inset:0;z-index:3;pointer-events:none;display:none}
-.heromark .mk{position:absolute;left:50%;bottom:80px;transform:translateX(-50%);
+.heromark .mk{position:absolute;left:50%;bottom:70px;transform:translateX(-50%);
   -webkit-mask:var(--markfile) center/contain no-repeat;mask:var(--markfile) center/contain no-repeat;
   animation:markIn .7s ease both}   /* plain fade-in, same entrance window as the header */
-.heromark .mk{width:min(94vw,1720px);aspect-ratio:26148/1490}    /* one line — a wide, thin band of type */
+/* ⚠️ aspect-ratio MUST equal the mark files' viewBox (0 -140 26148 1780), which is taller than the
+   1490-unit lockup so the glyph overshoot and the dissolve halo aren't cropped — see mark-1line.svg.
+   A mask cannot paint outside its element either, so the box has to carry that extra height too:
+   matching the viewBox keeps `contain` exact, which keeps the letters at 1720/26148 scale. `bottom`
+   absorbs the ~10px of new halo room below the baseline so the type sits where it did. */
+.heromark .mk{width:min(94vw,1720px);aspect-ratio:26148/1780}    /* one line — a wide, thin band of type */
 @keyframes markIn{from{opacity:0}to{opacity:1}}   /* opacity-only, so .mk keeps its own transform */
 /* mark edge treatments: dissolve = noise-eroded edges that break up and reform (the shipped
    default); sharp = the raw lockup paths. JS overwrites --markfile inline once the paths are fetched. */
@@ -80,6 +85,81 @@ body.heromark-ghost .heromark .mk{background:#fff;opacity:.22}
 /* upcoming — label far left, content indented (asymmetric) */
 .up .lbl{grid-column:1/2}
 .up .body{grid-column:3/10}
+
+/* ── PROJECT DETAILS, IN A MODAL ─────────────────────────────────────────────────────────────
+   Same control and same reading band as Projects, so a visitor meets one "there is more to read"
+   grammar on both pages. This is a SECOND, simpler copy of that page's modal rather than a shared
+   one: Projects' version is emitted by build-projects.py and carries page-specific rules (the
+   .stmt statement blocks, the poster as a second hit area, the acrostic's fixed measure). The two
+   share only what is written here. If a third page ever needs a modal, lift this into c-base.css
+   and drop the generator's copy — until then a shared rule set would have to serve one caller.
+   The class names deliberately MATCH Projects' so that lift is a delete, not a rewrite.
+   ⚠️ margin:auto is what CENTRES a modal dialog and it is the UA's — c-base.css's *{margin:0}
+   wipes it, parking the dialog in the top-left corner. It has to be written back by hand.
+   ⚠️ .pdbody needs BOTH flex:1 and min-height:0: a flex item's min-height defaults to auto and
+   refuses to shrink below its content, so without it the prose spills past max-height and
+   overflow:auto never engages. */
+.pdlg{margin:auto;width:min(94vw,736px);max-width:none;max-height:88svh;padding:0;border:0;
+  background:var(--paper);color:var(--ink);box-shadow:0 24px 70px rgba(0,0,0,.24)}
+.pdlg::backdrop{background:rgba(16,18,20,.62)}
+/* a flex column, with the head OUTSIDE the scroll area so it holds the project's name while the
+   prose runs — inside a modal the page's own context is gone. Sticky would do nothing here: it
+   needs the scroll container as an ancestor, and the head is the scroller's sibling. */
+.pdlg[open]{display:flex;flex-direction:column}
+.pdhead{flex:none;display:flex;align-items:flex-start;justify-content:space-between;
+  gap:clamp(1rem,3vw,2rem);background:var(--paper);border-bottom:1px solid var(--hair);
+  padding:clamp(1.4rem,3vh,2rem) clamp(1.5rem,4vw,4.5rem)}
+.pdt{font-family:"Inter Tight",var(--sans);font-weight:700;text-transform:uppercase;
+  font-size:clamp(1.15rem,2.2vw,1.6rem);line-height:1.06;letter-spacing:-.01em}
+.pdsub{margin-top:.45rem;font-size:.9rem;letter-spacing:.1em;color:var(--ink-soft)}
+/* the reading area takes focus on open (autofocus in the markup). Without it showModal() focuses
+   the first tabbable thing, which is Close — so the modal opened with a focus ring round the exit.
+   tabindex="-1" keeps it out of the tab order while the arrow keys still scroll it. */
+.pdbody{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;
+  padding:clamp(2rem,5vh,3.2rem) clamp(1.5rem,4vw,4.5rem) clamp(2.6rem,7vh,4.5rem)}
+.pdbody:focus,.pdbody:focus-visible{outline:none}
+/* 592px is Projects' reading band, reused so both modals set prose to one measure */
+.pdbody .liner{max-width:592px}
+.pdbody .liner p{font-size:var(--read);line-height:1.78}
+.pdbody .liner p + p{margin-top:1.15em}
+/* credits sit above the prose in the mono voice — they are facts, not part of the argument.
+   The label is the grey half and the NAME carries the ink: the name is the information, and grey
+   is this site's passive voice throughout. Weight stays 400 — mono bold would read as a heading. */
+.pdcred{margin-bottom:clamp(1.6rem,3.5vh,2.4rem);padding-bottom:clamp(1.2rem,2.5vh,1.7rem);
+  border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:.8rem;line-height:1.7;
+  color:var(--ink-soft)}
+.pdcred b{font-weight:400;color:var(--ink)}
+/* BOTTOM FADE — on the DIALOG, not the scroller, and on only while something is still below, so the
+   scroll edge stops cutting a sentence mid-word and the last line is never left under a veil. The
+   gradient ends on --paper AT ALPHA 0 rather than `transparent`, which some engines interpolate
+   through transparent-black and grey the fade. */
+.pdlg::after{content:"";position:absolute;left:0;right:0;bottom:0;height:clamp(2.4rem,7vh,4.5rem);
+  background:linear-gradient(to top,var(--paper),rgba(251,251,250,0));
+  opacity:0;transition:opacity .3s;pointer-events:none}
+.pdlg.pd-fade::after{opacity:1}
+/* one-shot entrance in the page's own curve. Closing is immediate — a dialog that lingers on the
+   way out reads as lag, not as motion. */
+.pdlg[open]{animation:pdIn .42s cubic-bezier(.16,1,.3,1)}
+.pdlg[open]::backdrop{animation:pdBd .42s ease}
+@keyframes pdIn{from{opacity:0;transform:translateY(14px)}}
+@keyframes pdBd{from{opacity:0}}
+@media(prefers-reduced-motion:reduce){.pdlg[open],.pdlg[open]::backdrop{animation:none}}
+/* the page must not scroll behind the modal. overflow:hidden collapses the scrollbar, which shifts
+   the layout by its width wherever one reserves space (not macOS, which overlays) — --sbw is
+   measured before the lock and hands that width back. */
+html.pdlg-open,html.pdlg-open body{overflow:hidden}
+html.pdlg-open body{padding-right:var(--sbw,0px)}
+/* THE CONTROL. Full ink plus a standing hairline underline — the site's "you can click this"
+   grammar. A soft grey label with a hover-only underline reads as another metadata line, and this
+   one sits directly under the programme list where everything else is passive text. */
+.lnbtn{display:block;margin-top:clamp(1.8rem,4vh,2.8rem);background:none;border:0;padding:0;
+  font:inherit;color:inherit;text-align:left;cursor:pointer;appearance:none;-webkit-appearance:none}
+.lnlbl,.pdx{font-family:var(--mono);font-size:.78rem;letter-spacing:.05em;color:var(--ink);
+  padding-bottom:.15rem;border-bottom:1px solid var(--hair);transition:border-color .3s}
+.pdx{flex:none;margin-top:.2rem;background:none;border-width:0 0 1px;border-style:solid;
+  border-color:var(--hair);cursor:pointer;appearance:none;-webkit-appearance:none}
+.lnbtn:hover .lnlbl,.pdx:hover{border-bottom-color:currentColor}
+.lnbtn:focus-visible,.pdx:focus-visible{outline:1px solid var(--ink);outline-offset:.4rem}
 
 /* tour visual — the season's key artwork, FULL-BLEED (the one image on the page that isn't contained;
    it's a poster, not a photograph, so it gets the whole measure). No .wrap/.grid on the section, and
@@ -217,6 +297,11 @@ body.heromark-ghost .heromark .mk{background:#fff;opacity:.22}
           <li><strong>Gustav Mahler:</strong> Adagietto</li>
           <li><strong>Gavin Bryars:</strong> Jesus’ blood never failed me yet</li>
         </ul>
+        <!-- the narrative lives behind this control, as on Projects: the section stays facts-first
+             (dates, then programme) and the reading is opt-in -->
+        <button class="lnbtn" type="button" data-dlg="lovers-dlg" aria-haspopup="dialog">
+          <span class="lnlbl">Project Details</span>
+        </button>
       </div>
     </div>
   </div>
@@ -350,6 +435,37 @@ body.heromark-ghost .heromark .mk{background:#fff;opacity:.22}
   </div>
 </footer>
 
+<!-- PROJECT DETAILS — the Lovers Tour narrative. A native <dialog> in the top layer, so it sits
+     outside the page's transforms and parallax entirely. Opened by the control under the programme. -->
+<dialog class="pdlg" id="lovers-dlg" aria-labelledby="lovers-dlg-h">
+  <div class="pdhead">
+    <div>
+      <p class="pdt" id="lovers-dlg-h">Lovers Tour</p>
+      <p class="pdsub metanum">Balkan Season 2026</p>
+    </div>
+    <button class="pdx" type="button" data-pdclose>Close</button>
+  </div>
+  <div class="pdbody" tabindex="-1" autofocus>
+    <div class="liner">
+      <p class="pdcred">Conducted by <b>Premil Petrović</b><br>Directed by <b>Brett Bailey</b></p>
+      <p>In a world dominated by wars, the rise of right-wing populists, deepening social inequality,
+      human rights violations and human-caused climate change, we see a profound absence of love at the
+      very root of these crises. And even though it may sound naive at first glance, this is exactly what
+      more and more artists and thinkers have rightly been thematizing lately.</p>
+      <p>Wiener Festwochen, as one of the leading European festivals, gave itself the title this year
+      “Republic of Love”, calling to oppose the destructive forces in the world and fight with love.
+      Emphasizing the need to become loving, many feminist, queer and left-wing authors and thinkers have
+      recently advocated terms such as radical tenderness, radical love or revolutionary love. Theater
+      director Milo Rau says: “When the famous sentence ‘beauty will save the world’ is spoken in
+      Dostoevsky’s novel ‘The Idiot’, someone comments – you say that because you’re in love… It’s
+      wonderful, because everything we do should be done out of love for another. The answer lies in
+      creating art with other people, for other people.”</p>
+      <p>The Lovers Tour thematize both the freedom of the individual act of love and love as a political
+      force in the world.</p>
+    </div>
+  </div>
+</dialog>
+
 <!-- PROTOTYPE: tweaks panel — ?clean hides it for screenshots -->
 <div class="tweaks" id="tweaks">
   <button class="gear" aria-label="Toggle tweaks panel">✎</button>
@@ -384,7 +500,11 @@ function setHeroVideo(on){
 // The one-line lockup is only 1490 units tall, so the filter's percentage margin has to be far larger
 // than it looks to hold a stdDeviation-200 blur — hence fy/fh travelling with the geometry here
 // instead of being hardcoded into the filter string.
-const MARK={file:'mark-1line.svg',vb:'0 0 26148 1490',fy:'-60%',fh:'220%'};
+// ⚠️ vb is the PADDED viewBox and must match mark-1line{,-dissolve}.svg and .heromark .mk's
+// aspect-ratio. It is taller than the lockup so this generated mask doesn't crop the letters'
+// overshoot or the blur halo — a viewBox clips its own ink. fy/fh are unaffected: filter-region
+// percentages resolve against the <g>'s ink bbox, not against the viewBox.
+const MARK={file:'mark-1line.svg',vb:'0 -140 26148 1780',fy:'-60%',fh:'220%'};
 let markPath=null;
 function loadMark(){
   if(markPath) return Promise.resolve();
@@ -436,6 +556,44 @@ function scrollDissolve(){
 addEventListener('scroll',()=>requestAnimationFrame(scrollDissolve),{passive:true});
 // ?photohero forces the still (clean screenshots); reduced-motion never autoplays
 setHeroVideo(!reduce && !location.search.includes('photohero'));
+
+// ── PROJECT DETAILS MODAL ───────────────────────────────────────────────────────────────────
+// Only what a <dialog> does NOT give us: the page-scroll lock, the bottom fade, and resetting the
+// scroll on reopen. The focus trap, the inert background, Esc-to-close and focus-return to the
+// opener are all the platform's. Mirrors projects.html so both modals behave identically.
+// The fade carries 4px of slack — a fractional device-pixel scrollHeight otherwise never quite
+// reaches the end and the veil sticks on at the bottom of the prose.
+function pdFade(dlg){
+  const b=dlg.querySelector('.pdbody');
+  dlg.classList.toggle('pd-fade', b.scrollHeight-b.clientHeight-b.scrollTop > 4);
+}
+function openPdlg(id){
+  const dlg=document.getElementById(id);
+  if(!dlg || dlg.open) return;
+  // hand back the scrollbar's width BEFORE the lock collapses it, or the page shifts by it
+  document.documentElement.style.setProperty('--sbw',(innerWidth-document.documentElement.clientWidth)+'px');
+  document.documentElement.classList.add('pdlg-open');
+  dlg.showModal();
+  dlg.querySelector('.pdbody').scrollTop=0;   // a re-opened dialog would keep its old scroll
+  pdFade(dlg);   // only measurable once it is laid out, which showModal() has just done
+}
+document.querySelectorAll('.pdlg').forEach(dlg=>{
+  dlg.querySelector('.pdbody').addEventListener('scroll',()=>pdFade(dlg),{passive:true});
+  addEventListener('resize',()=>{ if(dlg.open) pdFade(dlg); });
+  // the backdrop is NOT a child, so a click landing on the dialog element itself is a click outside
+  // its content — the standard dismissal. The <dialog> carries no padding, so there is no dead band
+  // inside it that could swallow a genuine content click.
+  dlg.addEventListener('click',e=>{ if(e.target===dlg) dlg.close(); });
+  dlg.querySelectorAll('[data-pdclose]').forEach(b=>b.addEventListener('click',()=>dlg.close()));
+  // 'close' fires for Esc and for the backdrop alike, so the lock is released in ONE place
+  dlg.addEventListener('close',()=>document.documentElement.classList.remove('pdlg-open'));
+});
+document.querySelectorAll('[data-dlg]').forEach(el=>{
+  el.addEventListener('click',()=>openPdlg(el.dataset.dlg));
+});
+// review flag — ?open=lovers opens the modal on load, for a screenshot
+const wantOpen=(new URLSearchParams(location.search).get('open')||'').replace(/^#/,'');
+if(wantOpen) openPdlg(wantOpen+'-dlg');
 </script>
 </body>
 </html>

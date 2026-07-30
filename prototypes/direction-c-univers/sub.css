@@ -67,15 +67,14 @@
 .dlede{font-weight:300;font-size:clamp(1.55rem,3.1vw,2.7rem);line-height:1.14;letter-spacing:-.014em;
   max-width:30ch;text-wrap:balance}
 
-/* THE EMPHASIS VOICE — one size for everything the page lifts out of running prose. No rule, no
+/* THE EMPHASIS VOICE — one size for everything a page lifts out of running prose. No rule, no
    quote mark: the whitespace and the gutter hang do the work; a box would read as a callout.
-   .pull and .stair.caps were the identical face, weight and case at two different sizes (3.4rem vs
-   3rem) and two line-heights — so "emphasis" meant two things depending on the block. The client
-   asked for one ("ako se nesto istice, mozda uvek istim vecim fontom"), so both now share these
-   three declarations and only .lead sits above them. */
-.pull,.stair.caps > *{font-family:"Inter Tight",var(--sans);font-weight:700;
+   ONE recipe across the site, per the client ("ako se nesto istice, mozda uvek istim vecim
+   fontom"); only .lead sits above it. Projects' 2018 values lines are the sole user — the
+   manifesto sets every lifted sentence as prose instead, so this voice appears once site-wide.
+   Adding a second user is a design decision, not a styling one. */
+.stair.caps > *{font-family:"Inter Tight",var(--sans);font-weight:700;
   text-transform:uppercase;font-size:clamp(1.6rem,3.6vw,3rem);line-height:1.04;letter-spacing:.005em}
-.pull{max-width:20ch;padding-block:clamp(2.6rem,6vh,4.5rem)}
 
 /* row modifiers (the base rule lives in c-base.css beside .gig).
    .row is sub-page-only, so anything set here leaves the homepage's .gig — which shares the base

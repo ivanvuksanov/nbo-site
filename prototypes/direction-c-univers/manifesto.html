@@ -12,14 +12,15 @@
 <link rel="stylesheet" href="sub.css">
 <style>
 /* Manifesto-only composition. The prose column MOVES down the page rather than running
-   one measure: that migration, three lifted sentences and the question catalogue are the
-   whole design. The two densest paragraphs get nothing — a page where every paragraph is
+   one measure: that migration, the lifted first sentence of p5 and the question catalogue are
+   the whole design. The two densest paragraphs get nothing — a page where every paragraph is
    designed has no playfulness left. */
 /* ONE prose band. The page used to start each block on a slightly different column — 3/9, 3/10,
    2/11, 2/10, 3/11 — which is most of what read as "too many changes" (client, 2026-07-28). The
-   reading blocks now share one edge; only the deliberately WIDE gestures — the two pull-quotes and the
-   photo row — still break out of it. The closing statement used to as well, as a big uppercase stair;
-   it is plain prose on the shared edge now. */
+   reading blocks share one edge; the photo row is the only gesture that breaks out of it.
+   The page carries NO uppercase emphasis blocks: every sentence the design once lifted out —
+   the two about possibilities and about borders, and the closing statement — is running prose,
+   set where the source has it. Emphasis on this page is position and air, not a second voice. */
 .m-lede,.m-prem,.m-q .body,.m-body{grid-column:3/10}
 .m-q .qline{font-weight:300;font-size:clamp(1.05rem,2vw,1.6rem);line-height:1.34;letter-spacing:-.008em}
 .m-q .qline + .qline{margin-top:.85em}
@@ -32,25 +33,19 @@
 
 /* ── ONE VERTICAL RHYTHM ──────────────────────────────────────────────────────────────────
    Each text block is an .erow that contributes NO padding of its own, and the gap between two
-   consecutive rows is a single token. The pull-quotes are the one exception: they get a slightly
-   larger gap, and they own it through their own padding — so the row margin is suppressed on
-   both sides of a .pullrow and the gap can't be counted twice.
-   This replaces per-section padding plus ad-hoc `padding-top:0` overrides, which compounded
-   differently at every join: the two pulls measured 27px and 103px from their neighbours, and
-   paragraph gaps ranged 99–215px. */
+   consecutive rows is a single token. Two tiers, so a join is never the sum of a section's
+   padding and its neighbour's: this replaces per-section padding plus ad-hoc `padding-top:0`
+   overrides, which compounded differently at every join (paragraph gaps ranged 99–215px). */
 body{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the same argument continuing */
-     --gap-b:clamp(3rem,6.6vh,5.2rem);      /* block → block: prose to a photo band, a catalogue, … */
-     --gap-p:clamp(4rem,8.6vh,6.4rem)}      /* around a pull-quote — a step more, both sides */
+     --gap-b:clamp(3rem,6.6vh,5.2rem)}      /* block → block: prose to a photo band, a catalogue, … */
 .erow{padding-block:0}
 .erow + .erow{margin-top:var(--gap-b)}
-/* --gap-b is a BLOCK gap: it separates a paragraph from a photo band, from the question catalogue,
-   from a pull-quote row. Two consecutive PLAIN PARAGRAPHS are not that — they are one argument
-   continuing, and at 59px they read as though the page had changed subject. The page's own answer for
-   two paragraphs is 1.15em (19px, `.read p + p`); this sits between the two, because these are still
-   separate blocks on a deliberately airy page. Only 2 joins on the page qualify, both near the close. */
+/* --gap-b is a BLOCK gap: it separates a paragraph from a photo band, from the question catalogue.
+   Two consecutive PLAIN PARAGRAPHS are not that — they are one argument continuing, and at 59px they
+   read as though the page had changed subject. The page's own answer for two paragraphs is 1.15em
+   (19px, `.read p + p`); this sits between the two, because these are still separate blocks on a
+   deliberately airy page. */
 .erow:has(> .grid > .m-body) + .erow:has(> .grid > .m-body){margin-top:var(--gap-t)}
-.erow.pullrow + .erow,.erow + .erow.pullrow{margin-top:0}
-.pull{padding-block:var(--gap-p)}
 /* The question catalogue is no longer a dark panel (client, 2026-07-28: "izbaciti crno, kvari flow")
    — the black broke the page's flow. All twelve questions stay; only the treatment goes.
    It needed its own margins ONLY to hold air against the full-bleed dark face. As a plain .erow it
@@ -127,16 +122,11 @@ body{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the same argumen
   </div>
 </section>
 
-<!-- p4, its closing sentence lifted out as the first pull -->
+<!-- p4, whole. Its closing sentence is the source's own last sentence of this paragraph, so it
+     sits here in running prose rather than lifted out as an emphasis block. -->
 <section class="erow wrap">
   <div class="grid">
-    <div class="m-body read reveal"><p>Because of all those questions and possible answers we are offering, NBO is open for new performers, new audience, new concert venues, new visions and new aspects of communication.</p></div>
-  </div>
-</section>
-
-<section class="erow wrap pullrow">
-  <div class="grid">
-    <p class="pull hang-l reveal" style="grid-column:2/10">NBO is space filled with new possibilities.</p>
+    <div class="m-body read reveal"><p>Because of all those questions and possible answers we are offering, NBO is open for new performers, new audience, new concert venues, new visions and new aspects of communication. NBO is space filled with new possibilities.</p></div>
   </div>
 </section>
 
@@ -170,17 +160,12 @@ body{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the same argumen
   </div>
 </section>
 
-<!-- p8 — the page's identity moment. The site's hero is a wordmark whose borders
-     dissolve; here the sentence ABOUT borders dissolves at its edges. -->
-<section class="erow wrap pullrow">
-  <div class="grid">
-    <p class="pull hang-l reveal" style="grid-column:2/10">Border is the other name for prejudice.</p>
-  </div>
-</section>
-
+<!-- p8 — the source opens this paragraph with the borders sentence, so it reads as prose here.
+     The wordmark in the hero still carries the dissolving-border idea; the page no longer
+     repeats it typographically. -->
 <section class="erow wrap">
   <div class="grid">
-    <div class="m-body read reveal"><p>NBO is a call to play across the borders of purported, usual, and to listen without prejudices.</p></div>
+    <div class="m-body read reveal"><p>Border is the other name for prejudice. NBO is a call to play across the borders of purported, usual, and to listen without prejudices.</p></div>
   </div>
 </section>
 

@@ -1,7 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26148 1490" fill="#000">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -140 26148 1780" fill="#000">
 <defs>
-  <!-- taller filter region than the 2-line mask: the one-line lockup is only 1490 units high,
-       so a percentage-based margin has to be far larger to hold a stdDeviation-200 blur. -->
+  <!-- ⚠️ viewBox is taller than the 1490-unit lockup on purpose — see mark-1line.svg for why, and
+       keep the two files, MARK.vb in index.html and .heromark .mk's aspect-ratio in step.
+       The filter REGION below is separate: its percentages are relative to the <g>'s ink bbox, not
+       to the viewBox, so it is unaffected by the viewBox height and stays as it is. A wide region
+       is still needed here — the one-line lockup is only 1490 units high, so a percentage-based
+       margin has to be far larger to hold a stdDeviation-200 blur. -->
   <filter id="dissolve" x="-10%" y="-60%" width="120%" height="220%">
     <feGaussianBlur in="SourceAlpha" stdDeviation="43" result="soft"/>
     <feTurbulence type="fractalNoise" baseFrequency="0.0026" numOctaves="3" seed="11" result="n">

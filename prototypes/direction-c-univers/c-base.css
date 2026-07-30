@@ -122,9 +122,17 @@ body.panels-dark .field .soft,body.panels-dark .field .who-bio,body.panels-dark 
 .sublinks a:hover{opacity:.55}
 
 /* footer title — hangs left, echoes the hero's dissolving borders at the close of the page.
-   Any page using .ftitle must also carry the #edgeDissolve <svg><defs> block. */
+   Any page using .ftitle must also carry the #edgeDissolve <svg><defs> block.
+   ⚠️ The padding/negative-margin pair is what keeps the glyphs whole, and it is NOT cosmetic.
+   A CSS `filter` rasterizes its element at the BORDER BOX, so anything outside that box is gone
+   before the filter runs — widening the SVG's own filter region does nothing (measured). At
+   line-height .98 the box is 0.98em while the ink needs ~1.21em, so the round letters lost their
+   overshoot: C, O, S and U came out sliced flat top and bottom. The padding grows the box past the
+   ink (~0.12em) plus the blur's reach (stdDeviation 2.4 ≈ 0.09em); the equal negative margin gives
+   the outer footprint back, so the tight .98 line stacking and the page rhythm are unchanged. */
 footer{padding-block:var(--pad) 3.5rem}
 .ftitle{font-family:"Inter Tight",var(--sans);font-weight:700;font-size:clamp(2.4rem,6vw,5rem);line-height:.98;letter-spacing:.005em;text-transform:uppercase;
+  padding-block:.22em;margin-block:-.22em;
   filter:url(#edgeDissolve)}
 .ftitle .l2{display:block;padding-left:var(--ind)}
 
