@@ -165,9 +165,19 @@ body.textpage{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the sam
    so it has to stay AFTER it to win. A row that opens a new labelled section is never .cont. */
 .textpage .erow.cont{margin-top:var(--gap-t)}
 
-/* ── THE TWO SHORT LINES, AND WHY NEITHER IS A SECOND VOICE ────────────────────────────────
-   A long read needs two kinds of short line that are not paragraphs: a SECTION NAME and a
-   QUOTE ATTRIBUTION. Both were set in the .eyebrow micro-caps — and that was a real failure,
+/* ── THE THREE SHORT LINES, AND WHY NONE OF THEM IS A SECOND VOICE ─────────────────────────
+   A text page needs three kinds of short line that are not paragraphs: a SECTION NAME, a QUOTE
+   ATTRIBUTION, and — on the list pages — a CREDIT above a person's name. All three are plain
+   prose, and ONE mechanism tells them apart: a short line welded to its block by a gap tighter
+   than any paragraph join, plus, for the credit, ink dropped to the page's soft grey.
+     ink,  welded DOWN → it names what follows        → .slabel, a section heading
+     grey, welded DOWN → it credits the name below it → .qual, a role on Team / Board
+     ink,  welded UP   → it answers what precedes     → .cite, an attribution
+   The grey is the page's own voice dimmed, not a new style — and it is what lets a column of
+   names form one unbroken vertical edge the eye can run down, which is the whole job of a list
+   page. Nothing else is added: no rule, no hairline, no display size, no tracked caps.
+
+   The first two were set in the .eyebrow micro-caps — and that was a real failure,
    because the two jobs then rendered byte-identically: "ERHARD BUSEK" under a quoted passage
    looked exactly like "CULTURAL CONTEXT" over a new section, so an attribution read as a heading
    and nothing at all marked the passage above it as someone else's words (client, 2026-07-30).
@@ -180,10 +190,32 @@ body.textpage{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the sam
    never be misread as a stray one-line paragraph. The attribution also keeps the em-dash the source
    writes it with (mission.md:27) — that dash is the only mark the client's own page gives the quote,
    and it is what tells a reader at a glance which of the two kinds of short line this one is. */
-.textpage .slabel{margin-bottom:.5em}
-.textpage .read .slabel + p{margin-top:0}
-/* .cite must out-specify .read's `p + p` join, which it does on class count (2 vs 1) */
-.textpage .cite{margin-top:.5em}
+/* THE SECTION HEADING takes the site's TITLE voice — Inter Tight 700 uppercase, the same face and
+   weight as the page title and every chapter title on Projects — but at the PROSE SIZE. A different
+   style, not a bigger one (client, 2026-07-30: "a bit of a different font style than the rest, it
+   should stand out a little bit"). That makes it the gentlest possible step in a hierarchy the site
+   already has: PROJECTS 77px → 2025 46px → TURNING POINT TOUR 32px → a section heading at 17px.
+   It has to differ from the CREDIT, not just from prose: both are short lines that name something, so
+   if they shared a treatment we would be back to the collision that made "ERHARD BUSEK" read as a
+   heading. They now differ on every axis — title face, full ink, prose size, caps VERSUS the credit's
+   micro-caps grey. The hairline still separates sections; this labels them.
+   Tracking is .04em rather than .lead's .005em: uppercase at 17px sets far too tight at a display
+   face's tracking, which is calibrated for 46–77px. */
+.textpage .slabel{margin-bottom:.5em;font-family:"Inter Tight",var(--sans);font-weight:700;
+  text-transform:uppercase;letter-spacing:.04em}
+/* `+ *`, not `+ p`: a heading welds down to whatever opens its section — a paragraph on Mission,
+   a name list on Partners. Same 8px either way. */
+.textpage .read .slabel + *{margin-top:0}
+/* THE CREDIT sits UNDER the name and is the one short line that is also SMALLER (client, 2026-07-30:
+   above the name and at full size it competed with the name instead of serving it, and on Board it
+   made a third stacked line between the section heading and the person). Under and smaller, it is
+   unmistakably subordinate — you read the name, then what they do.
+   It carries .eyebrow IN THE MARKUP rather than restating that recipe here, so the site keeps ONE
+   micro-caps label and this cannot drift from it. That recipe is already doing exactly this job
+   elsewhere: `.stmt .who` names the speaker under a composer statement. It is the only place a text
+   page uses a second size, and it buys the thing a list page needs most — names as the one thing at
+   full size, so the column of them reads as the content and the roles as annotation. */
+.textpage .qual,.textpage .cite{margin-top:.5em}   /* both welded UP: they answer the line above */
 
 /* a list of one-line statements — the manifesto's twelve questions. Identical face, size and
    weight to prose; only the line gap says "list" rather than "paragraph".
@@ -191,8 +223,113 @@ body.textpage{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the sam
    flush against the sentence that introduces it, reading as that sentence's last line. It takes the
    paragraph join instead — wider than the .85em between questions, so where the list starts is
    unambiguous while every gap on the page stays one of the values the page already uses. */
-.textpage .read .qlist{margin-top:1.15em}
+/* `*:not(.slabel) +` and not a bare `.qlist`: a list that OPENS a section must take the heading's
+   own 8px weld, not this join, and the two rules would otherwise tie on specificity and be decided
+   by their order in this file — which is exactly the kind of fragility to write out rather than
+   inherit. The :not() lifts this rule above the tie and excludes the case it shouldn't win. */
+.textpage .read *:not(.slabel) + .qlist{margin-top:1.15em}
 .textpage .qlist p + p{margin-top:.85em}
+
+/* ── THE YEAR INDEX ─────────────────────────────────────────────────────────────────────────
+   Shared, because two pages now carry it: Projects and Photos. Only its LOOK lives here — each page
+   places it in its own rail, because those rails are different widths. Three max-content columns, so
+   adding a year needs no edit anywhere; the active state is painted in c-base.js.
+   Mono, soft grey going ink: this is the page's "thing you can click", not a heading. */
+.yrnav{display:none;grid-template-columns:repeat(3,max-content);
+  gap:.45rem clamp(.6rem,1.5vw,1.1rem)}
+.yrnav a{font-family:var(--mono);font-size:.82rem;letter-spacing:.05em;color:var(--ink-soft);
+  padding-bottom:.15rem;border-bottom:1px solid transparent;transition:color .3s,border-color .3s}
+.yrnav a:hover{color:var(--ink)}
+.yrnav a.active{color:var(--ink);font-weight:500;border-bottom-color:currentColor}
+/* Photos' rail: cols 1/3, the same empty band a Team portrait sits in, and it sticks under the header
+   exactly as Projects' index does.
+   ⚠️ It spans grid-row 1/3 — the year label AND its photo groups — and that is not cosmetic. `sticky`
+   only travels inside its own parent's box, so a rail sitting in a 60px label row would never move;
+   and the active-state observer in c-base.js uses a narrow reading band (-25%/-55%), which a 60px
+   section never enters. Both are why one section holds the whole year. */
+.textpage .prail{grid-column:1/3;grid-row:1/3;align-self:stretch}
+.textpage .prail .yrnav{display:grid;position:sticky;top:6.6rem}
+/* .grid sets row-gap:0, so the photo groups would otherwise sit flush under the year label */
+.textpage .yrsec .pgroup{margin-top:clamp(1.6rem,3.5vh,2.6rem)}
+
+/* ── THE PHOTO ARCHIVE ──────────────────────────────────────────────────────────────────────
+   Two levels, and NEITHER adds a type voice, because both already exist:
+     YEAR    → .slabel on a .sect — the title voice at prose size, under a hairline. Exactly what
+               Board and Partners use for a section.
+     CONCERT → .eyebrow welded DOWN over its grid. Projects already does this (`.eyebrow blk` over
+               its Concerts and Programme lists), so a grey micro-caps label naming the group below
+               it is established grammar, not a new invention.
+   Both come from the CLIENT'S own structure — their page is organised year → concert → photos — so
+   the page is a transcription of their archive, not a scheme imposed on it.
+   Square cells: their gallery's own tiles are square crops, so the grid matches what their page
+   shows. Four across at ~228px is a contact sheet, which is the honest form for 207 uncaptioned
+   photos — the archive IS the argument, and 12 years of it should read as a body of work. */
+.textpage .pgroup{grid-column:3/13}
+.textpage .gl{margin-bottom:.9rem}
+.textpage .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.5rem,1.1vw,1rem)}
+.textpage .pgrid img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#e8e8e6}
+.textpage .pgrid + .gl{margin-top:clamp(2rem,4.5vh,3.2rem)}
+
+/* ── THE VIDEO GRID ─────────────────────────────────────────────────────────────────────────
+   Spans from the TEXT EDGE to the right edge, so the grid's left edge IS the page's one text edge and
+   the title above it lines up with the first tile. Two across, and that is not a taste call: nine of
+   the thirteen videos are old enough that the largest 16:9 still YouTube holds for them is 640px wide
+   and one caps at 480px, so a ~486px tile is the honest maximum. Three across would win a row back and
+   spend the picture to get it.
+
+   A TILE IS A FACADE, NOT A LIVE EMBED. Thirteen iframes would load thirteen third-party players on
+   open and paint the entire grid in YouTube's chrome — red button, watch-later, channel bug — which
+   would be far and away the loudest thing on this site. Pressing a tile replaces it with the real
+   embed, autoplaying, so it *is* an embedded video; just not thirteen at once. See c-base.js.
+   The still comes from the video itself. The 4:3 stills are letterboxed 16:9 pictures, and `cover` on
+   a 16:9 box crops off almost exactly the black bars, so no per-video framing is needed. */
+.textpage .vgrid{grid-column:3/13;display:grid;grid-template-columns:repeat(2,1fr);
+  column-gap:clamp(1rem,2vw,2rem);row-gap:clamp(2.4rem,5.5vh,4rem)}
+.textpage .vtile{position:relative;display:block;width:100%;padding:0;border:0;cursor:pointer;
+  aspect-ratio:16/9;background-color:#e8e8e6;background-size:cover;background-position:center}
+.textpage .vtile::after{content:"";position:absolute;inset:0;background:var(--ink);opacity:0;
+  transition:opacity .4s}
+.textpage .vtile:hover::after{opacity:.14}
+/* the one glyph on the page: a play triangle, no circle and no box around it. The site already uses a
+   functional arrow (.back's ←), so a functional triangle is in grammar where a decorative one is not.
+   Paper-white with a shadow because it has to hold over a dark still and a light one alike. */
+.textpage .vtile .pl{position:absolute;left:50%;top:50%;z-index:1;
+  transform:translate(-50%,-50%);width:0;height:0;border-style:solid;
+  border-width:.8rem 0 .8rem 1.38rem;border-color:transparent transparent transparent var(--paper);
+  filter:drop-shadow(0 1px 7px rgba(0,0,0,.5));opacity:.92;transition:opacity .3s}
+.textpage .vtile:hover .pl{opacity:1}
+.textpage .vtile:focus-visible{outline:1px solid var(--ink);outline-offset:.4rem}
+.textpage .vitem .vt{margin-top:.9rem}
+.textpage .vitem:hover .vt{text-decoration:underline;text-underline-offset:.22em}
+/* what the facade is replaced BY */
+.textpage .vframe{display:block;width:100%;aspect-ratio:16/9;border:0}
+
+/* A SECTION RULE — what tells a heading from a list item on a page where every line is short.
+   The heading itself stays plain prose. On Mission a heading is legible without help because it sits
+   over a PARAGRAPH: a short line against a block of text reads as a heading by contrast alone. On a
+   list page every neighbour is also a short line, that contrast is gone, and "NBO Board" read as the
+   first name in the list (client, 2026-07-30). So the mark is STRUCTURAL rather than typographic —
+   the direction's own hairline, the same device that already separates rows and chapters. No new type
+   voice is introduced anywhere, which is the whole point of solving it this way.
+   It spans the text column, so the rule starts exactly on the page's one edge. The block gap sits
+   ABOVE it (59px) and the padding below it (24px), so the rule is nearer the heading it introduces
+   than the section it closes — a divider has to belong to what follows it. */
+.textpage .tcol.sect{border-top:1px solid var(--hair);padding-top:clamp(1.5rem,3.2vh,2.4rem)}
+/* and once a rule marks the section, the heading STOPS welding: the 8px weld exists to bind a heading
+   to what follows when nothing else does, and at 8px against a list's own 14px joins it read as
+   attached to the first name rather than to the list. The rule does the binding now, so the heading
+   takes the ordinary paragraph join and sits clear of its list. */
+.textpage .tcol.sect .slabel{margin-bottom:1.15em}
+
+/* A PORTRAIT IN THE RAIL — the only image a list page carries. Cols 1/3 are empty on every text
+   page, so a face can sit there WITHOUT touching the single text edge: every name on Team starts at
+   the same x whether or not that person has a photo, and the column of names stays one unbroken
+   vertical edge. Square, and small on purpose — 177px is the rail's own width at full size, so the
+   portrait is sized by the grid rather than by how big a face we wish we could show.
+   Each photo sets its own background-position inline: these are not a matched pair (one is a
+   three-quarter studio portrait, one a tight headshot), so a single crop rule cannot serve both. */
+.textpage .pcell{grid-column:1/3;align-self:start}
+.textpage .pcell .img{aspect-ratio:1;background-size:cover;max-width:177px}
 
 /* THE PHOTO ROW — the one gesture that leaves the reading column, breaking a full column left of
    it while the text beside it runs to the far edge. Position is all it has: no entrance, no drift. */
@@ -206,8 +343,14 @@ body.textpage{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the sam
 
 @media(max-width:880px){
   .textpage .phead .body,.textpage .tcol,
-  .textpage .figrow .figwrap,.textpage .figrow .b{grid-column:1/-1}
+  .textpage .figrow .figwrap,.textpage .figrow .b,.textpage .pcell{grid-column:1/-1}
   .textpage .figrow .b{margin-top:var(--gap-b)}
+  /* the rail is gone, so the portrait stacks above its credit — but it must not grow to the full
+     phone width: max-width already caps it at the size the asset can actually carry. */
+  .textpage .pcell{margin-bottom:1.15em}
+  .textpage .vgrid{grid-column:1/-1;grid-template-columns:1fr}
+  .textpage .pgroup{grid-column:1/-1}
+  .textpage .pgrid{grid-template-columns:repeat(2,1fr)}
 }
 
 /* ── FOUR EXPRESSIVE VOICES ───────────────────────────────────────────────── */

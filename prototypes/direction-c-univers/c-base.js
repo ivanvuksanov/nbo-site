@@ -99,6 +99,46 @@ function wireSeg(id,fn){ const seg=document.getElementById(id); if(!seg) return;
   seg.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
     seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b===btn)); fn(btn); })); }
 
+// THE YEAR INDEX — shared by Projects (.chap) and Photos (.yrsec). The index is repeated once per
+// section so it can stay stuck in the rail beside whatever you are reading, which means EVERY copy has
+// to highlight the same year. c-base.js's active-nav observer above cannot do this — it lights exactly
+// one anchor — so this paints them all from the topmost section inside the reading band.
+const yrLinks=[...document.querySelectorAll('.yrnav a')];
+const yrSecs=[...document.querySelectorAll('.chap[id], .yrsec[id]')];
+if(yrLinks.length && yrSecs.length){
+  const seen=new Map();
+  const paint=()=>{
+    const vis=[...seen.entries()].filter(([,r])=>r.hit).sort((a,b)=>a[1].top-b[1].top);
+    const id=vis.length?vis[0][0]:null;
+    yrLinks.forEach(a=>a.classList.toggle('active', !!id && a.getAttribute('href')==='#'+id));
+  };
+  const obs=new IntersectionObserver(es=>{
+    es.forEach(e=>seen.set(e.target.id,{hit:e.isIntersecting,top:e.boundingClientRect.top}));
+    paint();
+  },{rootMargin:'-25% 0px -55% 0px'});
+  yrSecs.forEach(c=>obs.observe(c));
+}
+
+// VIDEO FACADE — a tile shows our own still until it is pressed, then becomes the real embed and plays.
+// The point is that a grid of n videos loads ZERO third-party players on open: thirteen live iframes
+// would paint the whole page in YouTube's chrome before anyone asked to watch anything. Pressing one
+// swaps that single tile for a true autoplaying embed, so the page still delivers embedded video.
+// youtube-nocookie.com, and the iframe is only ever created after a real click — so nothing is
+// requested from YouTube until the visitor chooses to.
+document.querySelectorAll('.vtile').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id=btn.dataset.yt; if(!id) return;
+    const f=document.createElement('iframe');
+    f.className='vframe';
+    f.title=btn.dataset.title||'Video';
+    f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1';
+    f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    f.referrerPolicy='strict-origin-when-cross-origin';
+    f.allowFullscreen=true;
+    btn.replaceWith(f);   // replace the BUTTON, not its contents: an iframe inside a button is unusable
+  },{once:true});
+});
+
 // ?reveal=all — the scroll-in on a TEXT PAGE's running paragraphs. Off by default: the pages carry
 // only two entrances (title + opening paragraph on load, and the footer), and prose that lifts itself
 // into place on every scroll pass is the thing that made the Manifesto feel busy. The paragraphs are

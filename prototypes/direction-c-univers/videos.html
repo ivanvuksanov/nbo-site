@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Videos — No Borders Orchestra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="c-base.css">
+<link rel="stylesheet" href="sub.css">
+<!-- No page-specific CSS — the .textpage template in sub.css, plus its video grid.
+     Data: content/videos.md. The 13 YouTube ids were re-pulled from the client's raw HTML on
+     2026-07-30 (the 2026-06-18 pull had stripped the iframes and kept only titles) and every one was
+     verified playable the same day via YouTube's oEmbed endpoint.
+     Titles are the client's own labels from their page, not YouTube's longer ones.
+
+     Each tile is a FACADE: our own still, and no YouTube player exists until you press one. See the
+     grid note in sub.css and the handler in c-base.js.
+     ⚠️ The `still` per video is the largest 16:9 frame YouTube actually holds for it — 1280px for 4 of
+     them, 640px for 8, and 480px for one. That weakest file is what sets the tile width, so do not
+     widen the grid to three-up-in-reverse or drop it to one column without re-checking videos.md.
+     ⚠️ #12 (Ljubljana Festival) and #13 (raa uni) are on OTHER channels. Someone else can unlist them
+     and the first we would know is a blank tile. -->
+</head>
+<body class="sub textpage">
+
+<header id="nav">
+  <a href="index.html" class="logo" aria-label="No Borders Orchestra"><img src="logo.svg" alt="No Borders Orchestra"></a>
+  <nav>
+    <a href="index.html#about">About</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="index.html#who">Who we are</a>
+    <a href="index.html#media" class="active">Media</a>
+  </nav>
+  <div class="actions">
+    <a href="index.html#contact">Contact</a>
+    <a href="index.html#contact" class="donate">Donate</a>
+  </div>
+</header>
+
+<section class="phead wrap" id="top">
+  <div class="grid">
+    <div class="body">
+      <a class="back hang-l" href="index.html#media"><span class="ar" aria-hidden="true">&#8592;</span>Back</a>
+      <h1 class="lead reveal draw hang-l">Videos</h1>
+    </div>
+  </div>
+</section>
+
+<section class="erow wrap">
+  <div class="grid">
+    <div class="vgrid read">
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="SMdC8zDdSV0" data-title="Gustav Mahler: Adagietto / No Borders Orchestra (LIVE)"
+                style="background-image:url('https://i.ytimg.com/vi/SMdC8zDdSV0/maxresdefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — Gustav Mahler: Adagietto / No Borders Orchestra (LIVE)</span>
+        </button>
+        <p class="vt">Gustav Mahler: Adagietto / No Borders Orchestra (LIVE)</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="zyh75haZJjg" data-title="No Return to Normality Tour – No Borders Orchestra"
+                style="background-image:url('https://i.ytimg.com/vi/zyh75haZJjg/maxresdefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — No Return to Normality Tour – No Borders Orchestra</span>
+        </button>
+        <p class="vt">No Return to Normality Tour – No Borders Orchestra</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="DcJR1pZm4UQ" data-title="No Return to Normality – Balkan Season Tour 2021 (trailer)"
+                style="background-image:url('https://i.ytimg.com/vi/DcJR1pZm4UQ/maxresdefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — No Return to Normality – Balkan Season Tour 2021 (trailer)</span>
+        </button>
+        <p class="vt">No Return to Normality – Balkan Season Tour 2021 (trailer)</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="2W4-fFtET20" data-title="B Matinee – Balkan Season Tour 2019"
+                style="background-image:url('https://i.ytimg.com/vi/2W4-fFtET20/sddefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — B Matinee – Balkan Season Tour 2019</span>
+        </button>
+        <p class="vt">B Matinee – Balkan Season Tour 2019</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="2ql4UWJDnrE" data-title="Prokofiev: Symphonie Classique – Allegro – Larghetto"
+                style="background-image:url('https://i.ytimg.com/vi/2ql4UWJDnrE/sddefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — Prokofiev: Symphonie Classique – Allegro – Larghetto</span>
+        </button>
+        <p class="vt">Prokofiev: Symphonie Classique – Allegro – Larghetto</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="8M6I6imr-CE" data-title="Prokofiev: Symphonie Classique – Gavotta – Finale"
+                style="background-image:url('https://i.ytimg.com/vi/8M6I6imr-CE/sddefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — Prokofiev: Symphonie Classique – Gavotta – Finale</span>
+        </button>
+        <p class="vt">Prokofiev: Symphonie Classique – Gavotta – Finale</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="uia47bgx1bk" data-title="Kodaly: Dances of Galanta"
+                style="background-image:url('https://i.ytimg.com/vi/uia47bgx1bk/sddefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — Kodaly: Dances of Galanta</span>
+        </button>
+        <p class="vt">Kodaly: Dances of Galanta</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="u-d8JSZE2Bc" data-title="Ives: The Unanswered Question"
+                style="background-image:url('https://i.ytimg.com/vi/u-d8JSZE2Bc/sddefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — Ives: The Unanswered Question</span>
+        </button>
+        <p class="vt">Ives: The Unanswered Question</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="0QXgZz-BmHE" data-title="Beethoven: Piano Concerto No.5 – Allegro"
+                style="background-image:url('https://i.ytimg.com/vi/0QXgZz-BmHE/sddefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — Beethoven: Piano Concerto No.5 – Allegro</span>
+        </button>
+        <p class="vt">Beethoven: Piano Concerto No.5 – Allegro</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="YBxDbJ39XaM" data-title="Beethoven: Piano Concerto No.5 – Adagio"
+                style="background-image:url('https://i.ytimg.com/vi/YBxDbJ39XaM/sddefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — Beethoven: Piano Concerto No.5 – Adagio</span>
+        </button>
+        <p class="vt">Beethoven: Piano Concerto No.5 – Adagio</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="VMmovyHCZBQ" data-title="Beethoven: Piano Concerto No.5 – Rondo"
+                style="background-image:url('https://i.ytimg.com/vi/VMmovyHCZBQ/sddefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — Beethoven: Piano Concerto No.5 – Rondo</span>
+        </button>
+        <p class="vt">Beethoven: Piano Concerto No.5 – Rondo</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="nvtpmD8ZOiA" data-title="Milos Karadaglic with NBO in Ljubljana"
+                style="background-image:url('https://i.ytimg.com/vi/nvtpmD8ZOiA/maxresdefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — Milos Karadaglic with NBO in Ljubljana</span>
+        </button>
+        <p class="vt">Milos Karadaglic with NBO in Ljubljana</p>
+      </div>
+      <div class="vitem">
+        <button class="vtile" type="button" data-yt="OaoNUKzXh1Y" data-title="NBO Flash Mob in Ljubljana"
+                style="background-image:url('https://i.ytimg.com/vi/OaoNUKzXh1Y/hqdefault.jpg')">
+          <span class="pl" aria-hidden="true"></span>
+          <span class="sr-only">Play — NBO Flash Mob in Ljubljana</span>
+        </button>
+        <p class="vt">NBO Flash Mob in Ljubljana</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap sitefoot">
+  <div class="grid sf-row">
+    <div class="socials reveal"><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">YouTube</a></div>
+    <p class="copy reveal">© 2026 NBO</p>
+  </div>
+</footer>
+
+<script src="c-base.js"></script>
+</body>
+</html>

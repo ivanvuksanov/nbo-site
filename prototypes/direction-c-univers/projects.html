@@ -151,12 +151,8 @@ body.view-grid .lnbtn{display:none}   /* a poster wall has no chapter to open */
    inside the three-column rail (3 × 32px + 2 × 18px = 130px of 280px) and 14 years land in 5 rows
    instead of 7 — a shorter block to read and less of the rail's height taken while it is stuck under
    the header. max-content columns mean adding a year needs no edit here. */
-.yrnav{display:none;grid-template-columns:repeat(3,max-content);
-  gap:.45rem clamp(.6rem,1.5vw,1.1rem)}
-.yrnav a{font-family:var(--mono);font-size:.82rem;letter-spacing:.05em;color:var(--ink-soft);
-  padding-bottom:.15rem;border-bottom:1px solid transparent;transition:color .3s,border-color .3s}
-.yrnav a:hover{color:var(--ink)}
-.yrnav a.active{color:var(--ink);font-weight:500;border-bottom-color:currentColor}
+/* .yrnav's LOOK now lives in the shared sub.css — Photos uses the same index.
+   Only its PLACEMENT stays here, because the rail differs per page. */
 /* index mode: the monument goes, the index takes the rail and sticks under the header */
 body.rail-index .pr .n > span{display:none}
 body.rail-index .pr .n .yrnav{display:grid;position:sticky;top:6.6rem}
@@ -605,87 +601,6 @@ if(location.search.includes('rail=monument')){       // the non-default; index s
   if(typeof syncPar==='function') syncPar();
 }
 
-// The year index exists once per chapter, so EVERY copy must highlight the same tour. c-base.js's
-// active-nav observer can't do this (it lights one anchor), hence this: the topmost chapter inside
-// the reading band wins, and all copies are set from it.
-const yrLinks=[...document.querySelectorAll('.yrnav a')];
-const yrChaps=[...document.querySelectorAll('.chap[id]')];
-if(yrLinks.length && yrChaps.length){
-  const seen=new Map();
-  const paint=()=>{
-    const vis=[...seen.entries()].filter(([,r])=>r.hit).sort((a,b)=>a[1].top-b[1].top);
-    const id=vis.length?vis[0][0]:null;
-    yrLinks.forEach(a=>a.classList.toggle('active', !!id && a.getAttribute('href')==='#'+id));
-  };
-  const obs=new IntersectionObserver(es=>{
-    es.forEach(e=>seen.set(e.target.id,{hit:e.isIntersecting,top:e.boundingClientRect.top}));
-    paint();
-  },{rootMargin:'-25% 0px -55% 0px'});
-  yrChaps.forEach(c=>obs.observe(c));
-}
-
-if(location.search.includes('prog=rows')){           // the non-default; plain ships by default
-  document.body.classList.remove('prog-plain');
-  document.querySelectorAll('#prog button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.prog==='rows'));
-  if(typeof syncPar==='function') syncPar();
-}
-
-// PROJECT DETAILS — the narrative opens in a MODAL. showModal() is what makes this small: the focus
-// trap, the inert background, Esc-to-close and focus-return to the opener are the platform's.
-// Chapter heights no longer change when details open, which is why nothing here calls syncPar() —
-// the parallax bases stay valid for the life of the page.
-// the bottom fade is on only while there is something still below — 4px of slack, because a
-// fractional device-pixel scrollHeight otherwise never quite reaches the end and the veil sticks
-function pdFade(dlg){
-  const b = dlg.querySelector('.pdbody');
-  dlg.classList.toggle('pd-fade', b.scrollHeight - b.clientHeight - b.scrollTop > 4);
-}
-
-function openPdlg(id){
-  const dlg = document.getElementById(id);
-  if(!dlg || dlg.open) return;
-  // hand back the scrollbar's width BEFORE the lock collapses it, or the page shifts by it
-  document.documentElement.style.setProperty('--sbw', (innerWidth - document.documentElement.clientWidth) + 'px');
-  document.documentElement.classList.add('pdlg-open');
-  dlg.showModal();
-  dlg.querySelector('.pdbody').scrollTop = 0;   // a re-opened dialog would keep its old scroll
-  pdFade(dlg);   // only measurable once it is laid out, which showModal() has just done
-}
-
-document.querySelectorAll('.pdlg').forEach(dlg=>{
-  dlg.querySelector('.pdbody').addEventListener('scroll', ()=>pdFade(dlg), {passive:true});
-  addEventListener('resize', ()=>{ if(dlg.open) pdFade(dlg); });
-  // the backdrop is NOT a child, so a click that lands on the dialog element itself is a click
-  // outside its content — the standard dismissal. The <dialog> carries no padding of its own, so
-  // there is no dead band inside it that could swallow a genuine content click.
-  dlg.addEventListener('click', e=>{ if(e.target === dlg) dlg.close(); });
-  dlg.querySelectorAll('[data-pdclose]').forEach(b=>b.addEventListener('click', ()=>dlg.close()));
-  // 'close' fires for Esc and for the backdrop alike, so the page lock is released in ONE place
-  dlg.addEventListener('close', ()=>document.documentElement.classList.remove('pdlg-open'));
-});
-
-// Every opener names its dialog. Two carry it: the button in the facts column, and the poster —
-// which opens nothing in the poster wall, where there is no chapter to read.
-document.querySelectorAll('[data-dlg]').forEach(el=>{
-  el.addEventListener('click', ()=>{
-    if(el.classList.contains('pl') && document.body.classList.contains('view-grid')) return;
-    openPdlg(el.dataset.dlg);
-  });
-});
-
-// review flag — open one Project Details on load, for a screenshot. Takes EITHER a project slug
-// (?open=b-matinee) or a year (?open=2013, ?open=y2018), since the dialogs are keyed by project while
-// the chapters are keyed by year: a year resolves to whatever its first block opens.
-const wantOpen = (new URLSearchParams(location.search).get('open') || '').replace(/^#/, '');
-if(wantOpen){
-  let id = wantOpen + '-dlg';
-  if(!document.getElementById(id)){
-    const chap = document.getElementById(/^[0-9]{4}$/.test(wantOpen) ? 'y' + wantOpen : wantOpen);
-    const first = chap && chap.querySelector('[data-dlg]');
-    id = first ? first.dataset.dlg : id;
-  }
-  openPdlg(id);
-}
-</script>
+// The year-index active state is handled in the shared c-base.js — Photos runs the same index.
 </body>
 </html>
