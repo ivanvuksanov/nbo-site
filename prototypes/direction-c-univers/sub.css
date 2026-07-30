@@ -127,6 +127,89 @@ body.panels-dark .field .roster .ct,body.panels-dark .field .roster .now{color:r
 .stmt .say{margin-left:var(--ind);margin-top:1.2rem;max-width:52ch;font-size:var(--read);line-height:1.78}
 .stmt .say p + p{margin-top:1.15em}
 
+/* ── THE TEXT PAGE ─────────────────────────────────────────────────────────────────────────
+   ONE composition for every long-form page under ABOUT — Manifesto, Mission, NBO CV, and any
+   text-heavy page added later. Opt in with <body class="sub textpage">.
+
+   It is deliberately a SHORT set of rules, because the page's whole argument is that a reading
+   page needs almost nothing (client, 2026-07-30: "Manifesto stranu bih još pojednostavio").
+
+   ONE BODY VOICE.  Every sentence is the same face, size, weight and colour — .read, and nothing
+     else. The page has exactly two other voices: the title (.lead) and the micro-caps .eyebrow
+     that names a section. What used to be three more sizes — a display lede, a lifted-out
+     emphasis line, a bigger question — is gone: an opening sentence is emphatic because it is
+     first, not because it is large.
+   ONE COLUMN.  Every text block shares one left edge, cols 3/10, including the title. The photo
+     row is the only thing on the page allowed to leave it.
+   ONE RHYTHM, two tiers.  --gap-b separates blocks (prose → photo, prose → a new labelled
+     section). --gap-t, on .cont, joins two paragraphs of the SAME argument, where --gap-b's 59px
+     read as a change of subject. A row contributes no padding of its own, so a join is never the
+     sum of two sections' padding.
+   TWO ANIMATIONS, and no more.  The TITLE arrives on load — alone, so the page settles once and
+     then holds still while you read. The FOOTER arrives on scroll, which is the only reason the
+     page is not wholly inert. Nothing between them moves, the opening paragraph included: every
+     paragraph carries .reveal-opt, which is inert until ?reveal=all switches the scroll-in on for
+     a side-by-side look. Photos never move either — no reveal, and no [data-par]: parallax is a
+     homepage device, and on a page you read it drifts the one thing you are looking at.
+   ──────────────────────────────────────────────────────────────────────────────────────────── */
+body.textpage{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the same argument continuing */
+              --gap-b:clamp(3rem,6.6vh,5.2rem)}      /* block → block: prose to a photo, to a new section */
+
+/* the one column band — the page title sits on it too, so the title's left edge IS the text's */
+.textpage .phead .body,.textpage .tcol{grid-column:3/10}
+
+/* the one rhythm */
+.textpage .erow{padding-block:0}
+.textpage .erow + .erow{margin-top:var(--gap-b)}
+/* .cont — "this row continues the argument above it". Same class count as the rule it overrides,
+   so it has to stay AFTER it to win. A row that opens a new labelled section is never .cont. */
+.textpage .erow.cont{margin-top:var(--gap-t)}
+
+/* ── THE TWO SHORT LINES, AND WHY NEITHER IS A SECOND VOICE ────────────────────────────────
+   A long read needs two kinds of short line that are not paragraphs: a SECTION NAME and a
+   QUOTE ATTRIBUTION. Both were set in the .eyebrow micro-caps — and that was a real failure,
+   because the two jobs then rendered byte-identically: "ERHARD BUSEK" under a quoted passage
+   looked exactly like "CULTURAL CONTEXT" over a new section, so an attribution read as a heading
+   and nothing at all marked the passage above it as someone else's words (client, 2026-07-30).
+   Both are now plain prose — same face, size, weight and ink as every sentence on the page, which
+   is the rule this template exists to hold. What separates them is POSITION, made unambiguous by
+   ONE gap: a short line welded to its block by a gap TIGHTER than any paragraph join on the page.
+     welded DOWNWARD → it names what follows      → a section heading
+     welded UPWARD   → it answers what precedes   → an attribution
+   .5em is below the .85em list join and well below the 1.15em paragraph join, so a welded line can
+   never be misread as a stray one-line paragraph. The attribution also keeps the em-dash the source
+   writes it with (mission.md:27) — that dash is the only mark the client's own page gives the quote,
+   and it is what tells a reader at a glance which of the two kinds of short line this one is. */
+.textpage .slabel{margin-bottom:.5em}
+.textpage .read .slabel + p{margin-top:0}
+/* .cite must out-specify .read's `p + p` join, which it does on class count (2 vs 1) */
+.textpage .cite{margin-top:.5em}
+
+/* a list of one-line statements — the manifesto's twelve questions. Identical face, size and
+   weight to prose; only the line gap says "list" rather than "paragraph".
+   The list is a <div>, so .read's `p + p` join does NOT reach it and the first question would sit
+   flush against the sentence that introduces it, reading as that sentence's last line. It takes the
+   paragraph join instead — wider than the .85em between questions, so where the list starts is
+   unambiguous while every gap on the page stays one of the values the page already uses. */
+.textpage .read .qlist{margin-top:1.15em}
+.textpage .qlist p + p{margin-top:.85em}
+
+/* THE PHOTO ROW — the one gesture that leaves the reading column, breaking a full column left of
+   it while the text beside it runs to the far edge. Position is all it has: no entrance, no drift. */
+.textpage .figrow > .grid{align-items:center}
+.textpage .figrow .figwrap{grid-column:1/5}
+.textpage .figrow .figwrap .img{aspect-ratio:4/5}
+.textpage .figrow .b{grid-column:5/13}
+
+/* .reveal-opt carries NO styles on purpose: it is a marker, not a treatment. The paragraphs that
+   hold it are simply visible. c-base.js promotes them to real .reveal only under ?reveal=all. */
+
+@media(max-width:880px){
+  .textpage .phead .body,.textpage .tcol,
+  .textpage .figrow .figwrap,.textpage .figrow .b{grid-column:1/-1}
+  .textpage .figrow .b{margin-top:var(--gap-b)}
+}
+
 /* ── FOUR EXPRESSIVE VOICES ───────────────────────────────────────────────── */
 
 /* STAIR — successive lines each step further right. Extends .lead .l2, the site's

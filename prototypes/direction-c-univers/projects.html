@@ -223,8 +223,11 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
   font-size:inherit;text-transform:none;letter-spacing:0;margin:0 0 0 .35em;line-height:1.4}
 /* plates in TEXT view sit in the chapter's own grid, in the body's column band */
 .plates{margin-top:clamp(2.5rem,6vh,4.5rem)}
-/* one tile per chapter now, so it takes the body's own column band */
-.plates .pl{grid-column:3/8}
+/* one tile per chapter, ALIGNED TO THE TEXT: the body is 4/12, so the poster starts at 4 too
+   (client, 2026-07-30: "vizuale po projektima poravnati sa textom"). At 3/8 it began one track
+   left of every line of type above it — close enough to the text edge to read as a mistake rather
+   than as a deliberate break-out. Width is unchanged at five tracks. */
+.plates .pl{grid-column:4/9}
 .pl .cap{display:none}
 @media(max-width:880px){
   /* the index keeps its three columns here too — the override that dropped it to two existed for the

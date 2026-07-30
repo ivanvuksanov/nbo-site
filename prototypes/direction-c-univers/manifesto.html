@@ -10,51 +10,11 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="c-base.css">
 <link rel="stylesheet" href="sub.css">
-<style>
-/* Manifesto-only composition. The prose column MOVES down the page rather than running
-   one measure: that migration, the lifted first sentence of p5 and the question catalogue are
-   the whole design. The two densest paragraphs get nothing — a page where every paragraph is
-   designed has no playfulness left. */
-/* ONE prose band. The page used to start each block on a slightly different column — 3/9, 3/10,
-   2/11, 2/10, 3/11 — which is most of what read as "too many changes" (client, 2026-07-28). The
-   reading blocks share one edge; the photo row is the only gesture that breaks out of it.
-   The page carries NO uppercase emphasis blocks: every sentence the design once lifted out —
-   the two about possibilities and about borders, and the closing statement — is running prose,
-   set where the source has it. Emphasis on this page is position and air, not a second voice. */
-.m-lede,.m-prem,.m-q .body,.m-body{grid-column:3/10}
-.m-q .qline{font-weight:300;font-size:clamp(1.05rem,2vw,1.6rem);line-height:1.34;letter-spacing:-.008em}
-.m-q .qline + .qline{margin-top:.85em}
-/* one lede measure, rather than three inline max-widths on the same class */
-.dlede{max-width:30ch}
-/* the essay's outward turn — the only photo on the page, text pushed right beside it */
-.m-wedo .figwrap{grid-column:1/5}
-.m-wedo .figwrap .img{aspect-ratio:4/5}
-.m-wedo .b{grid-column:5/13}
-
-/* ── ONE VERTICAL RHYTHM ──────────────────────────────────────────────────────────────────
-   Each text block is an .erow that contributes NO padding of its own, and the gap between two
-   consecutive rows is a single token. Two tiers, so a join is never the sum of a section's
-   padding and its neighbour's: this replaces per-section padding plus ad-hoc `padding-top:0`
-   overrides, which compounded differently at every join (paragraph gaps ranged 99–215px). */
-body{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the same argument continuing */
-     --gap-b:clamp(3rem,6.6vh,5.2rem)}      /* block → block: prose to a photo band, a catalogue, … */
-.erow{padding-block:0}
-.erow + .erow{margin-top:var(--gap-b)}
-/* --gap-b is a BLOCK gap: it separates a paragraph from a photo band, from the question catalogue.
-   Two consecutive PLAIN PARAGRAPHS are not that — they are one argument continuing, and at 59px they
-   read as though the page had changed subject. The page's own answer for two paragraphs is 1.15em
-   (19px, `.read p + p`); this sits between the two, because these are still separate blocks on a
-   deliberately airy page. */
-.erow:has(> .grid > .m-body) + .erow:has(> .grid > .m-body){margin-top:var(--gap-t)}
-/* The question catalogue is no longer a dark panel (client, 2026-07-28: "izbaciti crno, kvari flow")
-   — the black broke the page's flow. All twelve questions stay; only the treatment goes.
-   It needed its own margins ONLY to hold air against the full-bleed dark face. As a plain .erow it
-   takes --gap-b from its neighbours like every other block, so it needs no spacing rule at all —
-   which is also the only way it stays symmetric: `.erow + .erow` (0,2,0) would outrank a `.m-q`
-   margin (0,1,0) on the top side and leave the bottom side wider. */
-</style>
+<!-- No page-specific CSS. The whole composition is the shared .textpage template in sub.css, which
+     Mission and NBO CV run on unchanged: one body voice, one column, one two-tier rhythm, two
+     animations. Anything added here would be the first crack in that. -->
 </head>
-<body class="sub">
+<body class="sub textpage">
 
 <header id="nav">
   <a href="index.html" class="logo" aria-label="No Borders Orchestra"><img src="logo.svg" alt="No Borders Orchestra"></a>
@@ -70,121 +30,120 @@ body{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the same argumen
   </div>
 </header>
 
-<!-- PAGE HEADER — the Lovers Tour opening, with h1 in place of h2 -->
+<!-- PAGE HEADER — the title is the page's one display size, and the one thing that moves on load
+     besides the opening paragraph. No [data-par]: the title of a reading page shouldn't drift. -->
 <section class="phead wrap" id="top">
   <div class="grid">
-    <div class="body" data-par="0.07">
+    <div class="body">
       <a class="back hang-l" href="index.html#about"><span class="ar" aria-hidden="true">&#8592;</span>Back</a>
       <h1 class="lead reveal draw hang-l">Manifesto</h1>
     </div>
   </div>
 </section>
 
-<!-- p1 — the opening sentence in the Light voice -->
+<!-- p1 — the opening sentence. It is emphatic because it is first and because the page is empty
+     around it, not because it is set larger: the display lede size is gone. It does NOT animate
+     either — the title is the only thing that arrives on load (client, 2026-07-30). -->
 <section class="erow wrap">
   <div class="grid">
-    <p class="m-lede dlede reveal">No Borders Orchestra has emerged from the desire to create an excellent regional professional symphony orchestra, a project which calls for a new kind of communication.</p>
+    <div class="tcol read reveal-opt"><p>No Borders Orchestra has emerged from the desire to create an excellent regional professional symphony orchestra, a project which calls for a new kind of communication.</p></div>
   </div>
 </section>
 
-<!-- the two premises — a continuous read, same column as the rest of the essay. The
-     text names them itself ("founded on two basic premises"), so no extra numbering. -->
-<section class="erow wrap">
+<!-- p2 — the two premises. The text names them itself ("founded on two basic premises"), so there
+     is no numbering and no second voice. -->
+<section class="erow cont wrap">
   <div class="grid">
-    <div class="m-prem read reveal">
-      <p>NBO is founded on two basic premises. The social aspect of the project is achieved by the deconstruction of stereotypes, overcoming of nationalism, racism, xenophobia, homophobia, the gory legacy of the past and through the affirmation of cultural values that are in a complete state of disarray in local transitional societies. Being fully aware of the past, NBO is not a project nostalgic about ex-Yugoslavia. On the contrary, it is completely committed to the future. Nostalgia abolishes criticism and critical engagement is at the basis of our idea. The right to the future requires the courage to face all traumatic facts from the past. An honest dialogue about difficult responsibility issues dispels demons from the past and opens doors for possibilities that are yet to come.</p>
-      <p>From the artistic side, we wish to create a symphonic orchestra where all members will have the motivation, engagement and energy of a chamber orchestra and will breathe like a big chamber ensemble. NBO is an ensemble of soloists.</p>
-    </div>
+    <div class="tcol read reveal-opt"><p>NBO is founded on two basic premises. The social aspect of the project is achieved by the deconstruction of stereotypes, overcoming of nationalism, racism, xenophobia, homophobia, the gory legacy of the past and through the affirmation of cultural values that are in a complete state of disarray in local transitional societies. Being fully aware of the past, NBO is not a project nostalgic about ex-Yugoslavia. On the contrary, it is completely committed to the future. Nostalgia abolishes criticism and critical engagement is at the basis of our idea. The right to the future requires the courage to face all traumatic facts from the past. An honest dialogue about difficult responsibility issues dispels demons from the past and opens doors for possibilities that are yet to come.</p></div>
   </div>
 </section>
 
-<!-- THE QUESTION CATALOGUE — twelve rhetorical questions that run together in the source; set as a
-     catalogue, a torrent becomes an index. -->
-<section class="erow wrap m-q">
+<!-- p3, WHOLE — and this is where dropping the display lede pays for itself. The source has "From
+     the artistic side…", "NBO is an ensemble of soloists." and "We are asking questions…" as ONE
+     paragraph; the page used to split it, because the last sentence had been promoted to a display
+     headline standing over the catalogue. As plain prose it goes back where the source has it, and
+     the colon does the introducing.
+     The twelve questions stay a catalogue — a torrent read as an index — but the catalogue is now
+     made of line breaks alone. Same face, same size, same weight as every other sentence. -->
+<section class="erow cont wrap">
   <div class="grid">
-    <div class="body">
-      <p class="dlede reveal">We are asking questions and with our performances we offer some answers:</p>
-      <div class="reveal" style="margin-top:clamp(2.4rem,5vh,3.6rem)">
-        <p class="qline">Why a symphony orchestra in 21st century?</p>
-        <p class="qline">Why classical music at all?</p>
-        <p class="qline">How can music become relevant again?</p>
-        <p class="qline">How can music become a way of life again?</p>
-        <p class="qline">What can be done with the ritual of classical concert, which hasn't changed since the 19th century?</p>
-        <p class="qline">How can classical music stop being a museum exhibit?</p>
-        <p class="qline">How can the relation between the audience and musicians be changed?</p>
-        <p class="qline">Why does no alternative scene of classical music exist?</p>
-        <p class="qline">What does it mean: to listen?</p>
-        <p class="qline">What are our expectations and valuations based on while listening?</p>
-        <p class="qline">How can we open up for something different?</p>
-        <p class="qline">How can we play and listen freely?</p>
+    <div class="tcol read reveal-opt">
+      <p>From the artistic side, we wish to create a symphonic orchestra where all members will have the motivation, engagement and energy of a chamber orchestra and will breathe like a big chamber ensemble. NBO is an ensemble of soloists. We are asking questions and with our performances we offer some answers:</p>
+      <div class="qlist">
+        <p>Why a symphony orchestra in 21st century?</p>
+        <p>Why classical music at all?</p>
+        <p>How can music become relevant again?</p>
+        <p>How can music become a way of life again?</p>
+        <p>What can be done with the ritual of classical concert, which hasn't changed since the 19th century?</p>
+        <p>How can classical music stop being a museum exhibit?</p>
+        <p>How can the relation between the audience and musicians be changed?</p>
+        <p>Why does no alternative scene of classical music exist?</p>
+        <p>What does it mean: to listen?</p>
+        <p>What are our expectations and valuations based on while listening?</p>
+        <p>How can we open up for something different?</p>
+        <p>How can we play and listen freely?</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- p4, whole. Its closing sentence is the source's own last sentence of this paragraph, so it
-     sits here in running prose rather than lifted out as an emphasis block. -->
+<!-- p4 — a block gap, not the tight one: after twelve short lines a 19px join would read as a
+     thirteenth question. -->
 <section class="erow wrap">
   <div class="grid">
-    <div class="m-body read reveal"><p>Because of all those questions and possible answers we are offering, NBO is open for new performers, new audience, new concert venues, new visions and new aspects of communication. NBO is space filled with new possibilities.</p></div>
+    <div class="tcol read reveal-opt"><p>Because of all those questions and possible answers we are offering, NBO is open for new performers, new audience, new concert venues, new visions and new aspects of communication. NBO is space filled with new possibilities.</p></div>
   </div>
 </section>
 
-<!-- p5 — its first sentence lifted to act as the paragraph's headline, the reference
-     section's headline-then-body order -->
-<section class="erow wrap">
+<!-- p5, WHOLE — "Our main interest is the connection between music and life!" was lifted out as
+     this paragraph's headline. Same story as p3: it was a headline only because it was set large,
+     and the source runs it straight into the sentences that follow. -->
+<section class="erow cont wrap">
   <div class="grid">
-    <div style="grid-column:3/11">
-      <p class="dlede reveal">Our main interest is the connection between music and life!</p>
-      <div class="read reveal measure" style="margin-top:clamp(1.6rem,3.5vh,2.6rem)"><p>The fundamental word in our language is communication. Communication means consciousness that together we can do more than individually. NBO is call for regional cooperation and communication being made to artists and intellectuals of different profiles: philosophers, sociologists, musicians, visual artists, writers, architects, directors, choreographers, performers…</p></div>
-    </div>
+    <div class="tcol read reveal-opt"><p>Our main interest is the connection between music and life! The fundamental word in our language is communication. Communication means consciousness that together we can do more than individually. NBO is call for regional cooperation and communication being made to artists and intellectuals of different profiles: philosophers, sociologists, musicians, visual artists, writers, architects, directors, choreographers, performers…</p></div>
   </div>
 </section>
 
-<!-- p6 — the essay turns outward to WEDO; the page's one photo sits beside it -->
-<section class="erow wrap m-wedo">
-  <div class="grid" style="align-items:center">
-    <div class="figwrap" data-par="0.14">
-      <figure class="fig reveal-l">
+<!-- p6 — the essay turns outward to WEDO, and the page's one photo sits beside it. The photo has no
+     entrance and no drift: position is the whole gesture. -->
+<section class="erow wrap figrow">
+  <div class="grid">
+    <div class="figwrap">
+      <figure class="fig">
         <div class="img" style="background-image:url('../../fotografije/chairs-nbo.jpg')"></div>
       </figure>
     </div>
-    <div class="b read reveal"><p>NBO has been inspired by West-East Divan Orchestra (WEDO), founded by conductor Daniel Barenboim and Palestine intellectual Edward Said, where Israeli and Palestinian musicians play side by side. Musicians who had the opportunity to work in this orchestra came out changed from this experience both as artists as well as persons. This is what we aspire to in our case as well! It's not about the elimination of mutual differences or any kind of imposed harmonization – it is about developing an experience that differences don't have to be synonymous with conflict and should in fact be associated with richness instead. While creating WEDO, they knew that one orchestra couldn't bring peace to a tortured Near East, but at the same time they felt that it was essential to take action, to meet The Other, to understand his thoughts and feelings, without the need to reach an agreement.</p></div>
+    <div class="b read reveal-opt"><p>NBO has been inspired by West-East Divan Orchestra (WEDO), founded by conductor Daniel Barenboim and Palestine intellectual Edward Said, where Israeli and Palestinian musicians play side by side. Musicians who had the opportunity to work in this orchestra came out changed from this experience both as artists as well as persons. This is what we aspire to in our case as well! It's not about the elimination of mutual differences or any kind of imposed harmonization – it is about developing an experience that differences don't have to be synonymous with conflict and should in fact be associated with richness instead. While creating WEDO, they knew that one orchestra couldn't bring peace to a tortured Near East, but at the same time they felt that it was essential to take action, to meet The Other, to understand his thoughts and feelings, without the need to reach an agreement.</p></div>
   </div>
 </section>
 
-<!-- p7 — one of the two densest paragraphs. Deliberately plain. -->
+<!-- p7 -->
 <section class="erow wrap">
   <div class="grid">
-    <div class="m-body read reveal"><p>Politics shouldn't be the exclusive property of a political class, just as music is not supposed to belong uniquely to elites, whether they are old or new. NBO wishes to avoid the trap of artistic excellence as an excuse for marginalized self-complacency, voluntary exclusion from society and time. In a way, artistic music shares the fate of discriminated social entities, as they are being offered a paradoxical choice: stay trapped in your own four walls in order to be accepted by the society. In such circumstances, it only makes sense to step out, be loud, be visible and audible…</p></div>
+    <div class="tcol read reveal-opt"><p>Politics shouldn't be the exclusive property of a political class, just as music is not supposed to belong uniquely to elites, whether they are old or new. NBO wishes to avoid the trap of artistic excellence as an excuse for marginalized self-complacency, voluntary exclusion from society and time. In a way, artistic music shares the fate of discriminated social entities, as they are being offered a paradoxical choice: stay trapped in your own four walls in order to be accepted by the society. In such circumstances, it only makes sense to step out, be loud, be visible and audible…</p></div>
   </div>
 </section>
 
-<!-- p8 — the source opens this paragraph with the borders sentence, so it reads as prose here.
-     The wordmark in the hero still carries the dissolving-border idea; the page no longer
-     repeats it typographically. -->
-<section class="erow wrap">
+<!-- p8 — the borders sentence. It opens its paragraph in the source, so it reads as prose here; the
+     wordmark in the hero still carries the dissolving-border idea. -->
+<section class="erow cont wrap">
   <div class="grid">
-    <div class="m-body read reveal"><p>Border is the other name for prejudice. NBO is a call to play across the borders of purported, usual, and to listen without prejudices.</p></div>
+    <div class="tcol read reveal-opt"><p>Border is the other name for prejudice. NBO is a call to play across the borders of purported, usual, and to listen without prejudices.</p></div>
   </div>
 </section>
 
 <!-- p9 -->
-<section class="erow wrap">
+<section class="erow cont wrap">
   <div class="grid">
-    <div class="m-body read reveal"><p>Is the wish of NBO to change the world? Such thing will certainly be done if at least one young musician from the "periphery" country is enabled to realize that he is not born with the right talent in the wrong place and the wrong time. Is there something utopian in the entire attitude? Maybe, but is it necessarily a mistake? Why would dystopia always represent a credible concept?</p></div>
+    <div class="tcol read reveal-opt"><p>Is the wish of NBO to change the world? Such thing will certainly be done if at least one young musician from the "periphery" country is enabled to realize that he is not born with the right talent in the wrong place and the wrong time. Is there something utopian in the entire attitude? Maybe, but is it necessarily a mistake? Why would dystopia always represent a credible concept?</p></div>
   </div>
 </section>
 
-
-<!-- p10 — the close, in the page's reading voice. It was a three-line stair in big uppercase
-     display type, stepping right with the ellipsis hung into the gutter; the source
-     (content/manifesto.md:25) has it as ONE sentence on one line, so the three lines and their
-     indents were the page's invention, not the text's. As regular prose it flows as one paragraph
-     on the same reading edge as every other one (.m-body, cols 3/10). -->
+<!-- p10 — the close. It gets the BLOCK gap above it and nothing else: the last word of a manifesto
+     carries itself, and the page has no bigger size left to say so with. -->
 <section class="erow wrap">
   <div class="grid">
-    <div class="m-body read reveal"><p>No Borders Orchestra is about making a decision that art should represent the change that we wish to see in the world…</p></div>
+    <div class="tcol read reveal-opt"><p>No Borders Orchestra is about making a decision that art should represent the change that we wish to see in the world…</p></div>
   </div>
 </section>
 

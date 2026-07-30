@@ -99,6 +99,15 @@ function wireSeg(id,fn){ const seg=document.getElementById(id); if(!seg) return;
   seg.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
     seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', b===btn)); fn(btn); })); }
 
+// ?reveal=all — the scroll-in on a TEXT PAGE's running paragraphs. Off by default: the pages carry
+// only two entrances (title + opening paragraph on load, and the footer), and prose that lifts itself
+// into place on every scroll pass is the thing that made the Manifesto feel busy. The paragraphs are
+// tagged .reveal-opt rather than .reveal so "off" means genuinely no animation, not an animation
+// suppressed by CSS; this promotes them and hands them to the same observer for a side-by-side look.
+if(new URLSearchParams(location.search).get('reveal')==='all'){
+  document.querySelectorAll('.reveal-opt').forEach(el=>{ el.classList.add('reveal'); revObs.observe(el); });
+}
+
 if(location.search.includes('clean')) document.body.classList.add('clean');
 if(location.search.includes('drawin')) document.body.classList.add('draw-in');
 if(location.search.includes('openpanel') && tw) tw.classList.add('tw-open');
