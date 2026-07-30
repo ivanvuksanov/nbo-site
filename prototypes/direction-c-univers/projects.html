@@ -115,19 +115,8 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
    verbatim introduces no new vocabulary — and no +/− glyph, which sub.css's own doctrine forbids.
    The button closes the facts column; the poster is a second hit area for the same dialog (its own
    caption is display:none in text view, so cursor is the only affordance it can carry). */
-.lnbtn{display:block;margin-top:clamp(1.6rem,4vh,2.6rem);background:none;border:0;padding:0;
-  font:inherit;color:inherit;text-align:left;cursor:pointer;appearance:none;-webkit-appearance:none}
-/* ONE recipe for both controls, and it is deliberately NOT the footnote's. The commission note sits
-   directly above this button in the same mono at the same size in --ink-soft, so a soft label with
-   only a hover underline read as a SECOND FOOTNOTE — nothing said it could be clicked. Full ink plus
-   a standing hairline underline is this page's own "you can click this" grammar (the year index marks
-   its current tour the same way), and it keeps grey as the passive voice. Hover darkens the rule. */
-.lnlbl,.pdx{font-family:var(--mono);font-size:.78rem;letter-spacing:.05em;color:var(--ink);
-  padding-bottom:.15rem;border-bottom:1px solid var(--hair);transition:border-color .3s}
-.pdx{flex:none;margin-top:.2rem;background:none;border-width:0 0 1px;border-style:solid;
-  border-color:var(--hair);cursor:pointer;appearance:none;-webkit-appearance:none}
-.lnbtn:hover .lnlbl,.pdx:hover{border-bottom-color:currentColor}
-.lnbtn:focus-visible,.pdx:focus-visible{outline:1px solid var(--ink);outline-offset:.4rem}
+/* The clickable-mono-line control (.lnbtn/.lnlbl/.pdx) now lives in the shared sub.css —
+   Donate uses the same one. Only page-specific behaviour stays here. */
 .pl.lnhit{cursor:pointer}
 body.view-grid .lnbtn{display:none}   /* a poster wall has no chapter to open */
 /* the chapter rule SEPARATES chapters, so the first one has nothing to separate — there it reads
@@ -249,7 +238,7 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
   </nav>
   <div class="actions">
     <a href="index.html#contact">Contact</a>
-    <a href="index.html#contact" class="donate">Donate</a>
+    <a href="donate.html" class="donate">Donate</a>
   </div>
 </header>
 

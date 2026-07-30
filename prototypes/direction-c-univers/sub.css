@@ -230,6 +230,45 @@ body.textpage{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the sam
 .textpage .read *:not(.slabel) + .qlist{margin-top:1.15em}
 .textpage .qlist p + p{margin-top:.85em}
 
+/* ── THE CLICKABLE MONO LINE ─────────────────────────────────────────────────────────────────
+   Shared: Projects' "Project Details" control and Donate's PayPal submit are the same object —
+   a line of mono you can press. Full ink plus a STANDING hairline underline, because a soft
+   grey label with only a hover underline read as a second footnote and nothing said it could be
+   clicked. Grey stays the passive voice everywhere on this site; hover darkens the rule.
+   It carries no button chrome at all, so a <button> and an <a> look identical. */
+.lnbtn{display:block;margin-top:clamp(1.6rem,4vh,2.6rem);background:none;border:0;padding:0;
+  font:inherit;color:inherit;text-align:left;cursor:pointer;appearance:none;-webkit-appearance:none}
+/* ONE recipe for both controls, and it is deliberately NOT the footnote's. The commission note sits
+   directly above this button in the same mono at the same size in --ink-soft, so a soft label with
+   only a hover underline read as a SECOND FOOTNOTE — nothing said it could be clicked. Full ink plus
+   a standing hairline underline is this page's own "you can click this" grammar (the year index marks
+   its current tour the same way), and it keeps grey as the passive voice. Hover darkens the rule. */
+.lnlbl,.pdx{font-family:var(--mono);font-size:.78rem;letter-spacing:.05em;color:var(--ink);
+  padding-bottom:.15rem;border-bottom:1px solid var(--hair);transition:border-color .3s}
+.pdx{flex:none;margin-top:.2rem;background:none;border-width:0 0 1px;border-style:solid;
+  border-color:var(--hair);cursor:pointer;appearance:none;-webkit-appearance:none}
+.lnbtn:hover .lnlbl,.pdx:hover{border-bottom-color:currentColor}
+.lnbtn:focus-visible,.pdx:focus-visible{outline:1px solid var(--ink);outline-offset:.4rem}
+
+/* ── THE STORE BADGE ROW ─────────────────────────────────────────────────────────────────────
+   Six vendor badges are the ONE place this site shows another brand's artwork — the client's own
+   badges were chosen over text links. They need a row of their own because c-base.css sets every
+   img to display:block site-wide, so without this the six stack one per line.
+   Vendored locally, like the photos: hotlinked they were http:// on an https site, which browsers
+   block as mixed content, and they sat in the client's theme folder — gone the moment they
+   reskin. Sized to 110px display, 2x for retina, and nothing larger. */
+/* THREE max-content columns, the same choice the year index makes — and for the same reason: it needs
+   no hand-placed spans and no width arithmetic. Six badges at 110px plus gaps come to 805px against a
+   692px reading column, so a flex row wrapped 5+1, which reads as an accident. 3×2 reads as a block. */
+.textpage .badges{display:grid;grid-template-columns:repeat(3,max-content);align-items:center;
+  gap:clamp(.9rem,2.2vh,1.6rem) clamp(.9rem,2.2vw,1.8rem);margin-top:clamp(1.6rem,3.5vh,2.6rem)}
+.textpage .badges a{display:block;transition:opacity .3s}
+.textpage .badges a:hover{opacity:.62}
+.textpage .badges img{width:110px;height:auto}
+/* the album cover — a mounted print object, capped at its own display size */
+.textpage .cover{max-width:20rem}
+.textpage .cover .img{aspect-ratio:1;background-size:cover}
+
 /* ── THE YEAR INDEX ─────────────────────────────────────────────────────────────────────────
    Shared, because two pages now carry it: Projects and Photos. Only its LOOK lives here — each page
    places it in its own rail, because those rails are different widths. Three max-content columns, so
@@ -267,7 +306,18 @@ body.textpage{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the sam
 .textpage .pgroup{grid-column:3/13}
 .textpage .gl{margin-bottom:.9rem}
 .textpage .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.5rem,1.1vw,1rem)}
-.textpage .pgrid img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#e8e8e6}
+/* ⚠️ `picture` must be display:block. It is inline by default, so as a grid item it sizes to its
+   content rather than to the track, the img's width:100% then resolves against the wrong box, and
+   every cell renders oversized — it took the page from 19,352px to 42,500px tall. Both selectors are
+   needed: a photo with no WebP ships as a bare img and is a grid item itself. */
+.textpage .pgrid picture{display:block;min-width:0}
+/* ⚠️ `height:auto` is REQUIRED, not tidiness. The tiles carry width/height attributes so the browser
+   can reserve the space before the file arrives (207 lazy images would otherwise reflow the page as
+   they land). But that height attribute is a presentational hint of `height:600px`, and `aspect-ratio`
+   only governs when one dimension is auto — so without this the cells rendered 238×600 and the page
+   was 42,500px tall instead of 19,352px. */
+.textpage .pgrid img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;
+  background:#e8e8e6}
 .textpage .pgrid + .gl{margin-top:clamp(2rem,4.5vh,3.2rem)}
 
 /* ── THE VIDEO GRID ─────────────────────────────────────────────────────────────────────────
@@ -351,6 +401,9 @@ body.textpage{--gap-t:clamp(1.7rem,3.4vh,3rem);      /* prose → prose, the sam
   .textpage .vgrid{grid-column:1/-1;grid-template-columns:1fr}
   .textpage .pgroup{grid-column:1/-1}
   .textpage .pgrid{grid-template-columns:repeat(2,1fr)}
+  /* three 110px badges plus gaps need ~359px against 343px of content at 390px wide. body has
+     overflow-x:hidden, so a third column does not report as overflow — it just gets clipped. */
+  .textpage .badges{grid-template-columns:repeat(2,max-content)}
 }
 
 /* ── FOUR EXPRESSIVE VOICES ───────────────────────────────────────────────── */

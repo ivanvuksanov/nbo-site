@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Donate — No Borders Orchestra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="c-base.css">
+<link rel="stylesheet" href="sub.css">
+<!-- No page-specific CSS — the .textpage template in sub.css.
+     Text: content/donate.md (verbatim pull, nobordersorchestra.org/donate/, 2026-06-18; re-pulled
+     2026-07-30 from raw HTML) — three short prose lines, no source headings.
+     The mechanism itself is the client's real PayPal form: POST to cgi-bin/webscr with the same
+     cmd=_s-xclick and hosted_button_id=D7DFJN3QPUW3Y hidden fields, kept exactly because it is known
+     to work. Only the submit control changes — PayPal's own image button is replaced by a real
+     <button type="submit">. .lnbtn/.lnlbl — the clickable mono line — was moved out of projects.html's
+     inline <style> into the shared sub.css so this button and Projects' "Project Details" control are
+     literally the same object: a line of mono, full ink, standing hairline underline, no button chrome
+     at all. A <button> and an <a> render identically under it. The client's 1×1 PayPal tracking pixel is dropped. -->
+</head>
+<body class="sub textpage">
+
+<header id="nav">
+  <a href="index.html" class="logo" aria-label="No Borders Orchestra"><img src="logo.svg" alt="No Borders Orchestra"></a>
+  <nav>
+    <a href="index.html#about">About</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="index.html#who">Who we are</a>
+    <a href="index.html#media">Media</a>
+  </nav>
+  <div class="actions">
+    <a href="index.html#contact">Contact</a>
+    <a href="donate.html" class="donate active">Donate</a>
+  </div>
+</header>
+
+<section class="phead wrap" id="top">
+  <div class="grid">
+    <div class="body">
+      <a class="back hang-l" href="index.html#contact"><span class="ar" aria-hidden="true">&#8592;</span>Back</a>
+      <h1 class="lead reveal draw hang-l">Donate</h1>
+    </div>
+  </div>
+</section>
+
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>No Borders Orchestra is a not for profit, non-governmental organisation based in Berlin. We are registered as an official German e.V. civil society entity.</p></div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>To deliver our projects and activities we rely entirely on the generous support of foundations, companies, public bodies and private individuals.</p></div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p>Any donations would be very gratefully received and can be made at:</p>
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="D7DFJN3QPUW3Y">
+        <button class="lnbtn" type="submit"><span class="lnlbl">Donate with PayPal</span></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap sitefoot">
+  <div class="grid sf-row">
+    <div class="socials reveal"><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">YouTube</a></div>
+    <p class="copy reveal">© 2026 NBO</p>
+  </div>
+</footer>
+
+<script src="c-base.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discography — No Borders Orchestra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="c-base.css">
+<link rel="stylesheet" href="sub.css">
+<!-- No page-specific CSS — the .textpage template in sub.css.
+     Text: content/discography.md (verbatim pull, nobordersorchestra.org/discography/, 2026-06-18;
+     re-pulled 2026-07-30 from raw HTML). One release — "The Opening" — no source headings, so the
+     page has no .slabel, the same choice Team makes for its six credits.
+     Cover: the source's own nbo.jpg on the .fig figure pattern (manifesto.html's figure, no new
+     class). The HTML only records width="350"; fetching the file itself shows the real image is
+     960×960, so the figure is set to a true 1:1 aspect-ratio rather than the stated width.
+     Programme: the four pieces as a qlist — the vocabulary's one line-list primitive, reused rather
+     than inventing a tracklist row.
+     Badges: the client's six real storefront badge images at their recorded wp-content/lnk.to URLs,
+     each an <img> at the source's own width="110", wrapped in its outbound link. No class in the
+     template fits a row of badges, so — per the brief — they sit in a qlist rather than earning new
+     CSS; because every <img> on this site is display:block (c-base.css), that also means the six
+     stack one per line instead of running in a horizontal row. A real badge row needs a new shared
+     class (flex/wrap on the list), which is a CSS decision, not a markup one, so it isn't added here. -->
+</head>
+<body class="sub textpage">
+
+<header id="nav">
+  <a href="index.html" class="logo" aria-label="No Borders Orchestra"><img src="logo.svg" alt="No Borders Orchestra"></a>
+  <nav>
+    <a href="index.html#about">About</a>
+    <a href="index.html#projects">Projects</a>
+    <a href="index.html#who">Who we are</a>
+    <a href="index.html#media" class="active">Media</a>
+  </nav>
+  <div class="actions">
+    <a href="index.html#contact">Contact</a>
+    <a href="donate.html" class="donate">Donate</a>
+  </div>
+</header>
+
+<section class="phead wrap" id="top">
+  <div class="grid">
+    <div class="body">
+      <a class="back hang-l" href="index.html#media"><span class="ar" aria-hidden="true">&#8592;</span>Back</a>
+      <h1 class="lead reveal draw hang-l">Discography</h1>
+    </div>
+  </div>
+</section>
+
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <figure class="fig cover">
+        <div class="img" style="background-image:url('disc/cover.jpg')"></div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p>No Borders Orchestra – The Opening</p>
+      <p class="qual eyebrow">conducted by Premil Petrović</p>
+      <div class="qlist">
+        <p>Sergei Prokofiev – Symphonie classique No. 1 in D major, op. 25</p>
+        <p>Isidora Žebeljan – The Horses of Saint Mark</p>
+        <p>Richard Wagner – Siegfried Idyll</p>
+        <p>Zoltán Kodály – Dances of Galánta</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>This first release, entitled "The Opening" to express NBO's unapologetically fresh and innovative approach, conveys the raw energy of a group of young, open-minded and extraordinarily talented musicians performing traditional pieces of music by Sergei Prokofiev, Richard Wagner and Zoltán Kodály alongside a modern composition "The Horses of Saint Mark" by Serbian-born, internationally acclaimed composer Isidora Žebeljan.</p></div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>"The Opening" was recorded at the Slovenian Philharmonic Hall in Ljubljana where NBO was headlining the Ljubljana Festival. No Borders Orchestra debut album "The Opening" has been released on Universal Music Austria/Deutsche Grammophon on March 24th, 2015.</p></div>
+  </div>
+</section>
+
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <div class="badges">
+        <a href="https://umwb.lnk.to/NBODeezer" target="_blank" rel="noopener"><img src="disc/deezer.png" width="110" loading="lazy" alt="Deezer"></a>
+        <a href="https://hyperurl.co/NBOCD" target="_blank" rel="noopener"><img src="disc/cd-neoplanta.jpg" width="110" loading="lazy" alt="CD (Neoplanta)"></a>
+        <a href="https://umwb.lnk.to/NBOSpotify" target="_blank" rel="noopener"><img src="disc/spotify.png" width="110" loading="lazy" alt="Spotify"></a>
+        <a href="https://umwb.lnk.to/NBOamazon" target="_blank" rel="noopener"><img src="disc/amazon.png" width="110" loading="lazy" alt="Amazon"></a>
+        <a href="https://umwb.lnk.to/NBOGplay" target="_blank" rel="noopener"><img src="disc/google-play.png" width="110" loading="lazy" alt="Google Play"></a>
+        <a href="https://umwb.lnk.to/NBOiTunes" target="_blank" rel="noopener"><img src="disc/itunes.png" width="110" loading="lazy" alt="iTunes"></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap sitefoot">
+  <div class="grid sf-row">
+    <div class="socials reveal"><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">YouTube</a></div>
+    <p class="copy reveal">© 2026 NBO</p>
+  </div>
+</footer>
+
+<script src="c-base.js"></script>
+</body>
+</html>
