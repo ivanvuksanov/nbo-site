@@ -361,30 +361,7 @@ body.clean .tweaks{display:none}
 </footer>
 
 <!-- PROTOTYPE: tweaks panel — ?clean hides it for screenshots -->
-<div class="tweaks" id="tweaks">
-  <button class="gear" aria-label="Toggle tweaks panel">✎</button>
-  <div class="panel">
-    <h4>Tweaks</h4>
-    <div class="ttl">Direction A · PRISM</div>
-    <div class="tw-group">
-      <label>Tour heading</label>
-      <div class="seg" id="heading">
-        <button data-head="a" aria-pressed="true">Name only</button>
-        <button data-head="b" aria-pressed="false">+ Upcoming</button>
-        <button data-head="c" aria-pressed="false">Combined</button>
-      </div>
-      <p class="hint">A — just "The Lovers Tour". B — "Upcoming" kicker + "The Lovers Tour". C — "upcoming lovers tour" as one title.</p>
-    </div>
-    <div class="tw-group">
-      <label>Description</label>
-      <div class="seg" id="desc">
-        <button data-desc="on" aria-pressed="false">Show</button>
-        <button data-desc="off" aria-pressed="true">Hide</button>
-      </div>
-      <p class="hint">Hide drops the thematic sentence and jumps the heading straight into Program / Ensemble.</p>
-    </div>
-  </div>
-</div>
+
 
 <script>
 // PROTOTYPE: parallax, scroll-reveal, active-nav, sticky header
@@ -443,7 +420,7 @@ if(!reduce){
 
 // tweaks panel
 const tw=document.getElementById('tweaks');
-tw.querySelector('.gear').addEventListener('click',()=>tw.classList.toggle('open'));
+tw&&tw.querySelector('.gear').addEventListener('click',()=>tw.classList.toggle('open'));
 function wireSeg(id,fn){const seg=document.getElementById(id);if(!seg)return;
   seg.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{
     seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===btn)); fn(btn); }));}
