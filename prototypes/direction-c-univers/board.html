@@ -10,11 +10,28 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="c-base.css">
 <link rel="stylesheet" href="sub.css">
-<!-- No page-specific CSS — the .textpage template in sub.css.
+<!-- No page-specific CSS — the .textpage template in sub.css, and the portrait is Team's own .pcell.
      Text: content/board.md (verbatim pull, nobordersorchestra.org/board/, 2026-06-18).
      Two source headings — NBO Board · Advisory Council. Only ONE of the nine people carries a role
-     in the source, so the President takes a grey credit line and the other members are a plain name
-     list; inventing titles for the rest is not ours to do. No photos exist for anyone here. -->
+     in the source, so the President takes a grey credit line and everyone else is name-only;
+     inventing titles for the rest is not ours to do.
+
+     PORTRAITS — eight of them, pulled by pull-board-photos.py into fotografije/board/.
+     The 2026-06-18 pull was text-only, so this page shipped as a name list while the photos sat on
+     the client's page all along. Re-run that script to refresh; never hand-edit the files.
+     ⚠️ SEVEN ARE 170px ORIGINALS on the client's server — not crops we chose. That is the whole
+     reason a portrait belongs in the RAIL here: .pcell caps at 177px, so every one of these renders
+     at 1:1 and none is upscaled. A 4-across grid (.pgrid, 228px) would stretch all seven.
+     Only Deventer carries more (3280px original, shipped at the 600px web size).
+     ⚠️ NO INLINE background-position, unlike Team: all eight uploads are already SQUARE and .pcell
+     .img is aspect-ratio:1, so at `cover` there is no crop to steer. Team needs per-photo positions
+     only because premil.jpg is 567×850. If a replacement portrait arrives non-square, it needs one.
+     ⚠️ EIGHT PEOPLE, not the nine in content/board.md. Dr. Nevenka Tromp was in the 06-18 pull and
+     is now absent from every page of the client's site — checked 2026-07-31 across home, board, team,
+     mission, manifesto, partners, supporters. She has left the Advisory Council, so she is off this
+     page. Do not restore her from board.md; that file is the June pull, not the current board.
+     (.pcell would have held a photo-less name on the same text edge if we ever need one.) -->
+
 </head>
 <body class="sub textpage">
 
@@ -41,18 +58,79 @@
   </div>
 </section>
 
+<!-- The section label keeps its own row and its hairline, exactly as it did when this page was two
+     name lists. Each person then takes one .erow.cont — the same row Team gives a principal, so a
+     board member and a staff credit are the same kind of thing on this site. -->
 <section class="erow wrap">
   <div class="grid">
     <div class="tcol sect read reveal-opt">
       <p class="slabel">NBO Board</p>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="pcell">
+      <figure class="fig">
+        <div class="img" style="background-image:url('../../fotografije/board/vuco.jpg')"></div>
+      </figure>
+    </div>
+    <div class="tcol read reveal-opt">
       <p>Beka Vučo</p>
       <p class="qual eyebrow">President of the Board</p>
-      <div class="qlist">
-        <p>Dr. Vesna Pusić</p>
-        <p>Kathrin Deventer</p>
-        <p>Philipp Dietachmair</p>
-        <p>Paul Dujardin</p>
-      </div>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="pcell">
+      <figure class="fig">
+        <div class="img" style="background-image:url('../../fotografije/board/pusic.jpg')"></div>
+      </figure>
+    </div>
+    <div class="tcol read reveal-opt">
+      <p>Dr. Vesna Pusić</p>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="pcell">
+      <figure class="fig">
+        <div class="img" style="background-image:url('../../fotografije/board/deventer.jpg')"></div>
+      </figure>
+    </div>
+    <div class="tcol read reveal-opt">
+      <p>Kathrin Deventer</p>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="pcell">
+      <figure class="fig">
+        <div class="img" style="background-image:url('../../fotografije/board/dietachmair.jpg')"></div>
+      </figure>
+    </div>
+    <div class="tcol read reveal-opt">
+      <p>Philipp Dietachmair</p>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="pcell">
+      <figure class="fig">
+        <div class="img" style="background-image:url('../../fotografije/board/dujardin.jpg')"></div>
+      </figure>
+    </div>
+    <div class="tcol read reveal-opt">
+      <p>Paul Dujardin</p>
     </div>
   </div>
 </section>
@@ -61,12 +139,45 @@
   <div class="grid">
     <div class="tcol sect read reveal-opt">
       <p class="slabel">Advisory Council</p>
-      <div class="qlist">
-        <p>Sir Geoffrey Nice</p>
-        <p>Dr. Ivo Josipović</p>
-        <p>Dr. Nevenka Tromp</p>
-        <p>Ivan Ludlow</p>
-      </div>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="pcell">
+      <figure class="fig">
+        <div class="img" style="background-image:url('../../fotografije/board/nice.jpg')"></div>
+      </figure>
+    </div>
+    <div class="tcol read reveal-opt">
+      <p>Sir Geoffrey Nice</p>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="pcell">
+      <figure class="fig">
+        <div class="img" style="background-image:url('../../fotografije/board/josipovic.jpg')"></div>
+      </figure>
+    </div>
+    <div class="tcol read reveal-opt">
+      <p>Dr. Ivo Josipović</p>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="pcell">
+      <figure class="fig">
+        <div class="img" style="background-image:url('../../fotografije/board/ludlow.jpg')"></div>
+      </figure>
+    </div>
+    <div class="tcol read reveal-opt">
+      <p>Ivan Ludlow</p>
     </div>
   </div>
 </section>

@@ -129,6 +129,12 @@ body.heromark-ghost .heromark .mk{background:#fff;opacity:.22}
   border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:.8rem;line-height:1.7;
   color:var(--ink-soft)}
 .pdcred b{font-weight:400;color:var(--ink)}
+/* …with ONE exception, and the rule above is what earns it: the orchestra is the HEAD of the credit
+   block, not a third credit line (Premil, 2026-07-31 — his own mockup sets it caps and bold over the
+   two "…by" lines). So it takes the weight the credit labels are denied, plus caps and tracking.
+   It stays in the MONO voice rather than borrowing .pdt's Inter Tight: the dialog title two lines
+   above is already bold caps sans, and a second one would fight it instead of sitting under it. */
+.pdcred .org{font-weight:500;text-transform:uppercase;letter-spacing:.055em}
 /* BOTTOM FADE — on the DIALOG, not the scroller, and on only while something is still below, so the
    scroll edge stops cutting a sentence mid-word and the last line is never left under a veil. The
    gradient ends on --paper AT ALPHA 0 rather than `transparent`, which some engines interpolate
@@ -447,7 +453,12 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
   </div>
   <div class="pdbody" tabindex="-1" autofocus>
     <div class="liner">
-      <p class="pdcred">Conducted by <b>Premil Petrović</b><br>Directed by <b>Brett Bailey</b></p>
+      <!-- ⚠️ THREE LINES, ORCHESTRA FIRST — per Premil's own mockup (2026-07-31). The orchestra is
+           named on its own line and the two roles hang under it, so the credit reads as NBO's tour
+           rather than as a cast list for a production it was hired into. Two things not to "tidy":
+           the line breaks are the structure, and NO BORDERS ORCHESTRA is a head, not a credit line —
+           it carries the weight the "…by" labels deliberately don't (see .pdcred .org). -->
+      <p class="pdcred"><b class="org">No Borders Orchestra</b><br>Conducted by <b>Premil Petrović</b><br>Directed by <b>Brett Bailey</b></p>
       <p>In a world dominated by wars, the rise of right-wing populists, deepening social inequality,
       human rights violations and human-caused climate change, we see a profound absence of love at the
       very root of these crises. And even though it may sound naive at first glance, this is exactly what

@@ -16,12 +16,20 @@
      name is the thing at full size, the role is annotation welded up to it.
 
      ⚠️ THE TWO PORTRAITS ARE NOT A MATCHED PAIR, and the size is set by the weaker file:
-       premil.jpg      567×850, 191K — a three-quarter studio portrait, light grey ground, head in
-                       the top third, so its square crop is positioned high to hold the face.
+       premil.jpg      567×850, 191K — a three-quarter studio portrait, light grey ground.
        B-Fehlmann.jpg  170×170,  10K — a tight head-and-shoulders crop on a dark ground.
      At 177px (the rail's own width) Fehlmann is already at 1:1 and is soft on any retina screen;
      anything larger visibly upscales him. A bigger Fehlmann file — or better, two portraits shot to
-     the same framing and ground — is what would let these grow. -->
+     the same framing and ground — is what would let these grow.
+
+     ⚠️ PREMIL'S CROP IS ZOOMED ON PURPOSE — background-size:150%, not `cover` (Premil, 2026-07-31).
+     Framed at `cover` he was shot from below the waist and read as standing far back while Fehlmann's
+     tight crop read as pressed against the lens; his own words were that he was "suvišno udaljen" and
+     Fehlmann "preblizno". 150% cuts him at the chest and brings his head to ~38% of the frame against
+     Fehlmann's ~40% — near-matched, while the remaining sliver of grey keeps him from going all the way
+     to the framing he called too close. He is the ONLY portrait on the site with a background-size:
+     the eight on Board are square files in a square cell, where there is nothing to steer.
+     Quality is unaffected: 150% renders the 567px source at 266 CSS px, still a downscale. -->
 </head>
 <body class="sub textpage">
 
@@ -54,7 +62,7 @@
   <div class="grid">
     <div class="pcell">
       <figure class="fig">
-        <div class="img" style="background-image:url('../../fotografije/premil.jpg');background-position:center 14%"></div>
+        <div class="img" style="background-image:url('../../fotografije/premil.jpg');background-size:150%;background-position:42% 15%"></div>
       </figure>
     </div>
     <div class="tcol read reveal-opt">
@@ -78,8 +86,12 @@
   </div>
 </section>
 
-<!-- the remaining four credits, one list. Development Managers is one role held by three people, as
-     the source has it. -->
+<!-- the remaining three credits, one list.
+     ⚠️ SHORTER THAN content/team.md, and deliberately (Premil, 2026-07-31): Igor Vasiljev / Art
+     Director is gone — "to više nije tačno", the role no longer holds — and Stephan Kruhl and
+     Margita Weiler are off Development Managers, leaving Marko Horg. The label is therefore
+     SINGULAR now; three names made it plural, one does not. Don't restore any of them from
+     team.md — that file is the 06-18 pull, not the current team. -->
 <section class="erow cont wrap">
   <div class="grid">
     <div class="tcol read reveal-opt">
@@ -87,10 +99,8 @@
       <p class="qual eyebrow">Executive Producer</p>
       <p>Darko Brstina</p>
       <p class="qual eyebrow">Project Coordinator</p>
-      <p>Marko Horg, Stephan Kruhl, Margita Weiler</p>
-      <p class="qual eyebrow">Development Managers</p>
-      <p>Igor Vasiljev</p>
-      <p class="qual eyebrow">Art Director</p>
+      <p>Marko Horg</p>
+      <p class="qual eyebrow">Development Manager</p>
     </div>
   </div>
 </section>
