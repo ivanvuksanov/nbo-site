@@ -18,7 +18,7 @@
      ⚠️ THE TWO PORTRAITS ARE NOT A MATCHED PAIR, and the size is set by the weaker file:
        premil.jpg      567×850, 191K — a three-quarter studio portrait, light grey ground.
        B-Fehlmann.jpg  170×170,  10K — a tight head-and-shoulders crop on a dark ground.
-     At 177px (the rail's own width) Fehlmann is already at 1:1 and is soft on any retina screen;
+     At 177px (.pcell's cap) Fehlmann is already at 1:1 and is soft on any retina screen;
      anything larger visibly upscales him. A bigger Fehlmann file — or better, two portraits shot to
      the same framing and ground — is what would let these grow.
 
@@ -56,8 +56,10 @@
   </div>
 </section>
 
-<!-- the two principals carry a portrait, in the rail. The credit still sits on the page's one text
-     edge, so it lines up with the four credits below that have no photo. -->
+<!-- The two principals carry a portrait. It sits on the TEXT EDGE now, not in the left rail
+     (client, 2026-08-03 — see .pcell in sub.css), with the credit beside it at Manifesto's own
+     body-text stop. ⚠️ Every credit row here carries .tcol.beside, INCLUDING the photo-less three
+     below: that is what keeps all five names on one left edge. A bare .tcol drops back to 322. -->
 <section class="erow wrap">
   <div class="grid">
     <div class="pcell">
@@ -65,7 +67,7 @@
         <div class="img" style="background-image:url('../../fotografije/premil.jpg');background-size:150%;background-position:42% 15%"></div>
       </figure>
     </div>
-    <div class="tcol read reveal-opt">
+    <div class="tcol beside read reveal-opt">
       <p>Premil Petrović</p>
       <p class="qual eyebrow">Artistic Director &amp; Conductor</p>
     </div>
@@ -79,7 +81,7 @@
         <div class="img" style="background-image:url('../../fotografije/B-Fehlmann.jpg');background-position:center center"></div>
       </figure>
     </div>
-    <div class="tcol read reveal-opt">
+    <div class="tcol beside read reveal-opt">
       <p>Beat Fehlmann</p>
       <p class="qual eyebrow">General Manager</p>
     </div>
@@ -94,7 +96,7 @@
      team.md — that file is the 06-18 pull, not the current team. -->
 <section class="erow cont wrap">
   <div class="grid">
-    <div class="tcol read reveal-opt">
+    <div class="tcol beside read reveal-opt">
       <p>Jelena Dojčinović</p>
       <p class="qual eyebrow">Executive Producer</p>
       <p>Darko Brstina</p>
@@ -108,7 +110,7 @@
 <footer class="wrap sitefoot">
   <div class="grid sf-row">
     <div class="socials reveal"><a href="https://www.instagram.com/nobordersorchestra/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/NoBordersOrchestra/" target="_blank" rel="noopener">Facebook</a><a href="https://www.youtube.com/channel/UCiRMDP4Lz-f1h5Mxtehy86w" target="_blank" rel="noopener">YouTube</a><a href="https://x.com/NBOofficial" target="_blank" rel="noopener">X</a></div>
-    <p class="copy reveal">© 2026 NBO</p>
+    <p class="copy reveal">© 2026 NBO <a class="imp" href="impressum.html">Impressum</a></p>
   </div>
 </footer>
 

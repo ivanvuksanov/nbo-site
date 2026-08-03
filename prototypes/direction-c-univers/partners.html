@@ -10,15 +10,51 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="c-base.css">
 <link rel="stylesheet" href="sub.css">
-<!-- No page-specific CSS — the .textpage template in sub.css.
+<!-- No page-specific CSS. This page is ORGANISED BY YEAR, in Projects' own chapter language
+     (.chap — a full-ink rule with the year as an <h2 class="lead"> on the body column). Ivan + Arko,
+     2026-08-03: listing every season's partners first and every season's friends far below made a
+     reader scroll to the bottom to find who was with them in a given year. A season now holds both
+     of its own groups, newest first, exactly as Projects runs 2025 → 2012.
+
+     ⚠️ THE LOGOS DO SPLIT BY YEAR — the assumption that they could not was wrong, in a good way.
+     The client publishes every season on ONE flattened graphic, but each season inside it carries
+     its own baked-in heading, and the seasons are separated by gaps far taller than any gap within
+     one (55px and 54px against a 39px maximum). pull-supporter-sheets.py cuts on those gaps and
+     ASSERTS the piece count, so supporters/ now holds season-2021 · season-2019 · season-2018 ·
+     season-2012-2013, each self-labelling. Re-run that script to refresh; never hand-edit and never
+     hand-cut — the boundaries are derived from the pixels, so a re-pull lands on real ones.
+
+     ⚠️ NOT EVERY SEASON HAS BOTH GROUPS, and no year invents what it hasn't got:
+       2021         partners only  (logos; the client publishes no friends list for it)
+       2019         partners + friends
+       2018         partners + friends
+       2012 & 2013  partners only  (logos)
+       Initiation   friends only   (the 17 founding organisations — no logos exist, and the source
+                    gives no year. "Initiation" is its own noun, from "Partners that have supported
+                    initiation of the No Borders Orchestra")
+
+     Sheets: content/supporters.md. That page carries NO TEXT AT ALL — every brand on it exists only
+     as pixels, so nothing there can be typeset and the alt text is the only place those ~35 names
+     exist as words on this site.
+     ⚠️ BOTH SOURCE GRAPHICS ARE CROPPED IN THE CLIENT'S OWN FILES — a logo row off the bottom of the
+     2021 sheet, logos off the left and right of the multi-season one. Verified 2026-08-03 that no
+     uncropped original exists on their server. Only new files fix it; it is an open ask.
+     ⚠️ EACH SHEET STILL CARRIES ITS OWN BAKED-IN TITLE in a serif we do not control, so "Partners"
+     above a sheet reads twice — once in our label, once inside the picture. The label stays: it is
+     the client's own structure, and it is what survives when they send clean logos.
+     ⚠️ SHEETS ARE EXACTLY 600px AT EVERY VIEWPORT and pan inside .sheetwrap on a phone. See .sheet
+     in sub.css — a percentage width made them illegible on mobile.
+
      Text: content/partners.md (verbatim pull, nobordersorchestra.org/partners/, 2026-06-18).
-     Three source headings; 32 organisations, 10 + 5 + 17. The source runs each group as one
-     semicolon-separated line — set here one per line, so the group is a list you can scan instead of
-     a paragraph you have to read. No grey credit line: for an organisation the city is part of how
-     the source names it, not a role, so it stays on the name's own line exactly as written.
-     ⚠️ We have NO logo files and NO URLs for any of these — names and cities are the whole asset.
-     Spellings are left as the client writes them, inconsistencies included: Lumbardhi (2019) vs
-     Loumbardhi Foundation (2018), and Priština vs Pristina in the same group. -->
+     32 organisations, 10 + 5 + 17, one per line so a group is a list you can scan. No grey credit
+     line: for an organisation the city is part of how the source names it, not a role.
+     ⚠️ We have NO logo files and NO URLs for any of these 32 — names and cities are the whole asset.
+     Cities are comma-separated in ALL THREE groups per the client's 2026-08-03 list; the source pull
+     parenthesises the third only, and they dropped that inconsistency. Spellings ARE still theirs:
+     Lumbardhi (2019) vs Loumbardhi Foundation (2018), Priština vs Pristina inside one group.
+
+     RANKS — three, and no new type size: the chapter's FULL-INK rule carries the year · .tcol.sect's
+     HAIRLINE separates the two groups inside a season · the .slabel weld binds a label to its list. -->
 </head>
 <body class="sub textpage">
 
@@ -45,72 +81,147 @@
   </div>
 </section>
 
-<section class="erow wrap">
-  <div class="grid">
-    <div class="tcol sect read reveal-opt">
-      <p class="slabel">Balkan Season 2019 partners</p>
-      <div class="qlist">
-        <p>KotorArt, Kotor</p>
-        <p>PortoMontenegro, Tivat</p>
-        <p>Lumbardhi, Prizren</p>
-        <p>Mali Mozart, Sarajevo</p>
-        <p>Bitef festival, Belgrade</p>
-        <p>Drugstore, Belgrade</p>
-        <p>Lauba, Zagreb</p>
-        <p>Maribor Festival, Maribor</p>
-        <p>Berghain, Berlin</p>
-        <p>Month of Contemporary Music, Berlin</p>
-      </div>
-    </div>
+<div class="wrap"><div class="grid chaps">
+
+  <!-- ONE index for the whole page, sticky beside every chapter — not a copy inside each
+       (client, 2026-08-03). It is a sibling of the chapters and stretches next to them, so a
+       single sticky element travels the page and c-base.js lights whichever season you are in. -->
+  <div class="prail">
+    <div class="yrnav" role="navigation" aria-label="Jump to a season"><a href="#y2021">2021</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2012">2012 &amp; 2013</a><a href="#initiation">Initiation</a></div>
   </div>
+
+  <div class="cbody">
+
+<!-- 2021 — partners only. -->
+<section class="chap" id="y2021">
+      <h2 class="lead reveal">2021</h2>
+      <div class="cgroup read reveal-opt">
+        <p class="slabel">Partners</p>
+        <div class="sheetwrap">
+          <img class="sheet" src="supporters/season-2021.jpg" width="1200" height="492" loading="lazy"
+               alt="Balkan Season 2021 supporters: Federal Foreign Office, Sigrid Rausing Trust,
+                    European Union, United States Embassy Serbia, EFB European Fund for the Balkans,
+                    Rockefeller Brothers Fund, Regional Cooperation Council, Austrijski kulturni
+                    forum Beograd.">
+        </div>
+      </div>
 </section>
 
-<section class="erow wrap">
-  <div class="grid">
-    <div class="tcol sect read reveal-opt">
-      <p class="slabel">Balkan Season 2018 partners</p>
-      <div class="qlist">
-        <p>Music school "Vida Matjan", Kotor</p>
-        <p>Theatre City, Budva</p>
-        <p>Loumbardhi Foundation, Prizren</p>
-        <p>Mali Mozart, Sarajevo</p>
-        <p>Center for Cultural Decontamination, Belgrade</p>
+<!-- 2019 — the first season carrying both groups. -->
+<section class="chap" id="y2019">
+      <h2 class="lead reveal">2019</h2>
+      <div class="cgroup read reveal-opt">
+        <p class="slabel">Partners</p>
+        <div class="sheetwrap">
+          <img class="sheet" src="supporters/season-2019.png" width="600" height="542" loading="lazy"
+               alt="Balkan Season 2019 supporters: Auswärtiges Amt, RYCO Regional Youth Cooperation
+                    Office, Open Society Foundations. Tivat concert: United States Embassy, Pine
+                    Hotel Tivat. Sarajevo concert: Telemach, Regional Cooperation Council. Belgrade
+                    concert: Embassy of Switzerland in the Republic of Serbia, United States Embassy
+                    Serbia. Berlin concert: Musikfonds, Die Beauftragte der Bundesregierung für
+                    Kultur und Medien, Botschaft der Republik Kosovo Berlin, Monat der
+                    zeitgenössischen Musik.">
+        </div>
       </div>
-    </div>
-  </div>
+      <div class="cgroup read reveal-opt">
+        <p class="slabel">Friends of the project</p>
+        <div class="qlist">
+          <p>KotorArt, Kotor</p>
+          <p>PortoMontenegro, Tivat</p>
+          <p>Lumbardhi, Prizren</p>
+          <p>Mali Mozart, Sarajevo</p>
+          <p>Bitef festival, Belgrade</p>
+          <p>Drugstore, Belgrade</p>
+          <p>Lauba, Zagreb</p>
+          <p>Maribor Festival, Maribor</p>
+          <p>Berghain, Berlin</p>
+          <p>Month of Contemporary Music, Berlin</p>
+        </div>
+      </div>
 </section>
 
-<section class="erow wrap">
-  <div class="grid">
-    <div class="tcol sect read reveal-opt">
-      <p class="slabel">Partners that have supported initiation of the No Borders Orchestra</p>
-      <div class="qlist">
-        <p>Jugokoncert (Belgrade)</p>
-        <p>A Tempo festival (Podgorica)</p>
-        <p>Belgrade Music Festival – BEMUS</p>
-        <p>Croatian Composers' Society</p>
-        <p>Faculty of Music (Skopje)</p>
-        <p>Festival Ljubljana</p>
-        <p>Kammerfest (Priština)</p>
-        <p>Music Academy Pristina</p>
-        <p>Music Biennale Zagreb</p>
-        <p>Montenegrin Music Center</p>
-        <p>Novi Sad Music Festival – NOMUS</p>
-        <p>Ohrid Summer Festival</p>
-        <p>Re Musica festival (Pristina)</p>
-        <p>Sarajevo Winter Festival</p>
-        <p>Serbian Festivals Association – SEFA</p>
-        <p>Zagreb Concert Management</p>
-        <p>Youth and Music of Novi Sad</p>
+<!-- 2018 — both groups. -->
+<section class="chap" id="y2018">
+      <h2 class="lead reveal">2018</h2>
+      <div class="cgroup read reveal-opt">
+        <p class="slabel">Partners</p>
+        <div class="sheetwrap">
+          <img class="sheet" src="supporters/season-2018.png" width="600" height="366" loading="lazy"
+               alt="Balkan Season 2018 supporters: Open Society Foundations, Regional Cooperation
+                    Council, Goethe-Institut. Budva concert: Louis Roederer, Moritz Eis, United
+                    States Embassy, Vida Matjan music school. Prizren concert: United States Embassy,
+                    Raiffeisen Bank, Republic of Kosovo. Sarajevo concert and workshop with Mali
+                    Mozart: Austrijska ambasada Sarajevo, Dijalog za budućnost, Telemach, UniCredit
+                    Bank. Belgrade concert master sponsor: Raiffeisen Bank.">
+        </div>
       </div>
-    </div>
-  </div>
+      <div class="cgroup read reveal-opt">
+        <p class="slabel">Friends of the project</p>
+        <div class="qlist">
+          <p>Music school “Vida Matjan”, Kotor</p>
+          <p>Theatre City, Budva</p>
+          <p>Loumbardhi Foundation, Prizren</p>
+          <p>Mali Mozart, Sarajevo</p>
+          <p>Center for Cultural Decontamination, Belgrade</p>
+        </div>
+      </div>
 </section>
+
+<!-- 2012 & 2013 — partners only, and the two years share ONE sheet because the client's own graphic
+     titles them together ("2012 & 2013 Concerts supporters"). Deliberately not split further: the
+     logos under that heading are not attributed to one year or the other anywhere in the source. -->
+<section class="chap" id="y2012">
+      <h2 class="lead reveal">2012 &amp; 2013</h2>
+      <div class="cgroup read reveal-opt">
+        <p class="slabel">Partners</p>
+        <div class="sheetwrap">
+          <img class="sheet" src="supporters/season-2012-2013.png" width="600" height="278" loading="lazy"
+               alt="2012 and 2013 concerts supporters: European Union Culture Programme,
+                    Goethe-Institut, Allianz Kulturstiftung, Robert Bosch Stiftung, Embassy of
+                    Montenegro in Berlin, Embassy of Slovenia in Berlin, Embassy of the Republic of
+                    Kosovo in Berlin, Deutsch-Makedonische Gesellschaft e.V.">
+        </div>
+      </div>
+</section>
+
+<!-- INITIATION — the founding organisations. Friends only: no logos exist for them, and the source
+     gives no year, so this chapter carries a noun where the others carry a number. Its full source
+     phrase is "Partners that have supported initiation of the No Borders Orchestra"
+     (content/partners.md) — too long to set at the chapter size. -->
+<section class="chap" id="initiation">
+      <h2 class="lead reveal">Initiation</h2>
+      <div class="cgroup read reveal-opt">
+        <p class="slabel">Friends of the project</p>
+        <div class="qlist">
+          <p>Jugokoncert, Belgrade</p>
+          <p>A Tempo festival, Podgorica</p>
+          <p>Belgrade Music Festival – BEMUS</p>
+          <p>Croatian Composers' Society</p>
+          <p>Faculty of Music, Skopje</p>
+          <p>Festival Ljubljana</p>
+          <p>Kammerfest, Priština</p>
+          <p>Music Academy Pristina</p>
+          <p>Music Biennale Zagreb</p>
+          <p>Montenegrin Music Center</p>
+          <p>Novi Sad Music Festival – NOMUS</p>
+          <p>Ohrid Summer Festival</p>
+          <p>Re Musica festival, Pristina</p>
+          <p>Sarajevo Winter Festival</p>
+          <p>Serbian Festivals Association – SEFA</p>
+          <p>Zagreb Concert Management</p>
+          <p>Youth and Music of Novi Sad</p>
+        </div>
+      </div>
+</section>
+
+  </div>
+
+</div></div>
 
 <footer class="wrap sitefoot">
   <div class="grid sf-row">
     <div class="socials reveal"><a href="https://www.instagram.com/nobordersorchestra/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/NoBordersOrchestra/" target="_blank" rel="noopener">Facebook</a><a href="https://www.youtube.com/channel/UCiRMDP4Lz-f1h5Mxtehy86w" target="_blank" rel="noopener">YouTube</a><a href="https://x.com/NBOofficial" target="_blank" rel="noopener">X</a></div>
-    <p class="copy reveal">© 2026 NBO</p>
+    <p class="copy reveal">© 2026 NBO <a class="imp" href="impressum.html">Impressum</a></p>
   </div>
 </footer>
 

@@ -12,16 +12,18 @@
 <link rel="stylesheet" href="sub.css">
 <!-- No page-specific CSS — the .textpage template in sub.css, and the portrait is Team's own .pcell.
      Text: content/board.md (verbatim pull, nobordersorchestra.org/board/, 2026-06-18).
-     Two source headings — NBO Board · Advisory Council. Only ONE of the nine people carries a role
-     in the source, so the President takes a grey credit line and everyone else is name-only;
-     inventing titles for the rest is not ours to do.
+     Two source headings — NBO Board · Advisory Council. The first is NOT set on this page: the h1
+     covers it (client, 2026-08-03), and "Advisory Council" takes the h1's own voice so the two bodies
+     read as peers. Only ONE of the nine people carries a role in the source, so the President takes a
+     grey credit line and everyone else is name-only; inventing titles for the rest is not ours to do.
 
      PORTRAITS — eight of them, pulled by pull-board-photos.py into fotografije/board/.
      The 2026-06-18 pull was text-only, so this page shipped as a name list while the photos sat on
      the client's page all along. Re-run that script to refresh; never hand-edit the files.
-     ⚠️ SEVEN ARE 170px ORIGINALS on the client's server — not crops we chose. That is the whole
-     reason a portrait belongs in the RAIL here: .pcell caps at 177px, so every one of these renders
-     at 1:1 and none is upscaled. A 4-across grid (.pgrid, 228px) would stretch all seven.
+     ⚠️ SEVEN ARE 170px ORIGINALS on the client's server — not crops we chose. That is why .pcell
+     caps at 177px: every one of these renders at 1:1 and none is upscaled. A 4-across grid
+     (.pgrid, 228px) would stretch all seven. It is ALSO why the client's "move them right" could not
+     be answered by making them bigger — see .pcell in sub.css.
      Only Deventer carries more (3280px original, shipped at the 600px web size).
      ⚠️ NO INLINE background-position, unlike Team: all eight uploads are already SQUARE and .pcell
      .img is aspect-ratio:1, so at `cover` there is no crop to steer. Team needs per-photo positions
@@ -30,7 +32,8 @@
      is now absent from every page of the client's site — checked 2026-07-31 across home, board, team,
      mission, manifesto, partners, supporters. She has left the Advisory Council, so she is off this
      page. Do not restore her from board.md; that file is the June pull, not the current board.
-     (.pcell would have held a photo-less name on the same text edge if we ever need one.) -->
+     ⚠️ EVERY CREDIT ROW CARRIES .tcol.beside, not a bare .tcol. Drop it and that name falls back to
+     322 while its neighbours sit at 528. A photo-less person needs it too — Team proves the case. -->
 
 </head>
 <body class="sub textpage">
@@ -58,25 +61,20 @@
   </div>
 </section>
 
-<!-- The section label keeps its own row and its hairline, exactly as it did when this page was two
-     name lists. Each person then takes one .erow.cont — the same row Team gives a principal, so a
-     board member and a staff credit are the same kind of thing on this site. -->
+<!-- ⚠ THE FIRST GROUP CARRIES NO LABEL, deliberately (client, 2026-08-03: "izbaciti malo NBO Board
+     ispod velikog Board"). The page title already names it. A small "NBO Board" over these five,
+     against the display-size "Advisory Council" below, ranked the NBO board BELOW its own advisory
+     council and put a third kind of heading on a page that now needs only one.
+     Each person takes one .erow.cont — the same row Team gives a principal, so a board member and a
+     staff credit are the same kind of thing on this site. -->
 <section class="erow wrap">
-  <div class="grid">
-    <div class="tcol sect read reveal-opt">
-      <p class="slabel">NBO Board</p>
-    </div>
-  </div>
-</section>
-
-<section class="erow cont wrap">
   <div class="grid">
     <div class="pcell">
       <figure class="fig">
         <div class="img" style="background-image:url('../../fotografije/board/vuco.jpg')"></div>
       </figure>
     </div>
-    <div class="tcol read reveal-opt">
+    <div class="tcol beside read reveal-opt">
       <p>Beka Vučo</p>
       <p class="qual eyebrow">President of the Board</p>
     </div>
@@ -90,7 +88,7 @@
         <div class="img" style="background-image:url('../../fotografije/board/pusic.jpg')"></div>
       </figure>
     </div>
-    <div class="tcol read reveal-opt">
+    <div class="tcol beside read reveal-opt">
       <p>Dr. Vesna Pusić</p>
     </div>
   </div>
@@ -103,7 +101,7 @@
         <div class="img" style="background-image:url('../../fotografije/board/deventer.jpg')"></div>
       </figure>
     </div>
-    <div class="tcol read reveal-opt">
+    <div class="tcol beside read reveal-opt">
       <p>Kathrin Deventer</p>
     </div>
   </div>
@@ -116,7 +114,7 @@
         <div class="img" style="background-image:url('../../fotografije/board/dietachmair.jpg')"></div>
       </figure>
     </div>
-    <div class="tcol read reveal-opt">
+    <div class="tcol beside read reveal-opt">
       <p>Philipp Dietachmair</p>
     </div>
   </div>
@@ -129,28 +127,31 @@
         <div class="img" style="background-image:url('../../fotografije/board/dujardin.jpg')"></div>
       </figure>
     </div>
-    <div class="tcol read reveal-opt">
+    <div class="tcol beside read reveal-opt">
       <p>Paul Dujardin</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE SECOND BODY, titled as a peer of the page title (client, 2026-08-03: "staviti veliko Advisory
+     Council kao što je gore Board"). An <h2> in .lead — the h1's own recipe — on .hang-l so it starts
+     at exactly the title's x, not the text column's. See .gtitle in sub.css for the spacing. -->
+<section class="erow gtitle wrap">
+  <div class="grid">
+    <div class="tcol">
+      <h2 class="lead reveal hang-l">Advisory Council</h2>
     </div>
   </div>
 </section>
 
 <section class="erow wrap">
   <div class="grid">
-    <div class="tcol sect read reveal-opt">
-      <p class="slabel">Advisory Council</p>
-    </div>
-  </div>
-</section>
-
-<section class="erow cont wrap">
-  <div class="grid">
     <div class="pcell">
       <figure class="fig">
         <div class="img" style="background-image:url('../../fotografije/board/nice.jpg')"></div>
       </figure>
     </div>
-    <div class="tcol read reveal-opt">
+    <div class="tcol beside read reveal-opt">
       <p>Sir Geoffrey Nice</p>
     </div>
   </div>
@@ -163,7 +164,7 @@
         <div class="img" style="background-image:url('../../fotografije/board/josipovic.jpg')"></div>
       </figure>
     </div>
-    <div class="tcol read reveal-opt">
+    <div class="tcol beside read reveal-opt">
       <p>Dr. Ivo Josipović</p>
     </div>
   </div>
@@ -176,7 +177,7 @@
         <div class="img" style="background-image:url('../../fotografije/board/ludlow.jpg')"></div>
       </figure>
     </div>
-    <div class="tcol read reveal-opt">
+    <div class="tcol beside read reveal-opt">
       <p>Ivan Ludlow</p>
     </div>
   </div>
@@ -185,7 +186,7 @@
 <footer class="wrap sitefoot">
   <div class="grid sf-row">
     <div class="socials reveal"><a href="https://www.instagram.com/nobordersorchestra/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/NoBordersOrchestra/" target="_blank" rel="noopener">Facebook</a><a href="https://www.youtube.com/channel/UCiRMDP4Lz-f1h5Mxtehy86w" target="_blank" rel="noopener">YouTube</a><a href="https://x.com/NBOofficial" target="_blank" rel="noopener">X</a></div>
-    <p class="copy reveal">© 2026 NBO</p>
+    <p class="copy reveal">© 2026 NBO <a class="imp" href="impressum.html">Impressum</a></p>
   </div>
 </footer>
 

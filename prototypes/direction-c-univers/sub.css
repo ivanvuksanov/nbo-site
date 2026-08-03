@@ -112,6 +112,10 @@ body.panels-dark .field .roster .ct,body.panels-dark .field .roster .now{color:r
 /* chapter — a monument in the label column under a full-ink rule. That rule is the
    only structural device on a page carrying six or nineteen chapters. */
 .chap{border-top:1px solid var(--ink);padding-top:1.2rem;margin-top:var(--pad-s)}
+/* A CHAPTER'S YEAR IS SMALLER THAN THE PAGE TITLE — it is a step DOWN the ladder, not a second h1
+   (client, 2026-08-03). Lives here rather than per page so both year-keyed pages take one value;
+   Projects states the identical clamp in its own block, which now just agrees with this. */
+.chap .lead{font-size:clamp(1.7rem,3.4vw,2.9rem)}
 .chap .n{grid-column:1/3;align-self:stretch}
 .chap .n > span{position:sticky;top:6.4rem;display:block}   /* parks under the 5.2rem header + air */
 .chap .n.num > span{font-family:var(--mono);font-weight:400;font-variant-numeric:tabular-nums;
@@ -324,20 +328,76 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
    places it in its own rail, because those rails are different widths. Three max-content columns, so
    adding a year needs no edit anywhere; the active state is painted in c-base.js.
    Mono, soft grey going ink: this is the page's "thing you can click", not a heading. */
-.yrnav{display:none;grid-template-columns:repeat(3,max-content);
+/* ⚠ justify-items:start so an entry is only as wide as its own label. Without it a grid item
+   STRETCHES to its column, and .active's underline then runs past the end of the word (client,
+   2026-08-03). Invisible on Projects and Photos, whose entries are all four-digit years of equal
+   width — it only showed on Partners, where "2012 & 2013" and "Initiation" set the column and made
+   every shorter year's underline too long. An underline belongs to its word, not to its column. */
+.yrnav{display:none;grid-template-columns:repeat(3,max-content);justify-items:start;
   gap:.45rem clamp(.6rem,1.5vw,1.1rem)}
 .yrnav a{font-family:var(--mono);font-size:.82rem;letter-spacing:.05em;color:var(--ink-soft);
   padding-bottom:.15rem;border-bottom:1px solid transparent;transition:color .3s,border-color .3s}
 .yrnav a:hover{color:var(--ink)}
 .yrnav a.active{color:var(--ink);font-weight:500;border-bottom-color:currentColor}
-/* Photos' rail: cols 1/3, the same empty band a Team portrait sits in, and it sticks under the header
-   exactly as Projects' index does.
-   ⚠️ It spans grid-row 1/3 — the year label AND its photo groups — and that is not cosmetic. `sticky`
-   only travels inside its own parent's box, so a rail sitting in a 60px label row would never move;
-   and the active-state observer in c-base.js uses a narrow reading band (-25%/-55%), which a 60px
-   section never enters. Both are why one section holds the whole year. */
-.textpage .prail{grid-column:1/3;grid-row:1/3;align-self:stretch}
+/* Partners' rail — the SAME index as Projects and Photos (client, 2026-08-03: "let's have that
+   navigation also the same as we have in the projects and in the gallery"), and it fills what was an
+   open question: the chapter rules used to run the page's whole width with nothing under their left
+   third. Now the rail holds the index and the chapters sit in their own column, so each chapter's
+   rule spans the CONTENT rather than the page — "not full width", as asked.
+   ⚠️ ONE index for the whole page, not one per chapter (client: "just have one of those elements,
+   not in every section, one element that is sticky"). Projects repeats its index inside every
+   chapter because each chapter is its own grid, so a sticky rail could only travel within one of
+   them. Here the rail is a SIBLING of all the chapters and stretches beside them, so a single
+   element sticks down the page on its own — less markup, and the years change as you scroll because
+   c-base.js's painter observes `.chap[id]` and simply has one copy to light instead of five.
+   ⚠️ ONE COLUMN, not Projects' three: that grid folds fourteen years into a 177px rail. Five
+   entries, two of them words ("2012 & 2013", "Initiation"), need the width more than the rows.
+   ⚠️ Scoped to .chaps so it cannot reach Photos' own .prail (which spans an explicit 2-row grid) or
+   Projects, whose index is gated behind body.rail-index and toggled by ?rail=monument — Projects is
+   `body.sub panels-dark`, never .textpage. */
+.textpage .chaps{align-items:start}
+.textpage .chaps > .prail{grid-column:1/3;grid-row:1;align-self:stretch}
+.textpage .chaps > .prail .yrnav{display:grid;grid-template-columns:max-content;
+  position:sticky;top:6.6rem}
+.textpage .chaps > .cbody{grid-column:3/13}
+/* a season's two groups — partners, then friends. No rule on either (client: "we don't need
+   underlines under the years in that right section"): the chapter's own full-ink rule already
+   marks the season, and a hairline under the year read as a second underline belonging to it.
+   The block gap alone separates the two groups, which is what the rhythm is for. */
+.textpage .cgroup + .cgroup{margin-top:var(--gap-b)}
+.textpage .chap > .lead + .cgroup{margin-top:clamp(1.1rem,2.4vh,1.8rem)}
+/* ⚠ NO RULE ABOVE THE FIRST YEAR (client, 2026-08-03). A chapter rule exists to SPLIT one season from
+   the one before it, so the first has nothing to be split from — over it the rule read as a lid on the
+   page rather than a divider, and it sat immediately under the page title doing that title's job
+   twice. Projects has always drawn the same distinction (`.chaps > .chap:first-child`). */
+.textpage .cbody > .chap:first-child{border-top:none;margin-top:0}
+
+/* ── ONE RAIL PER PAGE ────────────────────────────────────────────────────────────────────────
+   Photos' rail, and the shape all three indexed pages now share (client, 2026-08-03: "only one rail
+   is sticky on the left, not in every section — it's actually better").
+   THE PATTERN, and why it is this and not something simpler: `position:sticky` only travels inside
+   its own PARENT's box. A rail that lives in a section can therefore never outlast that section, which
+   is why Projects and Photos both used to repeat the whole index in every one of them — fourteen and
+   eight copies of the same markup. So the rail becomes a SIBLING of all the sections and the two of
+   them are the only children of a 12-column grid: rail in the left band, everything else in one
+   content column beside it. `align-self:stretch` then makes the rail as tall as the whole content, and
+   a single sticky element rides the page. c-base.js needed no change on any page — its painter
+   observes `.chap[id], .yrsec[id]` and simply has one copy to light instead of fourteen.
+   ⚠️ THE CONTENT COLUMN RE-DIVIDES. Its own inner grids see a NARROWER 12 tracks, so anything that
+   named a page column inside it has to be restated — see .gbody / .cbody below. That is the whole
+   cost of this pattern, and it is why each page states its overrides right here rather than inheriting
+   a guess.
+   ⚠️ It also SHORTENS THE RULES, which is the other half of what was asked: a chapter rule drawn on
+   the content column spans the content, not the page. */
+.textpage .prail{align-self:stretch}
 .textpage .prail .yrnav{display:grid;position:sticky;top:6.6rem}
+
+/* PHOTOS — rail in cols 1/3, the gallery in 3/13. Inside .gbody the year label and the photo groups
+   restate their columns against the narrower grid: both start at its col 1, which IS the page's col 3. */
+.textpage .gal > .prail{grid-column:1/3}
+.textpage .gal > .gbody{grid-column:3/13}
+.textpage .gbody .yrsec .tcol{grid-column:1/8}
+.textpage .gbody .pgroup{grid-column:1/13}
 /* .grid sets row-gap:0, so the photo groups would otherwise sit flush under the year label */
 .textpage .yrsec .pgroup{margin-top:clamp(1.6rem,3.5vh,2.6rem)}
 
@@ -421,15 +481,87 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
    takes the ordinary paragraph join and sits clear of its list. */
 .textpage .tcol.sect .slabel{margin-bottom:1.15em}
 
-/* A PORTRAIT IN THE RAIL — the only image a list page carries. Cols 1/3 are empty on every text
-   page, so a face can sit there WITHOUT touching the single text edge: every name on Team starts at
-   the same x whether or not that person has a photo, and the column of names stays one unbroken
-   vertical edge. Square, and small on purpose — 177px is the rail's own width at full size, so the
-   portrait is sized by the grid rather than by how big a face we wish we could show.
+/* (A `.tcol.chapt` full-ink rule lived here from 2026-08-03 to give Partners a rank above .slabel.
+   It lasted one afternoon: the page was then reorganised BY YEAR, so the year's own .chap rule does
+   that job and nothing referenced .chapt any more. Deleted rather than left dead — but the reasoning
+   is worth keeping, because it is the rule the site now uses in two places: a rank is bought with the
+   RULE'S WEIGHT, never with a second type size. Full ink opens a chapter, a hairline separates a
+   section inside one, an 8px weld binds a label to its content. Three ranks, one size.) */
+
+/* A SECOND DISPLAY TITLE MID-PAGE — Board's "Advisory Council", and only that (client, 2026-08-03:
+   "staviti veliko Advisory Council kao što je gore Board"). Board holds two bodies that are not one
+   list with two labels, and the client's own site titles them as peers. So the second one takes the
+   PAGE TITLE's voice — .lead, at .hang-l's own x, identical to the h1 above it — and the first group
+   needs no label at all, because the page title already names it. That is why "NBO Board" came off:
+   with the two groups ranked as peers, a small grey-weight label over the first one ranked it BELOW
+   the second and read as a third kind of heading.
+   ⚠ It takes the band gap, not the row gap. A 4.8rem monument under a 14px credit needs the space a
+   NEW PAGE SECTION gets, and --gap-b (the block gap) is calibrated for prose-to-photo. */
+.textpage .gtitle{margin-top:var(--pad)}
+.textpage .gtitle + .erow{margin-top:clamp(2rem,4.5vh,3.4rem)}
+/* ⚠ WIDER THAN THE TEXT COLUMN, and that is the whole point of this line. A display title is not
+   prose and must not be measured like it: "ADVISORY COUNCIL" needs ~740px at the 4.8rem size and
+   .tcol's 3/10 offers ~735 from the hang, so it broke to two lines by about five pixels (client,
+   2026-08-03: "doesn't have to be in two lines"). Running it to col 13 gives the line room to set
+   as one, exactly as the h1 above it does. It still wraps below 880px, which is correct — at a
+   phone's 343px no 38px display line fits, and forcing nowrap there would overflow the page. */
+.textpage .gtitle .tcol{grid-column:3/13}
+
+/* A SUPPLIED SHEET — a graphic that is the content, not an illustration of it. Partners' two
+   supporter composites are the only ones: every brand on them exists only as pixels, so there is no
+   text version to set and nothing to lay out around them.
+   ⚠ 600px EXACTLY, AT EVERY VIEWPORT — not a max-width, and this is the whole trick. Three things
+   forced it, and only the third was visible in a screenshot rather than in a number:
+     1. The smaller sheet is a 600px ORIGINAL. A width:100% in the 692px column stretched it 8% and
+        softened every logo on it.
+     2. Each sheet carries its own baked-in rule spanning its full width, so at their own widths the
+        two rules stacked at DIFFERENT lengths and the pair read as ragged. One width, one right edge
+        — the page's second vertical edge after the text edge.
+     3. A percentage width made them ILLEGIBLE ON A PHONE. These are fixed-layout rasters: at 342px
+        the second sheet's four-column grid put "Embassy of Switzerland in the Republic of Serbia" at
+        about 4px tall. Small is acceptable, unreadable is not, and no amount of scaling fixes a
+        bitmap whose layout cannot reflow.
+   So the sheet is ALWAYS exactly 600px and is never resampled up anywhere. The 1200px one downscales
+   by a clean half (sharp, and its logos are drawn twice as large, so the two land at comparable
+   scale); the 600px one renders 1:1. Narrow screens PAN it inside .sheetwrap instead of shrinking it,
+   the ordinary treatment for a diagram that cannot reflow. That scroller is why the page still has no
+   horizontal overflow at 390px — the sheet overflows its own box, not the document.
+   ⚠ MULTIPLY IS LOAD-BEARING, not an effect. Both sheets have a pure-white (255,255,255) ground and
+   the paper is #fbfbfa, so without it each one reads as a white BOX sitting on the page — the site
+   has no cards, and two of them under the page title looked like a rendering fault. Multiplying
+   white against the paper returns the paper exactly, so the ground vanishes and the logos sit
+   directly on the page. The cost is ~1.6% darkening of the coloured marks (the EU and US flags),
+   which is below the threshold of visibility; the gain is that these stop looking pasted on.
+   It also depends on the sheets being TRIMMED to their ink — see pull-supporter-sheets.py, because
+   once white is invisible any white margin inside the file becomes phantom page rhythm. */
+.textpage .sheetwrap{overflow-x:auto;overscroll-behavior-x:contain}
+/* ⚠ max-width:none is REQUIRED, not redundant — c-base.css sets `img{max-width:100%}` globally, which
+   silently caps width:600px at the column's width and shrinks the sheet right back into illegibility
+   on a phone. The fixed width does nothing without it. */
+.textpage .sheet{display:block;width:600px;max-width:none;height:auto;mix-blend-mode:multiply}
+
+/* A PORTRAIT ON THE TEXT EDGE, its credit beside it — Team and Board.
+   ⚠ MOVED OUT OF THE LEFT RAIL on 2026-08-03 (client: "slike su suviše levo … na svim ostalim npr.
+   Manifesto itd je više u desno"). It used to sit at cols 1/3, which put a 177px square at x=116 —
+   left of the page title (279), left of the section rules and left of every name (322), ending 29px
+   short of the text column. At that size it read as stranded in the margin rather than placed there.
+   The comparison the client drew is exact: Manifesto's photo starts at 116 too, but it is 383px wide
+   and CROSSES the text edge, so it reads as a deliberate break-out. A 177px square cannot do that,
+   and it cannot be made bigger — seven of the eight Board uploads are 170px ORIGINALS, so any growth
+   is upscaling.
+   So the pair moved right instead. Cols 3/5 measure 177px at full size — exactly the portrait's
+   natural width — so the face now lands FLUSH ON THE TEXT EDGE at its true size, still sized by the
+   grid and still never upscaled. The credit takes cols 5/13, which is Manifesto's own body-text stop
+   (.figrow .b, x=529): a name on Team now begins exactly where a paragraph on Manifesto begins.
+   ⚠ .tcol.beside GOES ON EVERY CREDIT ROW, including the three people on Team who have no portrait.
+   That is the whole reason it exists as a separate class: grid placement is explicit, so an unphotographed
+   name still starts at col 5 and the column of names stays ONE unbroken vertical edge. Put a credit in
+   a plain .tcol on these two pages and it drops back to 322 while its neighbours sit at 529.
    Each photo sets its own background-position inline: these are not a matched pair (one is a
    three-quarter studio portrait, one a tight headshot), so a single crop rule cannot serve both. */
-.textpage .pcell{grid-column:1/3;align-self:start}
+.textpage .pcell{grid-column:3/5;align-self:start}
 .textpage .pcell .img{aspect-ratio:1;background-size:cover;max-width:177px}
+.textpage .tcol.beside{grid-column:5/13}
 
 /* THE PHOTO ROW — the one gesture that leaves the reading column, breaking a full column left of
    it while the text beside it runs to the far edge. Position is all it has: no entrance, no drift. */
@@ -442,12 +574,17 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
    hold it are simply visible. c-base.js promotes them to real .reveal only under ?reveal=all. */
 
 @media(max-width:880px){
-  .textpage .phead .body,.textpage .tcol,
+  .textpage .phead .body,.textpage .tcol,.textpage .tcol.beside,
   .textpage .figrow .figwrap,.textpage .figrow .b,.textpage .pcell{grid-column:1/-1}
   .textpage .figrow .b{margin-top:var(--gap-b)}
   /* the rail is gone, so the portrait stacks above its credit — but it must not grow to the full
-     phone width: max-width already caps it at the size the asset can actually carry. */
-  .textpage .pcell{margin-bottom:1.15em}
+     phone width: max-width already caps it at the size the asset can actually carry.
+     ⚠ .5em, NOT the 1.15em paragraph join. A portrait and its name are ONE unit, and at 1.15em the
+     two gaps came out level (~37px face→name against ~37px name→next face), which left every name
+     equally close to the person above and the person below it. .5em is the value this site already
+     uses to say "these belong together" — the .slabel weld and the .qual credit both take it — so
+     the face now hugs its own name and the row gap alone separates people. */
+  .textpage .pcell{margin-bottom:.5em}
   .textpage .vgrid{grid-column:1/-1;grid-template-columns:1fr}
   .textpage .pgroup{grid-column:1/-1}
   .textpage .pgrid{grid-template-columns:repeat(2,1fr)}

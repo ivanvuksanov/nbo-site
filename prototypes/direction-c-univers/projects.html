@@ -18,10 +18,16 @@
    lists and 600 words of prose doesn't read as one flat slab.
    Chapters are TOURS, not years: 2025≡2024 and 2023≡2022 are byte-identical in the source, so
    the monument is a stacked year pair and the chapter is the tour. */
-/* the year monument is mono display type: four digits at 6rem are ~230px, wider than a
-   two-column rail, so the rail is three columns and the body starts at four */
-.pr .n{grid-column:1/4}
-.pr .b{grid-column:4/12}
+/* ONE RAIL, THREE COLUMNS WIDE, beside every chapter rather than copied into each of the fourteen
+   (client, 2026-08-03) — see "ONE RAIL PER PAGE" in sub.css for why it must be their sibling.
+   Three columns and not two because the rail inherited that width from the year monument it used to
+   carry, and the index sets three years per row comfortably inside it.
+   ⚠️ .cbody RE-DIVIDES THE GRID: everything inside it measures against a NARROWER 12 tracks, so the
+   rules that used to name page column 4 restate themselves against column 1 — which IS page column 4.
+   Miss one and it indents twice. .pr .b and .plates .pl are the two. */
+.chaps > .prail{grid-column:1/4}
+.chaps > .cbody{grid-column:4/13}
+.pr .b{grid-column:1/13}
 /* THE YEAR is the chapter head — the orchestra's own site is organised that way, and it is the only
    heading 2013 and 2012 have (their concert groups carry no project name at all). It sits clearly
    below the h1, which keeps .lead's full clamp(2.4rem,5.4vw,4.8rem). */
@@ -119,20 +125,31 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
    Donate uses the same one. Only page-specific behaviour stays here. */
 .pl.lnhit{cursor:pointer}
 body.view-grid .lnbtn{display:none}   /* a poster wall has no chapter to open */
+/* ⚠️ THE CHAPTER RULE IS DRAWN ON THE BODY, NOT THE SECTION (client, 2026-08-03: the underline
+   "should just be the size of the right section"). sub.css puts border-top on .chap, which now spans
+   .cbody's whole width and would carry the rule across the rail as well. On .b it is exactly as wide
+   as the type it introduces. .chap keeps the between-chapter margin. */
+.pr{border-top:none;padding-top:0}
+.pr .b{border-top:1px solid var(--ink);padding-top:1.2rem}
 /* the chapter rule SEPARATES chapters, so the first one has nothing to separate — there it reads
    as a stray divider hung under the page title */
-.chaps > .chap:first-child{border-top:none}
+.cbody > .chap:first-child .b{border-top:none}
 /* the jump-nav lands a chapter under the sticky 5.2rem header without this */
 .chap{scroll-margin-top:6.6rem}
 /* JUMP-NAV — the six tours as an index in the RAIL, directly above the first year monument, so
    it reads as that column's own apparatus. Four tracks: the two year-RANGES span two each and
    fill row one, the four single years take row two. Mono in the metadata voice, small enough that
    both rows sit inside the three-column rail. */
-/* THE RAIL carries EITHER the big year monument (default) or a sticky year INDEX (tweak: Year rail).
-   The index is emitted into EVERY chapter's rail: each copy is sticky within its own chapter, so one
-   hands off to the next exactly at the chapter join and it reads as a single continuous index —
-   without needing the whole chapter list to become one grid. All copies highlight together, driven
-   from the chapter in view by projects.html's own observer.
+/* THE RAIL CARRIES THE YEAR INDEX, and only that.
+   ⚠️ THE "Big years" MONUMENT ALTERNATIVE IS GONE (2026-08-03), and it went because the client asked
+   for ONE shared rail instead of a copy per chapter. A monument shows the year of the chapter it sits
+   in, so it only ever worked when every chapter owned a rail; one element beside all fourteen has no
+   single year to show. Removed rather than left as a switch onto an empty rail — a control that does
+   nothing is worse than no control. The ?rail= flag, its panel segment and body.rail-index went too.
+   The index was the shipped default throughout, so nothing a reviewer has seen has changed.
+   Deliberately a <div role=navigation>, not a <nav>: as a <nav> it inherited c-base.css's HEADER
+   rules (margin-left:auto, uppercase, weight 500) and c-base.js's active-nav observer hijacked the
+   .active class, allowing only one copy to light up.
    Deliberately a <div role=navigation>, not a <nav>: as a <nav> it inherited c-base.css's HEADER
    rules (margin-left:auto, uppercase, weight 500) and c-base.js's active-nav observer hijacked the
    .active class, allowing only one copy to light up. */
@@ -142,10 +159,13 @@ body.view-grid .lnbtn{display:none}   /* a poster wall has no chapter to open */
    the header. max-content columns mean adding a year needs no edit here. */
 /* .yrnav's LOOK now lives in the shared sub.css — Photos uses the same index.
    Only its PLACEMENT stays here, because the rail differs per page. */
-/* index mode: the monument goes, the index takes the rail and sticks under the header */
-body.rail-index .pr .n > span{display:none}
-body.rail-index .pr .n .yrnav{display:grid;position:sticky;top:6.6rem}
+.chaps > .prail .yrnav{display:grid;position:sticky;top:6.6rem}
 body.view-grid .yrnav{display:none!important}   /* the grid wall has no chapters to jump between */
+/* ⚠️ .cbody MUST DISSOLVE IN GRID VIEW. That mode flattens .chap and .plates with display:contents so
+   every poster becomes a direct child of the .chaps grid; a wrapper left standing between them traps
+   the whole wall in one column. The rail goes too — a poster wall has no chapters to jump between. */
+body.view-grid .cbody{display:contents}
+body.view-grid .prail{display:none}
 .eyebrow.blk{display:block;margin-top:clamp(2.4rem,5vh,3.6rem);margin-bottom:.6rem}
 /* The commission mark and its footnote are the same character, but the footnote is IBM Plex Mono —
    whose asterisk is a large centred glyph — while inline it inherited Helvetica at .7em RAISED off
@@ -212,21 +232,23 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
    (client, 2026-07-30: "vizuale po projektima poravnati sa textom"). At 3/8 it began one track
    left of every line of type above it — close enough to the text edge to read as a mistake rather
    than as a deliberate break-out. Width is unchanged at five tracks. */
-.plates .pl{grid-column:4/9}
+/* ⚠️ 1/8 of .cbody's NARROWER grid, not the old 4/9 of the page's. .cbody begins at page column 4,
+   so the poster starts at its own column 1 and keeps the same left edge as the type above it. */
+.plates .pl{grid-column:1/8}
 .pl .cap{display:none}
 @media(max-width:880px){
   /* the index keeps its three columns here too — the override that dropped it to two existed for the
      old two-year RANGE labels ("2018–2017", 9 characters). But the rail is only 3 of 12 tracks, which
      at 390px is 74px, and three years need ~136px: it fitted only because nothing clipped it. The
      rail takes the full width on mobile, where it is already its own row above the body. */
-  .pr .n{grid-column:1/-1}
+  .chaps > .prail,.chaps > .cbody{grid-column:1/-1}
   .pr .b{grid-column:1/-1}
   .plates .pl{grid-column:1/-1}
   .plates .pl + .pl{margin-top:2rem}
 }
 </style>
 </head>
-<body class="sub panels-dark rail-index prog-plain">   <!-- shipped defaults: year index in the rail, plain programme list -->
+<body class="sub panels-dark prog-plain">   <!-- shipped default: plain programme list -->
 
 <header id="nav">
   <a href="index.html" class="logo" aria-label="No Borders Orchestra"><img src="logo.svg" alt="No Borders Orchestra"></a>
@@ -251,10 +273,16 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
   </div>
 </section>
 
-<div class="wrap"><div class="chaps">
+<div class="wrap"><div class="grid chaps">
+
+  <!-- ONE index for the whole page, sticky beside every chapter — not a copy inside each of the
+       fourteen (client, 2026-08-03). position:sticky only travels inside its own parent, so the rail
+       has to be a SIBLING of the chapters; see "ONE RAIL PER PAGE" in sub.css. -->
+  <div class="prail"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div></div>
+
+  <div class="cbody">
 <section class="chap pr" id="y2025">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2025</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2025</h2><div class="pblk"><p class="ptitle">Turning Point Tour</p><p class="subline metanum soft">Balkan Season 2025</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">30 August</span><span class="v">Mostar</span><span class="t">Kosača</span></div>
         <div class="row"><span class="k metanum">4 September</span><span class="v">Priština</span><span class="t">Palace of Youth and Sport</span></div>
@@ -272,7 +300,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2024">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2024</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2024</h2><div class="pblk"><p class="ptitle">Turning Point Tour</p><p class="subline metanum soft">Balkan Season 2024</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">4 September</span><span class="v">Sarajevo</span><span class="t">City Hall</span></div>
         <div class="row"><span class="k metanum">6 September</span><span class="v">Novi Sad</span><span class="t">Synagogue</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Nina Perović</span><span class="t">Bubbling<span class="cm">*</span></span></div>
@@ -287,7 +314,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2023">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2023</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2023</h2><div class="pblk"><p class="ptitle">Embracing Vulnerability Tour</p><p class="subline metanum soft">Balkan Season 2023</p><p class="dlede" style="margin-top:clamp(1.2rem,2.6vh,1.9rem);max-width:30ch">The wound is the place where the light enters you</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">15 September</span><span class="v">Mostar</span><span class="t">OKC Abrasevic</span></div>
         <div class="row"><span class="k metanum">17 September</span><span class="v">Novi Sad</span><span class="t">Synagogue</span></div>
@@ -305,7 +331,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2022">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2022</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2022</h2><div class="pblk"><p class="ptitle">Embracing Vulnerability Tour</p><p class="subline metanum soft">Balkan Season 2022</p><p class="dlede" style="margin-top:clamp(1.2rem,2.6vh,1.9rem);max-width:30ch">The wound is the place where the light enters you</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">24 August</span><span class="v">Podgorica</span><span class="t">Podgorica Cultural Summer</span></div>
         <div class="row"><span class="k metanum">26 August</span><span class="v">Sarajevo</span><span class="t">City Hall</span></div>
@@ -323,7 +348,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2021">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2021</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2021</h2><div class="pblk"><p class="ptitle">No Return to Normality Tour</p><p class="subline metanum soft">Balkan Season 2021</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">23 August</span><span class="v">Rijeka</span><span class="t">Export Drvo</span></div>
         <div class="row"><span class="k metanum">25 August</span><span class="v">Zagreb</span><span class="t">Lauba</span></div>
@@ -340,7 +364,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2020">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2020</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2020</h2><div class="pblk"><p class="ptitle">Balkan Season 2020</p><p class="eyebrow blk">Concerts</p><p class="silence">Due to the corona pandemic, the Balkan Season 2020 Tour, with planned concerts in RIJEKA, ZAGREB, SARAJEVO, PODGORICA, PRISTINA, SKOPJE and NOVI SAD, is postponed until next year.</p><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">John Adams</span><span class="t">Shaker Loops</span></div>
         <div class="row prog"><span class="k metanum">02</span><span class="v">Max Richter</span><span class="t">Vivaldi recomposed (Stanko Madic, solo violin)</span></div>
@@ -351,7 +374,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2019">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2019</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2019</h2><div class="pblk"><p class="ptitle">B Matinee Tour</p><p class="subline metanum soft">Balkan Season 2019</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">28 July</span><span class="v">Tivat</span><span class="t">Kotorart Festival</span></div>
         <div class="row"><span class="k metanum">30 July</span><span class="v">Prizren</span><span class="t">Lumbardhi Stage</span></div>
@@ -372,7 +394,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2018">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2018</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2018</h2><div class="pblk"><p class="ptitle">I exist – to Rajasthan</p><p class="fn">Production: Marc Sinan Company</p><p class="fn">Composer: Marc Sinan</p><p class="fn">Marc Sinan, Iva Bittova, Raju Bhopa, Dayam Khan, Papamir, NBO and Dresdner Sinfoniker</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">4 November</span><span class="v">Belgrade</span><span class="t">National Theatre</span></div>
         <div class="row"><span class="k metanum">6 November</span><span class="v">Pecs</span><span class="t">Zsolnay Cultural Quarter, E78</span></div>
@@ -389,7 +410,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2017">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2017</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2017</h2><div class="pblk"><p class="ptitle">I exist – to Rajasthan</p><p class="fn">Production: Marc Sinan Company</p><p class="fn">Composer: Marc Sinan</p><p class="fn">Marc Sinan, Iva Bittova, Raju Bhopa, Dayam Khan, Papamir, NBO and Dresdner Sinfoniker</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">31 March</span><span class="v">Dresden</span><span class="t">Festspielhaus Hellerau</span></div>
         <div class="row"><span class="k metanum">2 April</span><span class="v">Berlin</span><span class="t">Radialsystem V</span></div>
@@ -399,7 +419,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2016">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2016</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2016</h2><div class="pblk"><p class="ptitle">Verdi/Cassol: Macbeth</p><p class="fn">Directed by: Brett Bailey</p><p class="fn">Production: Third World Bun Fight, Cape Town</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">11, 12, 13 February</span><span class="v">Brussels</span><span class="t">KVS</span></div>
         <div class="row"><span class="k metanum">17, 18, February</span><span class="v">Poitiers</span><span class="t">Theatre et auditorium de Poitiers</span></div>
@@ -417,7 +436,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2015">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2015</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2015</h2><div class="pblk"><p class="ptitle">Verdi/Cassol: Macbeth</p><p class="fn">Directed by: Brett Bailey</p><p class="fn">Production: Third World Bun Fight, Cape Town</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">10, 11 September</span><span class="v">Gwangju</span><span class="t">South Korea, Opening Festival of the Asian Culture Complex Arts Theater</span></div>
         <div class="row"><span class="k metanum">15, 16, 18, 19 September</span><span class="v">Brisbane</span><span class="t">Australia, Brisbane Festival</span></div>
@@ -429,7 +447,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2014">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2014</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2014</h2><div class="pblk"><p class="ptitle">Verdi/Cassol: Macbeth</p><p class="fn">Directed by: Brett Bailey</p><p class="fn">Production: Third World Bun Fight, Cape Town</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">13, 15, 16 May</span><span class="v">Brussels</span><span class="t">Kunstenfestivaldesarts at KVS Theatre</span></div>
         <div class="row"><span class="k metanum">19, 20 May</span><span class="v">Rotterdam</span><span class="t">Operadagen</span></div>
@@ -449,7 +466,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2013">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2013</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2013</h2><div class="pblk"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">20 October</span><span class="v">Berlin</span><span class="t">Radial System</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Isidora Žebeljan</span><span class="t">Horses of Saint Mark</span></div>
         <div class="row prog"><span class="k metanum">02</span><span class="v">Lera Auerbach</span><span class="t">Sogno di Stabat Mater (soloists: Stanko Madic, violin &amp; Sasa Mirkovic, viola)</span></div>
@@ -472,7 +488,6 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 </section>
 <section class="chap pr" id="y2012">
   <div class="grid txt">
-    <div class="n num"><div class="yrnav" role="navigation" aria-label="Jump to a year"><a href="#y2025">2025</a><a href="#y2024">2024</a><a href="#y2023">2023</a><a href="#y2022">2022</a><a href="#y2021">2021</a><a href="#y2020">2020</a><a href="#y2019">2019</a><a href="#y2018">2018</a><a href="#y2017">2017</a><a href="#y2016">2016</a><a href="#y2015">2015</a><a href="#y2014">2014</a><a href="#y2013">2013</a><a href="#y2012">2012</a></div><span>2012</span></div>
     <div class="b">
       <h2 class="lead reveal draw">2012</h2><div class="pblk"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">11 October</span><span class="v">Belgrade</span><span class="t note">inauguration concert at the gala opening of the 44th BEMUS Festival</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Sergei Prokofiev</span><span class="t">Symphonie classique</span></div>
         <div class="row prog"><span class="k metanum">02</span><span class="v">Ludwig van Beethoven</span><span class="t">Piano Concerto No.5 in E-flat major Op.73 – “Emperor” (soloist: Hinrich Alpers, piano)</span></div>
@@ -483,6 +498,8 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
     </div>
   </div>
 </section>
+  </div>
+
 </div></div>
 
 <footer class="wrap sitefoot">
@@ -491,7 +508,7 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
          They also have Twitter/X (@NBOofficial); our design shows three, so adding it is a client
          question, not a fill-in-the-blank. target/rel match Discography's and Reviews' outbound links. -->
     <div class="socials reveal"><a href="https://www.instagram.com/nobordersorchestra/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/NoBordersOrchestra/" target="_blank" rel="noopener">Facebook</a><a href="https://www.youtube.com/channel/UCiRMDP4Lz-f1h5Mxtehy86w" target="_blank" rel="noopener">YouTube</a><a href="https://x.com/NBOofficial" target="_blank" rel="noopener">X</a></div>
-    <p class="copy reveal">© 2026 NBO</p>
+    <p class="copy reveal">© 2026 NBO <a class="imp" href="impressum.html">Impressum</a></p>
   </div>
 </footer>
 
@@ -557,19 +574,10 @@ if(location.search.includes('view=grid')){
 // re-measured — without syncPar the tagged blocks drift against stale offsets.
 // TWEAKS. The shipped state is the unclassed-plus-body-default one (year index + plain programme);
 // each toggle just removes/re-adds its class. Both change block heights, so re-measure parallax.
-wireSeg('rail', btn=>{
-  document.body.classList.toggle('rail-index', btn.dataset.rail==='index');
-  if(typeof syncPar==='function') syncPar();
-});
 wireSeg('prog', btn=>{
   document.body.classList.toggle('prog-plain', btn.dataset.prog==='plain');
   if(typeof syncPar==='function') syncPar();
 });
-if(location.search.includes('rail=monument')){       // the non-default; index ships by default
-  document.body.classList.remove('rail-index');
-  document.querySelectorAll('#rail button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.rail==='monument'));
-  if(typeof syncPar==='function') syncPar();
-}
 
 // The year-index active state is handled in the shared c-base.js — Photos runs the same index.
 

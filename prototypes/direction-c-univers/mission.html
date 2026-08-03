@@ -11,10 +11,43 @@
 <link rel="stylesheet" href="c-base.css">
 <link rel="stylesheet" href="sub.css">
 <!-- No page-specific CSS — the .textpage template in sub.css, same as Manifesto and NBO CV.
-     Text: content/mission.md (verbatim pull, nobordersorchestra.org/mission/, 2026-06-18).
-     Three source headings — Introduction · Cultural context · The NBO Basics — are the page's only
-     structure. They are plain prose like everything else; a heading is a short line welded DOWN to
-     the section it names, an attribution is welded UP to the passage it answers. See sub.css. -->
+     Text: content/mission.md (full verbatim pull, nobordersorchestra.org/mission/, 2026-08-03 —
+     REPLACES a LOSSY 2026-06-18 pull that rendered at ~5,750 characters against the source's ~16,200.
+     ⚠️ A PULL THAT LOOKS COMPLETE CAN BE MISSING TWO THIRDS OF A PAGE. The 06-18 pull silently
+     dropped: the "NBO is to its core based on non-exclusion…" paragraph in Mission statement; the
+     Slovenia paragraph in Introduction ("With a possible exception of Slovenia that became EU member
+     in 2004…"); the whole of Key words, General concept, Educational output, Workshops and Goals; and
+     it truncated one Introduction sentence to "…in order to present new channels of communication and
+     cultural exchange" where the source reads "…in order to present better cultural models and in
+     order to develop new channels of communication and cultural exchange." Re-verifying The NBO
+     Basics against the source (2026-08-03) turned up the same failure mode a second time: its opening
+     paragraph was cut mid-sentence, dropping "Partner organizations also joined in order to produce
+     intense communication between separated scenes with the aim to form “a body of culture”…", and
+     the section was missing its closing two paragraphs entirely ("NBO is a collaborative project
+     launched by a group of well established festivals…" and "As the conditions within the region are
+     far from optimal…"). Cultural context had the same problem a third time — only its last
+     paragraph ("NBO is not an initiative…") had ever made it in; its opening two ("Diverse and too
+     often not balanced cultural policies…" and "Years of cultural neglect…") were caught only after
+     a first pass at this rebuild still undercounted at ~14,900 rendered characters against the
+     ~16,000 target. Check character counts against the live page — a page that renders can still be
+     silently short, more than once.
+     Nine source headings now carry structure — Mission statement · Key words · Introduction ·
+     Cultural context · The NBO Basics · General concept · Educational output · Workshops · Goals —
+     plus three sub-headings inside Workshops (2018 · 2013 · 2012), each a `.slabel` WITHOUT `.sect`
+     so a workshop year ranks below the sections that open with one. Mentors are the site's own
+     name-then-credit pattern (Team's `.qual.eyebrow`): the source gives each as one sentence,
+     "Name, long descriptor" — split at the first comma, name as prose, the rest as the credit line.
+     ⚠️ EDUCATIONAL OUTPUT AND WORKSHOPS CARRY TWO NEAR-DUPLICATE PARAGRAPHS — the client wrote the
+     same paragraph twice, six years apart, with small edits ("engaged"/"committed" nature,
+     "resulting with"/"resulting in" a quality boost). Both are kept, verbatim, exactly as their own
+     page has them. Not a pull error to dedupe — flagged here as an open question for the client.
+     ⚠️ THE BUSEK ATTRIBUTION'S PARENTHESIS NEVER CLOSES IN THE SOURCE — "(Introduction in the guide:
+     Mobilizing Culture for Regional Development project by “A Soul for Europe” Initiative." — kept
+     exactly as the source has it. The 06-18 pull's attribution also carried a leading em-dash that
+     is not in this fuller citation; dropped rather than invented, since the .cite gap (sub.css) is
+     what marks it as an attribution, not the dash.
+     A heading is a short line welded DOWN to the section it names, an attribution is welded UP to
+     the passage it answers. See sub.css. -->
 </head>
 <body class="sub textpage">
 
@@ -42,16 +75,28 @@
 </section>
 
 <!-- the opening statement. It does NOT animate: the title is the only thing on the page that arrives
-     on load (client, 2026-07-30). -->
+     on load (client, 2026-07-30). Set in the source's own ALL CAPS ("NO BORDERS ORCHESTRA is
+     symphony orchestra…") — verbatim, not the title-cased rewrite the 06-18 build carried. -->
 <section class="erow wrap">
   <div class="grid">
-    <div class="tcol read reveal-opt"><p>No Borders Orchestra is symphony orchestra comprised of excellent professional musicians from ex-Yugoslavia region. Besides artistic, NBO has educational, strong social and political significance. It is based on deconstruction of stereotypes, overcoming nationalism, racism, xenophobia and the gory legacy from the past.</p></div>
+    <div class="tcol read reveal-opt"><p>NO BORDERS ORCHESTRA is symphony orchestra comprised of excellent professional musicians from ex-Yugoslavia region. Besides artistic, NBO has educational, strong social and political significance. It is based on deconstruction of stereotypes, overcoming nationalism, racism, xenophobia and the gory legacy from the past.</p></div>
+  </div>
+</section>
+
+<!-- MISSION STATEMENT — five paragraphs; the second ("non-exclusion in whatever aspect") is the one
+     the 06-18 pull silently dropped. See head comment. -->
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p class="slabel">Mission statement</p>
+      <p>The No Borders Orchestra ( NBO ) has a long-term mission. Every year the orchestra performs several new programmes at the festivals in the region of former Yugoslavia as well as in other cultural capitals of Europe.</p>
+    </div>
   </div>
 </section>
 
 <section class="erow cont wrap">
   <div class="grid">
-    <div class="tcol read reveal-opt"><p>The No Borders Orchestra (NBO) has a long-term mission. Every year the orchestra performs several new programmes at the festivals in the region of former Yugoslavia as well as in other cultural capitals of Europe.</p></div>
+    <div class="tcol read reveal-opt"><p>NBO is to its core based on non-exclusion in whatever aspect: culture, ethnicity, religion or private life. It sustains all efforts to construct a society that is truly open.</p></div>
   </div>
 </section>
 
@@ -70,6 +115,23 @@
 <section class="erow cont wrap">
   <div class="grid">
     <div class="tcol read reveal-opt"><p>NBO presents a regional, cross bordering project with a cultural impact based on universal human values. It takes action to enhance the progress of social, environmental and cultural awareness.</p></div>
+  </div>
+</section>
+
+<!-- KEY WORDS — the source's own four-line list under Mission statement. A .qlist opening a
+     section takes the heading's own weld (see .textpage .read .slabel + * in sub.css), so no extra
+     markup is needed to close the gap between the label and the first line. -->
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p class="slabel">Key words</p>
+      <div class="qlist">
+        <p>Excellence</p>
+        <p>Art, Open Society, Citizen’s Europe &amp; Politics</p>
+        <p>Setting Example</p>
+        <p>Dedication &amp; Motivation</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -96,6 +158,13 @@
   </div>
 </section>
 
+<!-- the Slovenia sentence — the other paragraph the 06-18 pull dropped. See head comment. -->
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>With a possible exception of Slovenia that became EU member in 2004, level of corruption, dysfunctional public domain and political, social and cultural neglect is still present in the region to certain extent.</p></div>
+  </div>
+</section>
+
 <section class="erow cont wrap">
   <div class="grid">
     <div class="tcol read reveal-opt"><p>We firmly believe that the power of culture implemented through a development of cultural resources can produce stabilizing effect on the social, political and economic environment. This is not an insanely optimistic adagio. It is based on many scientific studies deriving from empirical examples across Europe.</p></div>
@@ -104,45 +173,64 @@
 
 <section class="erow cont wrap">
   <div class="grid">
-    <div class="tcol read reveal-opt"><p>The No Borders Orchestra project intends to implement an acquired long-term experience (gathered through the production of projects based on know-how expertise) in order to perceive and encourage mutual understanding within the segregated groups and cultural environments. We take the only position possible: it is of the utmost importance to act towards new integrations with a unique aim to present new channels of communication and cultural exchange.</p></div>
+    <div class="tcol read reveal-opt"><p>The NO BORDERS ORCHESTRA project intends to implement an acquired long-term experience (gathered through the production of projects based on know-how expertise) in order to perceive and encourage mutual understanding within the segregated groups and cultural environments. We take the only position possible: it is of the utmost importance to act towards new integrations with a unique aim to present better cultural models and in order to develop new channels of communication and cultural exchange.</p></div>
   </div>
 </section>
 
 <section class="erow cont wrap">
   <div class="grid">
-    <div class="tcol read reveal-opt"><p>Propounding a high level of cultural and social awareness, equality, empathy, multiculturalism, sensitivity, critical stand point, exchange of experience and information, NBO project offers a strong value to the creation of new cultural horizons. This initiative has the possibility to gather segregated ethnic groups under one cultural 'umbrella' with the power to influence faster balancing of regional cultural policies.</p></div>
+    <div class="tcol read reveal-opt"><p>Propounding a high level of cultural and social awareness, equality, empathy, multiculturalism, sensitivity, critical stand point, exchange of experience and information, NBO project offers a strong value to the creation of new cultural horizons. This initiative has the possibility to gather segregated ethnic groups under one cultural “umbrella” with the power to influence faster balancing of regional cultural policies.</p></div>
   </div>
 </section>
 
-<!-- THE BUSEK PASSAGE — someone else's words, quoted in mission.md:27. The quotation is plain prose:
-     a quote size would be the second voice this template exists to avoid, and the direction carries
-     no quote glyph anywhere. What marks it as quoted is the attribution below it, carrying the source's
-     own em-dash and welded up to the passage by a gap tighter than any paragraph join.
+<!-- THE BUSEK PASSAGE — someone else's words, quoted in mission.md. The quotation is plain prose: a
+     quote size would be the second voice this template exists to avoid, and the direction carries no
+     quote glyph anywhere. What marks it as quoted is the attribution below it, welded up to the
+     passage by a gap tighter than any paragraph join. The attribution's own parenthesis is left open
+     — the source never closes it — and carries no dash: see head comment for why the 06-18 build's
+     leading em-dash is not reproduced here.
      No photo: the page has none (client, 2026-07-30), so this sits in the reading column like every
      other block — which also brings it back to the page's own measure instead of the wider figrow. -->
 <section class="erow wrap">
   <div class="grid">
     <div class="tcol read reveal-opt">
-      <p>However much we achieve – in rebuilding infrastructure in South-Eastern Europe, coping with migration issues, stabilizing democracy and creating the requisite security – if we exclude culture, it will never be enough. Approaching culture through institutional measures is certainly difficult. Culture is present in every area which exists in imagined, experienced and established reality: it is indispensable yet difficult to pin down… …Past destruction has left deep scars. People in South-Eastern Europe have often had their world overturned, with culture used as a weapon and the destruction of cultural objects (churches, mosques, libraries etc.) presented as images of victory. The task now is to promote the victory of the cultural spirit, as the condition 'human' is determined through culture.</p>
-      <p class="cite">— Erhard Busek</p>
+      <p>However much we achieve – in rebuilding infrastructure in South-Eastern Europe, coping with migration issues, stabilizing democracy and creating the requisite security – if we exclude culture, it will never be enough. Approaching culture through institutional measures is certainly difficult. Culture is present in every area which exists in imagined, experienced and established reality: it is indispensable yet difficult to pin down… …Past destruction has left deep scars. People in South-Eastern Europe have often had their world overturned, with culture used as a weapon and the destruction of cultural objects (churches, mosques, libraries etc.) presented as images of victory. The task now is to promote the victory of the cultural spirit, as the condition “human” is determined through culture.</p>
+      <p class="cite">Erhard Busek (Introduction in the guide: Mobilizing Culture for Regional Development project by “A Soul for Europe” Initiative.</p>
     </div>
   </div>
 </section>
 
+<!-- CULTURAL CONTEXT — the previous build kept only this section's third paragraph. The other two
+     (also missing from the 06-18 pull, caught on this pass) restore the section to its full source. -->
 <section class="erow wrap">
   <div class="grid">
     <div class="tcol read reveal-opt">
       <p class="slabel">Cultural context</p>
-      <p>NBO is not an initiative propounding so-called 'YU-nostalgia'. On the contrary, it is fully aware of turbulent Yugoslavia's history as well as devastatingly destructive recent past. NBO represents the cultural force facing the future with the intention to act towards further regional development and cultural cooperation.</p>
+      <p>Diverse and too often not balanced cultural policies, as well as politics in the time of crisis, leave no space for intense cultural exchange, progressive visions and strong messages engaged projects are sending. The capacity of professionals to investigate our cultural and social conditions is simply not supported enough, as opposites to the enormous body of mainstream or politicized culture.</p>
     </div>
   </div>
 </section>
 
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>Years of cultural neglect, lack of cultural strategy and difficult contacts between likely partners in a process of creating collective models, resulted in rather dispersed cultural landscape striped down to the individual actions and random appearances on the contemporary art settings across the region. Contemporary art development is limited to personal interests and research capabilities. Thus we can see a fragmented background of institutional frames and a variety of forms and disciplines. In this environment new collaborations are appearing in which cultural operators and artists are crossing the boundaries of their initial activities and create a complex cultural initiative based on performing arts.</p></div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>NBO is not an initiative propounding so-called “YU-nostalgia”. On the contrary, it is fully aware of turbulent Yugoslavia’s history as well as devastatingly destructive recent past. NBO represents the cultural force facing the future with the intention to act towards further regional development and cultural cooperation.</p></div>
+  </div>
+</section>
+
+<!-- THE NBO BASICS — five paragraphs. The first was cut mid-sentence in the previous build (missing
+     "Partner organizations also joined…"), and the section was missing its own closing two
+     paragraphs entirely. Both fixed here; see head comment. -->
 <section class="erow wrap">
   <div class="grid">
     <div class="tcol read reveal-opt">
       <p class="slabel">The NBO Basics</p>
-      <p>Professionals join together over sharing progressive intellectual and cultural values in a single-minded effort to work toward dissemination of universal values through music, through open discussion and sociable engaged activities.</p>
+      <p>Professionals join together over sharing progressive intellectual and cultural values in a single-minded effort to work toward dissemination of universal values through music, through open discussion and sociable engaged activities. Partner organizations also joined in order to produce intense communication between separated scenes with the aim to form “a body of culture” in service of ambassadorship thus highlighting reconstruction of cultural values and importance of high cultural and social awareness.</p>
     </div>
   </div>
 </section>
@@ -159,10 +247,170 @@
   </div>
 </section>
 
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>NBO is a collaborative project launched by a group of well established festivals and music institutions operating within borders of ex-YU. Although these institutions work in close collaboration with decision makers, their possibilities for action within a civil sector development are very limited. Festivals just too often find themselves in a position balancing between a city or a state cultural policies (that often undergo constant change of political winds or cravings) and objective necessity to deliver programs fulfilling diverse cultural tastes of their audiences.</p></div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>As the conditions within the region are far from optimal, one can easily recognize certain general ignorance when it comes to culture, – lack of cultural activity and interest, neo-traditionalism and most of all a massive brain-drain of young professionals. In this atmosphere cultural institutions are delivering programs under very complex conditions. Even with the support of higher instances, they are not really in a position to reach out toward active reconstruction of the society. Put under the roof of a sociable engaged collaborative work in the framework of common European values – as the NBO – these institutions can provide impact on both educational and cultural spheres.</p></div>
+  </div>
+</section>
+
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p class="slabel">General concept</p>
+      <p>This initiative strives towards the integration of regional cultural policies and will represent an interrogative platform for research on cultural and social relations between ex-Yugoslav countries. It shall provide specialized education for performing artists in the segment of classical music based on universal cultural values and global cultural heritage.</p>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATIONAL OUTPUT — its second paragraph is one half of the near-duplicate pair with Workshops'
+     second paragraph (client's own repetition, "engaged"/"committed", kept both; see head comment). -->
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p class="slabel">Educational output</p>
+      <p>This new platform for classical music, in the form of a symphony orchestra, will certainly speed up the process of revitalizing unfortunately heavily marginalized culture. The lack of balance between the number of graduated musicians and offered professional posts is great and probably will not change unless action is taken. High educational institutions are producing new generations of artists and cultural recruits just in order to set them off directly to mostly Western European countries or the United States. Classical music is one of the most visible brain-drain fields within the cultural sphere of the region. On the other hand, the highest level of cultural capacity, sensitivity and creativity lays exactly with these young professionals. In the case of the region, they move out from their countries simply because their societies cannot provide sustainable careers in their fields of vocation. The NBO will unite professionals and support new talents. Through the international exchange of knowledge and expertise, a massive intellectual input is expected, resulting with a quality boost and further potential development!</p>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>The multicultural and engaged nature of the NBO project can truly bring added value to other educational systems as well. As the whole region is going through different transitional levels the educational quality is also variable. Given the fact that every professional classical music performer is also educated to become a tutor, the amount of alternative education networking that can flourish from NBO only on individual level offers already a huge added value to the cultural sphere. Gathering cultural potential in the region for the sake of “knowledge” will most certainly produce higher level of competence!</p></div>
+  </div>
+</section>
+
+<!-- WORKSHOPS — opens with its own near-duplicate of Educational output's second paragraph
+     ("committed"/"resulting in", kept verbatim), then the peer-to-peer line, then the mentors roster
+     for the first three years. Each year is a `.slabel` withOUT `.sect` — a sub-heading ranking below
+     the sections that open with a hairline; see head comment. Mentors follow Team's own
+     name-then-credit pattern: the source gives each as "Name, long descriptor" in one sentence, split
+     at the first comma into a prose name and a `.qual.eyebrow` credit line underneath. -->
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p class="slabel">Workshops</p>
+      <p>NBO is a new platform for classical music, in the form of a symphony orchestra. Although consisting of the most excellent musicians from the region, NBO functions as a permanent workshop with educational output. NBO unites professionals and support new talents. Through the international exchange of knowledge and expertise, a massive intellectual input is expected, resulting in a quality boost and further potential development!</p>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>The multicultural and committed nature of the NBO project can truly bring added value to other educational systems as well. As the whole region is going through different transitional levels, the educational quality is also variable. Given the fact that every professional classical music performer is also educated to become a tutor, the amount of alternative education networking that can flourish from NBO on an individual level offers a huge added value to the cultural sphere. Gathering cultural potential in the region for the sake of “knowledge” will most certainly produce a higher level of competence!</p></div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>No Borders Orchestra musicians have the opportunity to interact and to find a fruitful ground for peer-to peer learning. Musicians have the opportunity to learn from the best: every year NBO collaborates with leading European orchestras. Experienced musicians lead workshops for NBO members during the rehearsal period.</p></div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>Mentors who worked with NBO musicians during the first year:</p></div>
+  </div>
+</section>
+
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p class="slabel">2018 workshop in Sarajevo, Bosnia &amp; Herzegovina</p>
+      <p>In cooperation with the organization Mali Mozart Sarajevo, No Borders Orchestra gave a wonderful one-hour workshop for children and young people ages 12-18 in Sarajevo about the power of cooperation and friendship in music and society. The moderator was a Rusmir Piknjac working with Conductor Premil Petrovic, NBO educator Catherine Lejtenyi and musicians from NBO playing A. Schoenberg’s Transfigured Night. Together they demonstrated how the diverse parts of an orchestra play together to create in harmony the unity of the whole, which is the work of music as well as of a peaceful and progressive society. At the very end we had a great opportunity to hear the inspiring, life changing stories from three distinguished members of the orchestra: Stanko Madic, Mersiha Teskeredzic and Ilin-Dime Dimovski.</p>
+    </div>
+  </div>
+</section>
+
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p class="slabel">2013 workshop in Trebinje, Bosnia and Herzegovina</p>
+      <p>Rainer Sonne</p>
+      <p class="qual eyebrow">Long-time 1st Concertmaster, Berliner Philharmoniker and a professor at the Orchestra Academy and at the Universitaet der Künste Berlin.</p>
+      <p>Monia Rizkallah</p>
+      <p class="qual eyebrow">Leader of the 2nd violins at the Deutsche Oper Berlin, a member of the orchestra of Bayreuth Festival and member of the West-Eastern Divan Orchestra</p>
+      <p>Felix Schwartz</p>
+      <p class="qual eyebrow">1st Principal Viola, Staatskapelle Berlin, a member of the Streichtrio Berlin, professor at the Hochschule für Musik Rostock, mentor of the West-Eastern Divan Orchestra</p>
+      <p>Andreas Greger</p>
+      <p class="qual eyebrow">1st Principal Cello, Staatskapelle Berlin, a member of the Streichtrio Berlin, professor at the Hochschule für Musik Hans Eisler, Berlin</p>
+      <p>Matthew McDonald</p>
+      <p class="qual eyebrow">1st Principal Bass, Berliner Philharmoniker</p>
+      <p>Eckart Haupt</p>
+      <p class="qual eyebrow">Long-time Principal flute, Dresden Staatskapelle and a professor at the Hochschule für Musik Dresden</p>
+    </div>
+  </div>
+</section>
+
+<!-- Felix Schwartz and Matthew McDonald mentor both 2013 and 2012 — the source lists them twice,
+     once per year; not a duplication to collapse, two different rosters naming the same two people. -->
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p class="slabel">2012 workshop in Kanjiža, Serbia</p>
+      <p>Barennie Moon</p>
+      <p class="qual eyebrow">Leader of the 2nd Violins, WDR Rundfunkorchester</p>
+      <p>Axel Gerhardt</p>
+      <p class="qual eyebrow">Long-time Leader of the 2nd violins, Berliner Philharmoniker</p>
+      <p>Felix Schwartz</p>
+      <p class="qual eyebrow">1st Principal Viola, Staatskapelle Berlin, a member of the Streichtrio Berlin, professor at the Hochschule für Musik Rostock, mentor of the West-Eastern Divan Orchestra</p>
+      <p>Stefan Giglberger</p>
+      <p class="qual eyebrow">1st Principal Cello, Konzerthausorchester Berlin</p>
+      <p>Matthew McDonald</p>
+      <p class="qual eyebrow">1st Principal Bass, Berliner Philharmoniker</p>
+      <p>Thomas Ludes</p>
+      <p class="qual eyebrow">Principal Bassoon, Beethoven Orchester Bonn</p>
+    </div>
+  </div>
+</section>
+
+<!-- GOALS — three paragraphs, then the "Four aims" line and its qlist share ONE tcol (Manifesto's own
+     pattern for a colon-introduced list: the intro sentence and the list it introduces stay together
+     rather than splitting into two rows). -->
+<section class="erow wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p class="slabel">Goals</p>
+      <p>The NBO is a long-term project. After initial activities concentrated on the ex-YU region, the Orchestra’s ultimate aim is to include musicians and artists in general coming from the whole Balkan Peninsula.</p>
+    </div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>Our goal is to emphasize the necessity of cultural involvement in all aspects of social and political life. We intend to do so through educational approach: workshops, engaged cultural laboratories, open discussions, debates, lectures, and benchmarking media actions.</p></div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt"><p>We want to stimulate synergy, inspire partnerships and attract involvement of different civic and governmental groups into a joint common-shared venture. We send out a message to politicians that culture and arts are fundamental factors of good communication, co-operation and better quality of life for everyone.</p></div>
+  </div>
+</section>
+
+<section class="erow cont wrap">
+  <div class="grid">
+    <div class="tcol read reveal-opt">
+      <p>Four aims that we are strongly proposing:</p>
+      <div class="qlist">
+        <p>to halt the brain-drain of young professionals from the region;</p>
+        <p>to balance consequences of transitional period(s) across the region;</p>
+        <p>to activate civil sector through cultural activity;</p>
+        <p>to point out the importance of active citizenship.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer class="wrap sitefoot">
   <div class="grid sf-row">
     <div class="socials reveal"><a href="https://www.instagram.com/nobordersorchestra/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/NoBordersOrchestra/" target="_blank" rel="noopener">Facebook</a><a href="https://www.youtube.com/channel/UCiRMDP4Lz-f1h5Mxtehy86w" target="_blank" rel="noopener">YouTube</a><a href="https://x.com/NBOofficial" target="_blank" rel="noopener">X</a></div>
-    <p class="copy reveal">© 2026 NBO</p>
+    <p class="copy reveal">© 2026 NBO <a class="imp" href="impressum.html">Impressum</a></p>
   </div>
 </footer>
 

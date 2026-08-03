@@ -43,7 +43,20 @@ a{color:inherit;text-decoration:none}
 header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:clamp(1rem,2.6vw,2.6rem);
   min-height:5.2rem;padding:.9rem var(--gut);background:var(--paper);transition:box-shadow .4s ease}
 header.solid{box-shadow:0 1px 0 var(--hair)}
-.logo{position:absolute;left:var(--gut);top:.9rem;z-index:60;display:block}
+/* ⚠ top BALANCES THE LOGO IN THE HEADER, and it is NOT the header's .9rem padding any more (client,
+   2026-08-03). The nav links are flex-centred; the logo was pinned to the padding box, so it sat 14px
+   from the top of the page and only 5px from the rule that appears under a scrolled header — visibly
+   low. The arithmetic: (5.2rem header − 63px logo) / 2 ≈ 9.95px, so both gaps come out ~10px.
+   ⚠ NOT top:50%;translateY(-50%), which is the obvious fix and is wrong here. c-base.js has a
+   big→small state that grows the logo to ~20% of the viewport (201px wide, 91px tall — TALLER than
+   the 83px header) and lets it overhang downward on purpose. It is not on the shipped site (sizeLogo
+   returns early for body.hero-full and body.sub, which between them cover all 15 pages), but it is
+   one class away, and true centring would push it off the TOP of the screen. A fixed top can only
+   ever overhang downward, which is what that lockup wants.
+   ⚠ 63px is the SMALL logo's height — LOGO_SMALL (140px) in c-base.js over the wordmark's 2.22
+   aspect. Change LOGO_SMALL and this value stops balancing; the size living in two places is a
+   known trap of this header. */
+.logo{position:absolute;left:var(--gut);top:.62rem;z-index:60;display:block}
 .logo img{display:block;width:140px;height:auto}   /* outlined wordmark (3-line lockup, aspect 2.21); JS sizes width big→small on scroll */
 nav{margin-left:auto;display:flex;gap:clamp(1rem,2.6vw,2.6rem)}
 nav a{font-size:.82rem;text-transform:uppercase;letter-spacing:.18em;font-weight:500;padding-bottom:.4rem;
@@ -136,13 +149,24 @@ footer{padding-block:var(--pad) 3.5rem}
   filter:url(#edgeDissolve)}
 .ftitle .l2{display:block;padding-left:var(--ind)}
 
-/* site footer — social links + copyright, the one thing every page ends with.
-   Sub-pages carry only this (no contact form); the homepage's own Contact
-   section sits above it. */
+/* site footer — social links + copyright, the one thing every page ends with, and now the SAME thing
+   on all fourteen (client, 2026-08-03). The homepage used to keep its own inline socials row and an
+   .eyebrow copyright stacked inside the Contact block; it carries this instead, so `.sitefoot` is
+   the single definition of how a page ends. The homepage's Contact block sits above it as a
+   <section> — it must NOT be a <footer>, or the page ends twice.
+   There is no contact form anywhere on the direction — the Contact block is the client's own named
+   people and addresses (index.html .fwrap). */
 footer.sitefoot{padding-block:clamp(2.5rem,5vh,4rem) 3rem}
 .sitefoot .sf-row{align-items:center}
 .sitefoot .socials{grid-column:1/6;display:flex;gap:1.3rem;text-transform:uppercase;letter-spacing:.16em;font-size:.7rem}
 .sitefoot .copy{grid-column:8/13;text-align:right;font-family:var(--mono);font-size:.7rem;color:var(--ink-soft);letter-spacing:.03em}
+/* IMPRESSUM — the statutory notice, in the footer's right block beside the copyright (client,
+   2026-08-03), in the client's own order: copyright first, Impressum last, as their site writes it.
+   FULL INK against .copy's grey, because that is this site's one rule about grey — it is the passive
+   voice, and everything you can click steps out of it (the socials in this same row are full ink for
+   the same reason). The 1.3rem gap is the socials' own gap, so the two halves of the footer are
+   spaced by one value. No separator glyph: the socials row sets four items apart with space alone. */
+.sitefoot .copy .imp{margin-left:1.3rem;color:var(--ink);text-transform:uppercase;letter-spacing:.14em}
 
 /* ECM reveal — fluid slide + fade on a decelerating curve; photos also scale in a touch.
    Reveals RE-TRIGGER on every viewport entry (scroll up + down), so travel is generous.

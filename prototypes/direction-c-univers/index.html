@@ -213,22 +213,44 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
 .m3{grid-column:10/13;margin-top:2rem}.m3 .img{aspect-ratio:3/4}
 .m4{grid-column:2/8;margin-top:clamp(2rem,5vh,4rem)}.m4 .img{aspect-ratio:16/10}
 
-/* footer — narrow form beside the hanging title */
+/* footer — the two people beside the hanging title, the addresses in the quiet right column.
+   ⚠ THERE IS NO CONTACT FORM, and its absence is the point (client, 2026-08-03: "izbaciti kontakt
+   formular i ubaciti kao na starom sajtu"). The old form had no backend — submitting it only
+   rewrote its own button to "Thank you" — while the client's own /contact/ page has named people
+   with direct phone and e-mail. A control that pretends to send is worse than no control, and the
+   .fld/.frow/.send recipes went with it; nothing else on the direction used them. */
+/* ⚠ STATED HERE because #contact is a <section> now, not the page's <footer> — c-base's bare
+   `footer{padding-block:var(--pad) 3.5rem}` used to supply this and no longer reaches it. Top is
+   the same 135px band gap that separates Contact from Media above, so nothing moved. Bottom is 0:
+   the .sitefoot strip below closes the page now, with its own padding. */
+.fwrap{padding-block:var(--pad) 0}
 .fwrap .t{grid-column:1/8}
 .fwrap .f{grid-column:1/7;margin-top:clamp(2.5rem,5vh,4rem)}
-.fwrap .meta{grid-column:9/13;align-self:end;color:var(--ink-soft);font-size:.84rem}
-.fld{margin-bottom:1.7rem}
-.fld label{display:block;font-size:.64rem;text-transform:uppercase;letter-spacing:.2em;color:var(--ink-soft);margin-bottom:.55rem}
-.fld input,.fld textarea{width:100%;font-family:var(--sans);font-size:1rem;background:transparent;border:none;
-  border-bottom:1px solid var(--hair);padding:.5rem 0;color:var(--ink)}
-.fld input:focus,.fld textarea:focus{outline:none;border-bottom-color:var(--ink)}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem}
-.send{margin-top:1rem;background:none;border:1px solid var(--ink);color:var(--ink);cursor:pointer;
-  font-family:var(--sans);font-weight:500;text-transform:uppercase;letter-spacing:.2em;font-size:.7rem;
-  padding:.9rem 2.2rem;transition:background .3s,color .3s}
-.send:hover{background:var(--ink);color:var(--paper)}
-.socials{display:flex;gap:1.3rem;text-transform:uppercase;letter-spacing:.16em;font-size:.7rem;margin-top:1.4rem}
-.fwrap .meta a:hover{color:var(--ink)}
+/* start, not end: with the form gone this column is the SHORTER of the two, and bottom-aligning it
+   would hang the first name level with the last line of an address instead of with the label. */
+.fwrap .meta{grid-column:9/13;align-self:start;margin-top:clamp(2.5rem,5vh,4rem);
+  color:var(--ink-soft);font-size:.84rem}
+/* A CONTACT — the name at full size in full ink, the role under it and smaller in the site's one
+   micro-caps label. Same order and same ranking as a Team credit, so the footer introduces no new
+   way of writing a person. */
+.cx + .cx{margin-top:clamp(1.8rem,4vh,2.6rem)}
+.cx .role{margin-top:.4rem}
+/* the two lines you can ACT on, in the direction's existing "you can click this" grammar: mono at
+   full ink under a standing hairline that darkens on hover (sub.css .lnlbl — Projects' disclosure
+   and the year index mark themselves the same way). Deliberately not grey: grey is the passive
+   voice everywhere on this site, and a phone number you can dial is not passive. */
+.cx .cl{margin-top:.55rem;font-family:var(--mono);font-size:.8rem;letter-spacing:.02em}
+.cx .cl a{border-bottom:1px solid var(--hair);padding-bottom:.1rem;transition:border-color .3s}
+.cx .cl a:hover{border-bottom-color:currentColor}
+.cx .cl a:focus-visible{outline:1px solid var(--ink);outline-offset:.3rem}
+/* the three registered addresses. One <p> per address with hard breaks — a postal address is one
+   block whose line breaks are structural, the same reason the Lovers credit keeps its three. */
+.addr{margin-top:1.15rem;line-height:1.62}
+/* NO .socials RULE HERE, deliberately. The homepage's socials live in .sitefoot now and take
+   c-base.css's `.sitefoot .socials` like every other page. A bare `.socials{}` in this block would
+   still match them — this style block loads after c-base — and its margin-top would drop them off
+   the centre line of the .sf-row. The same goes for the old `.fwrap .meta a:hover`: the right column
+   holds only addresses now, and there is no link left in it to darken. */
 
 @media(max-width:700px){
   .heromark{display:none!important}   /* letters become slivers at phone widths; the corner logo carries the brand */
@@ -243,7 +265,6 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
   .who .p1,.who .p2,.m2,.m3,.m4{margin-top:2.5rem}
   .proj .body,.proj .fig,.who .q,.who .figwrap,.media .body,.media .figwrap,.fwrap .figwrap,.mission .figwrap,.mission .q{grid-column:1/-1!important}
   .proj .fig,.media .fig{margin-top:2rem!important}
-  .frow{grid-template-columns:1fr}
   .spread > *{grid-column:1/-1!important}
   .spread .txt{margin-top:2rem}
 }
@@ -410,8 +431,8 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
   </filter>
 </defs></svg>
 
-<!-- CONTACT FOOTER -->
-<footer id="contact" class="wrap fwrap">
+<!-- CONTACT -->
+<section id="contact" class="wrap fwrap">
   <div class="grid" style="margin-bottom:clamp(5rem,12vh,9rem)">
     <div class="figwrap" data-par="0.13" style="grid-column:1/10">
       <figure class="fig reveal-l">
@@ -422,22 +443,46 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
   <div class="grid">
     <div class="t" data-par="0.07"><h2 class="ftitle reveal draw hang-l">Contact us</h2></div>
   </div>
+  <!-- The two named contacts and the three registered addresses, verbatim from the client's own
+       /contact/ page (content/contact.md, pulled 2026-08-03) — including the phone numbers' own
+       spacing, which they write inconsistently (+381 641489479 against +49 1717 064221) and which
+       is left exactly as given, like every other spelling on this site. -->
   <div class="grid">
     <div class="f">
-      <form class="reveal" onsubmit="event.preventDefault();this.querySelector('.send').textContent='Thank you'">
-        <div class="frow">
-          <div class="fld"><label>First name</label><input type="text" autocomplete="given-name"></div>
-          <div class="fld"><label>Last name</label><input type="text" autocomplete="family-name"></div>
-        </div>
-        <div class="fld"><label>Email</label><input type="email" autocomplete="email"></div>
-        <div class="fld"><label>Message</label><textarea rows="3"></textarea></div>
-        <button class="send" type="submit">Send</button>
-      </form>
+      <div class="cx reveal">
+        <p>Jelena Dojčinović</p>
+        <p class="eyebrow role">Executive Producer</p>
+        <p class="cl"><a href="tel:+381641489479">+381 641489479</a></p>
+        <p class="cl"><a href="mailto:jelena@nobordersorchestra.org">jelena@nobordersorchestra.org</a></p>
+      </div>
+      <div class="cx reveal">
+        <p>Premil Petrović</p>
+        <p class="eyebrow role">Artistic Director &amp; Conductor</p>
+        <p class="cl"><a href="tel:+491717064221">+49 1717 064221</a></p>
+        <p class="cl"><a href="mailto:premilpetrovic@gmail.com">premilpetrovic@gmail.com</a></p>
+      </div>
     </div>
     <div class="meta reveal">
-      <div class="socials"><a href="https://www.instagram.com/nobordersorchestra/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/NoBordersOrchestra/" target="_blank" rel="noopener">Facebook</a><a href="https://www.youtube.com/channel/UCiRMDP4Lz-f1h5Mxtehy86w" target="_blank" rel="noopener">YouTube</a><a href="https://x.com/NBOofficial" target="_blank" rel="noopener">X</a></div>
-      <p class="eyebrow" style="margin-top:2.4rem">© 2026 NBO</p>
+      <p class="eyebrow">Address</p>
+      <p class="addr">No Borders Orchestra e.V.<br>c/o Tabacki<br>Osloerstr 101<br>13359 Berlin<br>Germany</p>
+      <p class="addr">No Borders Orchestra<br>Kralja Milana 22<br>11000 Belgrade<br>Serbia</p>
+      <p class="addr">No Borders Orchestra<br>Trg Sv. Jurja 6<br>52428 Oprtalj – Portole<br>Croatia</p>
     </div>
+  </div>
+</section>
+
+<!-- THE SITE FOOTER, now IDENTICAL to the thirteen sub-pages (client, 2026-08-03) — socials on the
+     page's left edge, copyright right, one line, one <footer>. It was the homepage's last piece of
+     private furniture: an inline socials row and an .eyebrow copyright stacked inside the contact
+     block's right column, in a different voice from the .copy every other page ends with.
+     ⚠ The block above is a <section> BECAUSE of this: it was the <footer>, and two sibling <footer>
+     elements for one page ending is a structure, not a formatting choice. That swap costs the
+     bare `footer{padding-block:var(--pad) 3.5rem}` rule in c-base.css, which is why .fwrap now
+     states its own padding — see the style block. -->
+<footer class="wrap sitefoot">
+  <div class="grid sf-row">
+    <div class="socials reveal"><a href="https://www.instagram.com/nobordersorchestra/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/NoBordersOrchestra/" target="_blank" rel="noopener">Facebook</a><a href="https://www.youtube.com/channel/UCiRMDP4Lz-f1h5Mxtehy86w" target="_blank" rel="noopener">YouTube</a><a href="https://x.com/NBOofficial" target="_blank" rel="noopener">X</a></div>
+    <p class="copy reveal">© 2026 NBO <a class="imp" href="impressum.html">Impressum</a></p>
   </div>
 </footer>
 
