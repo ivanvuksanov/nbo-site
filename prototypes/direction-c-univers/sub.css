@@ -274,6 +274,14 @@ body.sub .sitefoot{margin-top:auto}
   border-color:var(--hair);cursor:pointer;appearance:none;-webkit-appearance:none}
 .lnbtn:hover .lnlbl,.pdx:hover{border-bottom-color:currentColor}
 .lnbtn:focus-visible,.pdx:focus-visible{outline:1px solid var(--ink);outline-offset:.4rem}
+/* ON A CREDIT ROW (Team / Board's Bio control) the base margin-top is WRONG, and measurably so.
+   .lnbtn is tuned for Projects' facts column, where 26–42px of air separates it from a block of
+   metadata. Inside a two-line credit that same gap lands within a few px of --gap-t (31px), the
+   rhythm BETWEEN two people on .erow.cont — so the control reads as belonging to the next name as
+   much as to its own. 14px is unambiguous: wider than the .5em weld that .qual and .slabel use to
+   say "this annotates the line above" (a Bio is an affordance, not an annotation), and less than
+   half the distance to the next person. */
+.lnbtn.weld{margin-top:.88rem}
 
 /* ── THE DONATE CTA ──────────────────────────────────────────────────────────────────────────
    The one box in this file, and it is the box c-base.css ALREADY sanctions — the header's .donate
@@ -703,3 +711,78 @@ body.view-grid .typetile .tt{font-family:"Inter Tight",var(--sans);font-weight:6
   .anaph p{text-indent:0;padding-left:0}
   body.view-grid .chaps > *{grid-column:1/-1!important;margin-top:0!important}
 }
+
+/* ══ THE MODAL — .pdlg ══════════════════════════════════════════════════════════════════════
+   PROMOTED HERE from build-projects.py (2026-08-04) when Team and Board grew bio dialogs.
+   Its old home carried the comment "Lives here because Projects is the only page with a
+   .pdlg" — three pages now have one, so that reason expired.
+   ⚠️ THE CONTROLLER MOVED WITH IT, into c-base.js. Moving this block without its JS is how
+   the controller was lost once before: the markup, the CSS and every count stayed green
+   while a click opened nothing. probe-modal.mjs is the guard — run it after touching either.
+   ⚠️ Read the note on `body.sub > .wrap` above: it is scoped to > .wrap and NOT > * precisely
+   so it cannot outrank .pdlg on specificity and blow up the dialog width. */
+/* ── PROJECT DETAILS, IN A MODAL ─────────────────────────────────────────────────────────────
+   A native <dialog> shown with showModal(). It renders in the top layer, so no ancestor transform,
+   overflow or z-index on the page can reach it — which is the whole reason the in-place disclosure
+   needed care and this doesn't.
+   THE READING MEASURE IS HELD AT 592px — the width the inline liner had at 6/12 of the chapter grid
+   at 1440 (12 tracks of 74.2px, gaps of 28.8px, inside a 1207px content box). Every hand-set block
+   in there is measured against that band: the acrostic's 15ch rule and its 1ch step offsets, the
+   refrain's flush-right clauses, the values stair. Holding the width means none of them re-wrap
+   just because their container changed. It is also WIDER than the band at 1280/1024, where the
+   acrostic was verified — so those cases only get safer.
+   BOTH AXES SCROLL, deliberately: .stmt .work hangs half a gutter into the left margin, and an
+   overflow-x:hidden here would clip it. The inline padding is ≥ that hang (4.5rem vs 3rem at the
+   top of both clamps), so the hang lands inside the padding, nothing overflows and no horizontal
+   bar appears. */
+/* margin:auto is what CENTRES a modal dialog, and it is the UA's — c-base.css's reset (*{margin:0})
+   wipes it, which parks the dialog in the top-left corner. It has to be written back by hand. */
+.pdlg{margin:auto;width:min(94vw,736px);max-width:none;max-height:88svh;padding:0;border:0;
+  background:var(--paper);color:var(--ink);box-shadow:0 24px 70px rgba(0,0,0,.24)}
+.pdlg::backdrop{background:rgba(16,18,20,.62)}
+/* THE DIALOG IS A FLEX COLUMN and the head is OUTSIDE the scroll area, so it stays put through
+   2000px of prose without needing position:sticky (which would have done nothing anyway — sticky
+   needs the scroll container as an ANCESTOR, and .pdhead is the scroller's sibling). The head also
+   names the chapter you opened, because inside a modal the page's own context is gone.
+   .pdbody needs BOTH flex:1 and min-height:0: a flex item's min-height defaults to auto, which
+   refuses to shrink below its content — so without it the prose spills straight past the dialog's
+   max-height and overflow:auto never engages. */
+.pdlg[open]{display:flex;flex-direction:column}
+.pdhead{flex:none;display:flex;align-items:flex-start;justify-content:space-between;
+  gap:clamp(1rem,3vw,2rem);background:var(--paper);border-bottom:1px solid var(--hair);
+  padding:clamp(1.4rem,3vh,2rem) clamp(1.5rem,4vw,4.5rem)}
+.pdt{font-family:"Inter Tight",var(--sans);font-weight:700;text-transform:uppercase;
+  font-size:clamp(1.15rem,2.2vw,1.6rem);line-height:1.06;letter-spacing:-.01em}
+.pdsub{margin-top:.45rem;font-size:.9rem;letter-spacing:.1em}
+/* the reading area takes focus on open (autofocus in the markup). Without it showModal() focuses the
+   first tabbable thing, which is Close — so the modal opened with a focus ring drawn round the exit.
+   tabindex="-1" keeps it out of the tab sequence while still letting the arrow keys scroll it, and
+   the ring is suppressed because a scroll container is not a control. */
+.pdbody{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;
+  padding:clamp(2rem,5vh,3.2rem) clamp(1.5rem,4vw,4.5rem) clamp(2.6rem,7vh,4.5rem)}
+.pdbody:focus,.pdbody:focus-visible{outline:none}
+/* BOTTOM FADE — the scroll edge used to cut a sentence mid-word against a hard line, which reads as
+   broken rather than as "more below" (macOS overlay scrollbars fade out, so there was no other hint).
+   It sits on the DIALOG, not the scroller: a mask on .pdbody would fight the negative-gutter hang.
+   Shown only while something is still below (see pdFade), so the last line is never left under a
+   veil once you reach the end. The gradient ends on --paper AT ALPHA 0 rather than `transparent`,
+   which some engines interpolate through transparent-black and grey the fade. */
+.pdlg::after{content:"";position:absolute;left:0;right:0;bottom:0;height:clamp(2.4rem,7vh,4.5rem);
+  background:linear-gradient(to top,var(--paper),rgba(251,251,250,0));
+  opacity:0;transition:opacity .3s;pointer-events:none}
+.pdlg.pd-fade::after{opacity:1}
+.pdbody .liner{max-width:592px}
+/* a .stmt opens with its own hairline, which would double the head's rule */
+.pdbody .liner > .stmt:first-child{border-top:0;padding-top:0}
+/* one-shot entrance in the page's own curve. Closing is immediate — a dialog that lingers on the
+   way out reads as lag, not as motion. */
+.pdlg[open]{animation:pdIn .42s cubic-bezier(.16,1,.3,1)}
+.pdlg[open]::backdrop{animation:pdBd .42s ease}
+@keyframes pdIn{from{opacity:0;transform:translateY(14px)}}
+@keyframes pdBd{from{opacity:0}}
+@media(prefers-reduced-motion:reduce){.pdlg[open],.pdlg[open]::backdrop{animation:none}}
+/* the page must not scroll behind the modal. overflow:hidden collapses the scrollbar, which shifts
+   the layout by its width wherever one reserves space (not macOS, which overlays) — --sbw is
+   measured before the lock and hands that width back. */
+html.pdlg-open,html.pdlg-open body{overflow:hidden}
+html.pdlg-open body{padding-right:var(--sbw,0px)}

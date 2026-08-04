@@ -158,3 +158,74 @@ if(location.search.includes('openpanel') && tw) tw.classList.add('tw-open');
 // PROTOTYPE: ?seek=<px> pulls content up so headless top-anchored shots can reach lower sections
 const seek=new URLSearchParams(location.search).get('seek');
 if(seek){ document.body.style.marginTop='-'+parseInt(seek,10)+'px'; if(!reduce){syncPar();} }
+
+// ══ THE MODAL CONTROLLER — .pdlg ═════════════════════════════════════════════════════════
+// PROMOTED HERE from build-projects.py (2026-08-04): Projects, Team and Board all run it.
+// ⚠️ ITS CSS MOVED WITH IT, into sub.css. Never separate them — that is how this exact
+// controller was lost once, leaving a fully green verification history and a dead click.
+// It binds nothing per control: both hit areas carry data-dlg and the click is delegated on
+// the document, so a page with two dialogs and a page with fourteen need no different setup.
+// Pages with no .pdlg cost one empty querySelectorAll.
+// ── PROJECT DETAILS, THE MODAL CONTROLLER ───────────────────────────────────────────────────
+// Lives here, beside its own CSS, because Projects is the only page with a .pdlg — sub.css owns
+// the control's LOOK (shared with Donate), this owns the behaviour.
+// Both hit areas carry data-dlg (the facts-column button, and the poster where there is one), and
+// a two-year tour points both years at the ONE dialog — so this delegates on the document instead
+// of binding per control, and the same id being opened from four places is not a special case.
+const pdBody = dlg => dlg.querySelector('.pdbody');
+
+// The fade is on ONLY while something is still below, so the last line is never left under a veil
+// once you reach the end. The -1px absorbs sub-pixel scrollHeight rounding, which otherwise leaves
+// the fade lit at the true bottom.
+function pdFade(dlg){
+  const b = pdBody(dlg); if(!b) return;
+  dlg.classList.toggle('pd-fade', b.scrollTop + b.clientHeight < b.scrollHeight - 1);
+}
+
+function pdOpen(id){
+  const dlg = document.getElementById(id); if(!dlg || dlg.open) return;
+  // ⚠️ --sbw MUST be measured BEFORE the lock. Once html carries overflow:hidden the scrollbar is
+  // already gone, the difference reads 0, and the padding that compensates for it never appears —
+  // so the whole page shifts by the scrollbar's width the moment a modal opens (not on macOS,
+  // which overlays, which is exactly why this regresses unnoticed).
+  document.documentElement.style.setProperty('--sbw',
+    (innerWidth - document.documentElement.clientWidth) + 'px');
+  document.documentElement.classList.add('pdlg-open');
+  dlg.showModal();                // autofocus on .pdbody lands focus on the prose, not on Close
+  // ⚠️ RESET AFTER showModal(), never before. A closed dialog is display:none, so it has no scroll
+  // box at all and scrollTop=0 is silently discarded — then the browser restores the previous
+  // offset when it becomes visible, and a reopen drops you mid-sentence where you last stopped.
+  const b = pdBody(dlg);
+  if(b) b.scrollTop = 0;
+  pdFade(dlg);
+}
+
+document.querySelectorAll('.pdlg').forEach(dlg=>{
+  const b = pdBody(dlg);
+  if(b) b.addEventListener('scroll', ()=>pdFade(dlg), {passive:true});
+  // ⚠️ ONE release point for EVERY close path — Escape, the Close button, the backdrop, .close()
+  // from the ?open= flag all raise 'close'. A lock released on some paths and not others strands
+  // the page unscrollable with no modal on screen and no way back.
+  dlg.addEventListener('close', ()=>{
+    document.documentElement.classList.remove('pdlg-open');
+    dlg.classList.remove('pd-fade');
+  });
+  // The backdrop IS the dialog's own box: .pdlg has padding:0 and .pdhead/.pdbody cover it, so a
+  // click whose target is the dialog element itself arrived from outside the panel.
+  dlg.addEventListener('click', e=>{ if(e.target===dlg) dlg.close(); });
+  dlg.querySelectorAll('[data-pdclose]').forEach(x=>x.addEventListener('click', ()=>dlg.close()));
+});
+
+document.addEventListener('click', e=>{
+  const t = e.target.closest('[data-dlg]');
+  if(t) pdOpen(t.dataset.dlg);
+});
+addEventListener('resize', ()=>document.querySelectorAll('.pdlg[open]').forEach(pdFade));
+
+// ?open=<project-slug|year> — opens one modal for a review shot. The dialogs are keyed by PROJECT
+// and the chapters by YEAR, so a year is resolved through whatever control that chapter carries.
+const pdWant = new URLSearchParams(location.search).get('open');
+if(pdWant){
+  const byYear = document.querySelector('#y'+pdWant+' [data-dlg]');
+  pdOpen(byYear ? byYear.dataset.dlg : pdWant+'-dlg');
+}
