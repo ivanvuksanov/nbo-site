@@ -365,6 +365,9 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
 .yrnav a{font-family:var(--mono);font-size:.82rem;letter-spacing:.05em;color:var(--ink-soft);
   padding-bottom:.15rem;border-bottom:1px solid transparent;transition:color .3s,border-color .3s}
 .yrnav a:hover{color:var(--ink)}
+/* the two-year chapter reads "2012 & 2013" on one line here and breaks in two on a phone; the
+   ampersand and the break swap places in the 880px block, so neither width ever shows both */
+.yrnav .ybr{display:none}
 .yrnav a.active{color:var(--ink);font-weight:500;border-bottom-color:currentColor}
 /* Partners' rail — the SAME index as Projects and Photos (client, 2026-08-03: "let's have that
    navigation also the same as we have in the projects and in the gallery"), and it fills what was an
@@ -677,6 +680,29 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
   /* three 110px badges plus gaps need ~359px against 343px of content at 390px wide. body has
      overflow-x:hidden, so a third column does not report as overflow — it just gets clipped. */
   .textpage .badges{grid-template-columns:repeat(2,max-content)}
+
+  /* ── THE YEAR RAIL KEEPS ITS STICKY LEFT COLUMN ON A PHONE (client, 2026-08-05) ─────────────
+     ⚠️ IT HAD NEVER BEEN GIVEN ONE, and the result was not a squeeze but an overlap: at 390px
+     `grid-column:1/3` is **44px** of a 12-track grid, while the labels measure **94px**
+     ("2012 & 2013") and ~85px ("Initiation"). Every rail overflowed its own column by ~50px and
+     printed straight through the text beside it, on Partners and Photos alike. Three tracks (73px)
+     with the mono a step smaller fits the longest label, and the content still keeps 253px.
+     ⚠️ ONE COLUMN, STATED. Photos inherits `.yrnav`'s base `repeat(3,max-content)`, which inside a
+     73px rail stacks three years into the same 34px of width. Partners already sets one column for
+     its own rail; saying it here covers every page that carries one. */
+  .textpage .chaps > .prail,.textpage .gal > .prail{grid-column:1/4}
+  .textpage .chaps > .cbody,.textpage .gal > .gbody{grid-column:4/13}
+  .textpage .prail .yrnav{grid-template-columns:max-content;row-gap:.55rem}
+  .yrnav a{font-size:.72rem}
+  /* one year per line: "2012 & 2013" breaks in two, and the ampersand goes with the space it
+     needed to sit in. The chapter is still ONE jump target — a single link, two lines. */
+  .yrnav .ysep{display:none}
+  .yrnav .ybr{display:inline}
+  /* ⚠️ AND THE NAME LISTS GO BACK TO ONE COLUMN. Two columns is right at 600px beside a logo sheet;
+     inside the 253px the rail leaves on a phone each column is ~118px, and "PortoMontenegro, Tivat"
+     and "Month of Contemporary Music, Berlin" broke over two and three lines each — a list of names
+     where you cannot tell where one name ends. The two-column rule arrived before the rail did. */
+  .textpage .cgroup .qlist{columns:1}
 }
 
 /* ── FOUR EXPRESSIVE VOICES ───────────────────────────────────────────────── */

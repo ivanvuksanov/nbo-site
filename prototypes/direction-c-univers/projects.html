@@ -219,11 +219,17 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 .plates .pl{grid-column:1/8}
 .pl .cap{display:none}
 @media(max-width:880px){
-  /* the index keeps its three columns here too — the override that dropped it to two existed for the
-     old two-year RANGE labels ("2018–2017", 9 characters). But the rail is only 3 of 12 tracks, which
-     at 390px is 74px, and three years need ~136px: it fitted only because nothing clipped it. The
-     rail takes the full width on mobile, where it is already its own row above the body. */
-  .chaps > .prail,.chaps > .cbody{grid-column:1/-1}
+  /* ── THE RAIL STAYS A STICKY LEFT COLUMN ON A PHONE (client, 2026-08-05: unify Projects with
+     Photos and Partners). It used to take the full width and sit as its own row ABOVE the body —
+     a fourteen-year block three columns wide that you scrolled past once and never saw again, which
+     is the opposite of what an index is for. Now it holds three of twelve tracks beside the content,
+     sticky, ONE YEAR PER ROW.
+     ⚠️ `grid-template-columns:max-content` is the load-bearing half. Three columns inside a 74px
+     rail gives each year 34px against the ~30px a four-digit year needs at this size — it fitted
+     only because nothing clipped it, and any wider label printed through the text beside it. */
+  .chaps > .prail{grid-column:1/4}
+  .chaps > .cbody{grid-column:4/13}
+  .chaps > .prail .yrnav{grid-template-columns:max-content;row-gap:.55rem}
   .pr .b{grid-column:1/-1}
   .plates .pl{grid-column:1/-1}
   .plates .pl + .pl{margin-top:2rem}
