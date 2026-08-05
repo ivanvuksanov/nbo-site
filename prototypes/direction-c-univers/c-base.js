@@ -84,13 +84,23 @@ if(navHdr && !navHdr.querySelector('.navtoggle')){
     const panel = document.createElement('dialog');
     panel.className = 'navpanel';
     panel.id = 'navpanel';
+    // ⚠️ THE PANEL CARRIES A COPY OF THE MASTHEAD. It is a top-layer dialog, so it covers the real
+    //    header outright — the logo disappeared the moment the menu opened, and `Close` sat at its
+    //    own margin rather than where `Menu` had just been, so the control jumped on every open
+    //    (client, 2026-08-05). The bar restates the header's geometry and clones the header's own
+    //    logo, so opening the menu changes exactly one thing on screen: the word.
+    const bar = document.createElement('div');
+    bar.className = 'navbar';
+    const logo = navHdr.querySelector('.logo');
+    if(logo) bar.appendChild(logo.cloneNode(true));
     const shutBtn = document.createElement('button');
     shutBtn.className = 'navclose';
     shutBtn.type = 'button';
     shutBtn.textContent = 'Close';
+    bar.appendChild(shutBtn);
     const panelNav = document.createElement('nav');
     navSrc.forEach(a => panelNav.appendChild(a.cloneNode(true)));
-    panel.append(shutBtn, panelNav);
+    panel.append(bar, panelNav);
     document.body.appendChild(panel);
 
     const shut = () => { if(panel.open) panel.close(); };
@@ -105,7 +115,10 @@ if(navHdr && !navHdr.querySelector('.navtoggle')){
     // ⚠️ A LINK MUST CLOSE THE PANEL. Five of the six are in-page or same-page anchors, which change
     //    nothing but the scroll position — without this the panel stays open over the section it
     //    just jumped to, and the site looks frozen.
-    panelNav.addEventListener('click', e=>{ if(e.target.closest('a')) shut(); });
+    // ⚠️ ON THE PANEL, not on its nav — the cloned logo lives in the bar and is a link too, and on a
+    //    sub-page it goes to index.html while on the homepage it is `#top`, which changes nothing but
+    //    the scroll position. Either way the panel has to get out of the way.
+    panel.addEventListener('click', e=>{ if(e.target.closest('a')) shut(); });
     panel.addEventListener('close', ()=>{
       document.documentElement.classList.remove('pdlg-open');
       toggle.setAttribute('aria-expanded', 'false');

@@ -240,7 +240,13 @@ body.clean .tweaks{display:none}
     border:0;padding:0;background:var(--paper);color:var(--ink)}
   .navpanel::backdrop{background:var(--paper)}
   .navpanel[open]{display:flex;flex-direction:column}
-  .navclose{align-self:flex-end;margin:.9rem var(--gut) 0;background:none;border:0;padding:.4rem 0;
+  /* ⚠️ THE PANEL'S BAR RESTATES THE HEADER'S GEOMETRY EXACTLY — same min-height, same padding, same
+     centring, and `position:relative` so the cloned logo's `position:absolute` anchors here instead
+     of to the page. Every value is the header's own, and that is the point: the dialog covers the
+     masthead, so anything that differs by a pixel reads as the page jumping when the menu opens. */
+  .navpanel .navbar{position:relative;display:flex;align-items:center;
+    min-height:5.2rem;padding:.9rem var(--gut)}
+  .navclose{margin-left:auto;background:none;border:0;padding:.4rem 0;
     font:inherit;color:inherit;cursor:pointer;
     font-size:.82rem;text-transform:uppercase;letter-spacing:.18em;font-weight:500}
   /* `margin-block:auto` centres the six in the leftover height, so the list sits where the thumb is
