@@ -365,9 +365,8 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
 .yrnav a{font-family:var(--mono);font-size:.82rem;letter-spacing:.05em;color:var(--ink-soft);
   padding-bottom:.15rem;border-bottom:1px solid transparent;transition:color .3s,border-color .3s}
 .yrnav a:hover{color:var(--ink)}
-/* the two-year chapter reads "2012 & 2013" on one line here and breaks in two on a phone; the
-   ampersand and the break swap places in the 880px block, so neither width ever shows both */
-.yrnav .ybr{display:none}
+/* the two-year chapter reads "2012 & 2013" on one line here and stacks on a phone — `.yy` goes from
+   inline to block in the 880px block, so the ampersand and the line break never both show */
 .yrnav a.active{color:var(--ink);font-weight:500;border-bottom-color:currentColor}
 /* Partners' rail — the SAME index as Projects and Photos (client, 2026-08-03: "let's have that
    navigation also the same as we have in the projects and in the gallery"), and it fills what was an
@@ -694,15 +693,39 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
   .textpage .chaps > .cbody,.textpage .gal > .gbody{grid-column:4/13}
   .textpage .prail .yrnav{grid-template-columns:max-content;row-gap:.55rem}
   .yrnav a{font-size:.72rem}
-  /* one year per line: "2012 & 2013" breaks in two, and the ampersand goes with the space it
-     needed to sit in. The chapter is still ONE jump target — a single link, two lines. */
+  /* one year per line: "2012 & 2013" stacks, and the ampersand goes with the space it needed to sit
+     in. The chapter is still ONE jump target — a single link, two lines, one active state. */
   .yrnav .ysep{display:none}
-  .yrnav .ybr{display:inline}
+  .yrnav .yy{display:block}
+  /* ⚠️ AND THE ACTIVE MARK MOVES ONTO EACH YEAR. `.yrnav a` is a grid item, so it is a BLOCK here:
+     a `border-bottom` on it draws ONE rule under the bottom of the box — under 2013 alone — which
+     reads as 2013 being the active year and 2012 being a label above it. Both years are the same
+     chapter, so both take the rule. */
+  .yrnav a.active{border-bottom-color:transparent}
+  .yrnav a.active .yy{border-bottom:1px solid currentColor;padding-bottom:.15rem}
   /* ⚠️ AND THE NAME LISTS GO BACK TO ONE COLUMN. Two columns is right at 600px beside a logo sheet;
      inside the 253px the rail leaves on a phone each column is ~118px, and "PortoMontenegro, Tivat"
      and "Month of Contemporary Music, Berlin" broke over two and three lines each — a list of names
      where you cannot tell where one name ends. The two-column rule arrived before the rail did. */
   .textpage .cgroup .qlist{columns:1}
+}
+
+/* ── THE RAIL DROPS ITS WORD-LABEL ON A PHONE ────────────────────────────────────────────────
+   Measured across widths rather than guessed (client: "check when it overlaps"). "Initiation" is a
+   fixed 75px — the only entry on any rail that is a word, not a year — while the rail is 3 of 12
+   tracks and so scales with the screen:
+       320px  rail 56px  → the label runs 3px INTO the text
+       375px  rail 70px  → clears the text, but 5px wider than its own column
+       390px  rail 74px  → 1px wider than its own column
+       414px  rail 79px  → fits
+   So a true overlap only happens on a 320px phone, but the label outgrows its column on every
+   handset below ~400px, and it is the one entry doing it. 420px hides it across that whole range
+   and keeps it everywhere it fits. ⚠️ A CLASS, not `a[href="#initiation"]` — the rule says why it
+   is hidden, and it does not stop working silently if the anchor is ever renamed.
+   ⚠️ Only the RAIL ENTRY goes. The chapter keeps its heading, its 17 organisations and its id, so
+   nothing is unreachable — it is one scroll below the last year in the index. */
+@media(max-width:420px){
+  .yrnav .ylong{display:none}
 }
 
 /* ── FOUR EXPRESSIVE VOICES ───────────────────────────────────────────────── */
