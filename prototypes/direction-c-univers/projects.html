@@ -50,6 +50,24 @@
    the tour title above it (client: "Balkan Season i godina mogli da budu malo veci"). Scoped to .pr
    so Manifesto and Musicians keep sub.css's smaller subline. */
 .pr .subline{font-size:1.1rem;letter-spacing:.1em}
+/* 2020 OPENS ON ITS SEASON LINE, with no .ptitle above it to carry the block's clearance — so it
+   takes the title's own margin. Without this the words sat 14px under the year heading while every
+   other year's first line sits 26–42px down, and the two read as different kinds of thing. */
+.pr .pblk > .subline:first-child{margin-top:clamp(1.6rem,3.5vh,2.6rem)}
+/* THE TAGLINE: THE TITLE'S SIZE, WELDED UNDER IT, OTHERWISE `.dlede` AS IT COMES (client,
+   2026-08-05: "isto kao Embracing Vulnerability… ali sa malim slovima, i bez bolda", then "make it
+   light and two lines… pull it even higher, a little bit closer to the Embracing Vulnerability").
+   sub.css's base runs clamp(1.55,3.1vw,2.7rem) — up to 43px, louder than the 32px title above it,
+   so the tour read as the tagline's subtitle rather than the other way round. Exactly TWO
+   departures, and everything else is deliberately left to the base:
+     · SIZE → the .ptitle clamp, so the title and the line of verse share one size.
+     · WELD → .5rem. This is the site's 8px weld, the documented "a short line belongs to the block
+       above it" gap (.slabel, .cite, .qual) — tighter than `.5em` would give, which at this size
+       computes to 16px and still read as a gap rather than a join.
+   ⚠️ WEIGHT 300 AND THE 30ch MEASURE ARE THE BASE'S, ON PURPOSE — a 400-weight single line was
+   tried and rejected: light over two lines is what makes this read as verse beside the tour's caps,
+   and one long line read as a strapline. Do not "fix" the light weight or uncap the measure. */
+.pr .dlede{font-size:clamp(1.25rem,2.4vw,2rem);margin-top:.5rem}
 
 /* PROJECT DETAILS, IN A MODAL — the .pdlg component (CSS) now lives in the shared sub.css
    and its controller in the shared c-base.js, because Team and Board carry bio dialogs too.
@@ -134,6 +152,31 @@ body.view-grid .prail{display:none}
    none is affected — the six that wrap were wrapping at the old width too.
    Not applied to .prog: the programme's track carries a 2-digit number and stays 3.2rem. */
 .pr .row:not(.prog){--c1:12.6rem}
+/* ⚠️ EVERY VENUE ENDS ON ONE RIGHT-HAND LINE (client, 2026-08-05: "venues da se uklope sa desnom
+   linijom. sada beze neki na levo"). Each .row is its OWN grid, so the venue's `auto` track is sized
+   by that row's own text: a 2-word venue and Marseille's 87-character one produced two different
+   left edges, and a venue long enough to wrap set its last line short of the right edge as well. So
+   the venue takes the treatment the programme's work column already has — capped measure, ragged
+   LEFT, flush right — and 2016/2015's long strings wrap instead of dragging the column open.
+   Deliberately not a fixed third track on .row: that rule is shared with the homepage's .gig.
+   ⚠️ THE CAP IS IN rem, NOT ch, and .t is why. `ch` measures the "0" advance and knows nothing
+   about letter-spacing, so at this recipe's .16em tracking a 34ch box held only ~26 characters —
+   Macao and Marseille broke into FOUR lines of tracked caps. 22rem is the measured equivalent
+   (~46 characters a line): every venue here is at most two lines, and the city column keeps 265px. */
+   ⚠️ `.hasnote` is EXCLUDED here rather than overridden later. Both selectors would otherwise carry
+   the same weight and be decided by file order — the fragility `.erow.cont` already documents in
+   sub.css. Excluding the case that shouldn't win is what lifts it out of the tie. */
+.pr .row:not(.prog) .t:not(.note):not(.hasnote){max-width:22rem;text-align:right;justify-self:end}
+/* A HALL WITH ITS OCCASION UNDER IT — the two Belgrade concerts whose venue the source never gave.
+   It takes `.t.note`'s existing shape, because that is already this page's treatment for a clause:
+   text set LEFT inside a box pushed to the right edge, so the block still ends on the page's right
+   line while the sentence stays readable. Right-aligning a 150-character clause would put it on that
+   line and make it unreadable — the alignment rule is about where the COLUMN ends, not the ragging.
+   The hall keeps the venue's tracked caps; the clause drops to the sentence-case metadata voice, the
+   same recipe `.t.note` uses, welded .5em under it (the site's "this line answers the one above"). */
+.pr .row:not(.prog) .t.hasnote{max-width:34ch;justify-self:end}
+.pr .row .vnote{display:block;margin-top:.5em;text-transform:none;letter-spacing:0;
+  font-family:var(--sans);font-weight:400;font-size:.88rem;line-height:1.45}
 /* a description standing in for a venue (2012, 2013) — sentence case at the metadata size, because
    the venue's tracked uppercase turns a 150-character clause into a shouted three-line paragraph */
 .pr .row .t.note{text-transform:none;letter-spacing:0;font-family:var(--sans);font-weight:400;
@@ -254,7 +297,7 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 <section class="chap pr" id="y2023">
   <div class="grid txt">
     <div class="b">
-      <h2 class="lead reveal draw">2023</h2><div class="pblk"><p class="ptitle">Embracing Vulnerability Tour</p><p class="subline metanum soft">Balkan Season 2023</p><p class="dlede" style="margin-top:clamp(1.2rem,2.6vh,1.9rem);max-width:30ch">The wound is the place where the light enters you</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">15 September</span><span class="v">Mostar</span><span class="t">OKC Abrasevic</span></div>
+      <h2 class="lead reveal draw">2023</h2><div class="pblk"><p class="ptitle">Embracing Vulnerability Tour</p><p class="dlede">The wound is the place where the light enters you</p><p class="subline metanum soft">Balkan Season 2023</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">15 September</span><span class="v">Mostar</span><span class="t">OKC Abrasevic</span></div>
         <div class="row"><span class="k metanum">17 September</span><span class="v">Novi Sad</span><span class="t">Synagogue</span></div>
         <div class="row"><span class="k metanum">19 September</span><span class="v">Maribor</span><span class="t">Union Hall, Festival Maribor</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Johann Sebastian Bach</span><span class="t">O Haupt Voll Blut und Wunden</span></div>
         <div class="row prog"><span class="k metanum">02</span><span class="v">Davor Branimir Vincze</span><span class="t">The Wound is the Place where the Light enters You — Movement I: In my dreams I’m dying all the time<span class="cm">*</span></span></div>
@@ -271,7 +314,7 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 <section class="chap pr" id="y2022">
   <div class="grid txt">
     <div class="b">
-      <h2 class="lead reveal draw">2022</h2><div class="pblk"><p class="ptitle">Embracing Vulnerability Tour</p><p class="subline metanum soft">Balkan Season 2022</p><p class="dlede" style="margin-top:clamp(1.2rem,2.6vh,1.9rem);max-width:30ch">The wound is the place where the light enters you</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">24 August</span><span class="v">Podgorica</span><span class="t">Podgorica Cultural Summer</span></div>
+      <h2 class="lead reveal draw">2022</h2><div class="pblk"><p class="ptitle">Embracing Vulnerability Tour</p><p class="dlede">The wound is the place where the light enters you</p><p class="subline metanum soft">Balkan Season 2022</p><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">24 August</span><span class="v">Podgorica</span><span class="t">Podgorica Cultural Summer</span></div>
         <div class="row"><span class="k metanum">26 August</span><span class="v">Sarajevo</span><span class="t">City Hall</span></div>
         <div class="row"><span class="k metanum">28 August</span><span class="v">Rijeka</span><span class="t">Export Drvo</span></div>
         <div class="row"><span class="k metanum">29 August</span><span class="v">Zagreb</span><span class="t">Lauba</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Johann Sebastian Bach</span><span class="t">O Haupt Voll Blut und Wunden</span></div>
@@ -304,10 +347,7 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 <section class="chap pr" id="y2020">
   <div class="grid txt">
     <div class="b">
-      <h2 class="lead reveal draw">2020</h2><div class="pblk"><p class="ptitle">Balkan Season 2020</p><p class="eyebrow blk">Concerts</p><p class="silence">Due to the corona pandemic, the Balkan Season 2020 Tour, with planned concerts in RIJEKA, ZAGREB, SARAJEVO, PODGORICA, PRISTINA, SKOPJE and NOVI SAD, is postponed until next year.</p><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">John Adams</span><span class="t">Shaker Loops</span></div>
-        <div class="row prog"><span class="k metanum">02</span><span class="v">Max Richter</span><span class="t">Vivaldi recomposed (Stanko Madic, solo violin)</span></div>
-        <div class="row prog"><span class="k metanum">03</span><span class="v">Ivan Bozicevic</span><span class="t">Rethink! – trailer</span></div>
-        <div class="row prog"><span class="k metanum">04</span><span class="v">Richard Strauss</span><span class="t">Metamorphosen</span></div></div></div>
+      <h2 class="lead reveal draw">2020</h2><div class="pblk"><p class="subline metanum soft">Balkan Season 2020</p><p class="eyebrow blk">Concerts</p><p class="silence">Due to the covid pandemic, the Balkan Season 2020 Tour was postponed until next year.</p></div>
     </div>
   </div>
 </section>
@@ -418,7 +458,7 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
         <div class="row prog"><span class="k metanum">02</span><span class="v">Isidora Žebeljan</span><span class="t">Horses of Saint Mark</span></div>
         <div class="row prog"><span class="k metanum">03</span><span class="v">Joaquin Rodrigo</span><span class="t">Concierto de Aranjuez (soloist Miloš Karadaglić, guitar)</span></div>
         <div class="row prog"><span class="k metanum">04</span><span class="v">Richard Wagner</span><span class="t">Siegfried-Idyll</span></div>
-        <div class="row prog"><span class="k metanum">05</span><span class="v">Zoltán Kodály</span><span class="t">Dances of Galanta</span></div></div></div><div class="pblk pblk2"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">17 March</span><span class="v">Belgrade</span><span class="t note">in the framework of the annual European Festival Association Collective and Affiliate Members Meeting (CAMM) and the 14th edition of the Guitar Art Festival</span></div>
+        <div class="row prog"><span class="k metanum">05</span><span class="v">Zoltán Kodály</span><span class="t">Dances of Galanta</span></div></div></div><div class="pblk pblk2"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">17 March</span><span class="v">Belgrade</span><span class="t hasnote">Kolarac Concert Hall<span class="vnote">in the framework of the annual European Festival Association Collective and Affiliate Members Meeting (CAMM) and the 14th edition of the Guitar Art Festival</span></span></div>
         <div class="row"><span class="k metanum">16 March</span><span class="v">Novi Sad</span><span class="t">Synagogue</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Isidora Žebeljan</span><span class="t">The Horses of Saint Mark</span></div>
         <div class="row prog"><span class="k metanum">02</span><span class="v">Albeniz/Leo Brouwer</span><span class="t">Iberia (soloist: Edin Karamazov, guitar)</span></div>
         <div class="row prog"><span class="k metanum">03</span><span class="v">Kodaly</span><span class="t">Dances of Galanta</span></div></div></div>
@@ -428,7 +468,7 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 <section class="chap pr" id="y2012">
   <div class="grid txt">
     <div class="b">
-      <h2 class="lead reveal draw">2012</h2><div class="pblk"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">11 October</span><span class="v">Belgrade</span><span class="t note">inauguration concert at the gala opening of the 44th BEMUS Festival</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Sergei Prokofiev</span><span class="t">Symphonie classique</span></div>
+      <h2 class="lead reveal draw">2012</h2><div class="pblk"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">11 October</span><span class="v">Belgrade</span><span class="t hasnote">Sava Center<span class="vnote">inauguration concert at the gala opening of the 44th BEMUS Festival</span></span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Sergei Prokofiev</span><span class="t">Symphonie classique</span></div>
         <div class="row prog"><span class="k metanum">02</span><span class="v">Ludwig van Beethoven</span><span class="t">Piano Concerto No.5 in E-flat major Op.73 – “Emperor” (soloist: Hinrich Alpers, piano)</span></div>
         <div class="row prog"><span class="k metanum">03</span><span class="v">Charles Ives</span><span class="t">The Unanswered Question</span></div>
         <div class="row prog"><span class="k metanum">04</span><span class="v">Zoltán Kodály</span><span class="t">Dances of Galánta</span></div></div></div><div class="pblk pblk2"><p class="eyebrow blk">Concerts</p><div class="reveal"><div class="row"><span class="k metanum">9 October</span><span class="v">Kanjiza</span><span class="t note">the first public appearance of No Borders Orchestra</span></div></div><p class="eyebrow blk">Programme</p><div class="reveal"><div class="row prog"><span class="k metanum">01</span><span class="v">Sergei Prokofiev</span><span class="t">Symphonie classique</span></div>

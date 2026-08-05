@@ -225,11 +225,18 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
    the .sitefoot strip below closes the page now, with its own padding. */
 .fwrap{padding-block:var(--pad) 0}
 .fwrap .t{grid-column:1/8}
-.fwrap .f{grid-column:1/7;margin-top:clamp(2.5rem,5vh,4rem)}
-/* start, not end: with the form gone this column is the SHORTER of the two, and bottom-aligning it
-   would hang the first name level with the last line of an address instead of with the label. */
-.fwrap .meta{grid-column:9/13;align-self:start;margin-top:clamp(2.5rem,5vh,4rem);
-  color:var(--ink-soft);font-size:.84rem}
+/* THE DETAILS BLOCK — two columns, both starting on the same top edge. The names stack in the left
+   column, the three addresses stack in the right one. `margin-top` sits on the GRID rather than on
+   each column, which is what top-aligns them: the old pair of identical margins on `.f` and `.meta`
+   said the same thing twice and could drift apart in an edit.
+   ⚠️ `scroll-margin-top` clears the fixed header when the nav jumps to `#contact` (this element) —
+   the same offset the year rails stick at. There is no `scroll-padding` anywhere on this site, so
+   without it the header covers the first name. */
+.fwrap .cxgrid{margin-top:clamp(2.5rem,5vh,4rem);scroll-margin-top:6.6rem}
+.fwrap .f{grid-column:1/7}
+/* start, not end: the names column is the SHORTER of the two, and bottom-aligning would hang the
+   ADDRESS label level with the last line of a contact instead of level with the first name. */
+.fwrap .meta{grid-column:9/13;align-self:start;color:var(--ink-soft);font-size:.84rem}
 /* A CONTACT — the name at full size in full ink, the role under it and smaller in the site's one
    micro-caps label. Same order and same ranking as a Team credit, so the footer introduces no new
    way of writing a person. */
@@ -261,6 +268,9 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
   .up .lbl,.up .body,.mission .q,
   .proj .lbl,.proj .body,.who .lead,.who .p1,.who .p2,
   .m1,.m2,.m3,.m4,.media .lead,.fwrap .t,.fwrap .f,.fwrap .meta{grid-column:1/-1}
+  /* the addresses follow the two names instead of sitting beside them; `.meta`'s own margin gives
+     them the same separation the two contacts have from each other */
+  .fwrap .meta{margin-top:clamp(1.8rem,4vh,2.6rem)}
   .media .lead{text-align:left}
   .who .p1,.who .p2,.m2,.m3,.m4{margin-top:2.5rem}
   .proj .body,.proj .fig,.who .q,.who .figwrap,.media .body,.media .figwrap,.fwrap .figwrap,.mission .figwrap,.mission .q{grid-column:1/-1!important}
@@ -421,18 +431,14 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
   </div>
 </section>
 
-<!-- shared SVG filter: the hero's dissolving-borders language, scaled to text pixels — echoed on the Contact headline -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-  <filter id="edgeDissolve" x="-10%" y="-30%" width="120%" height="160%">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="soft"/>
-    <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="4" seed="11" result="n"/>
-    <feComposite in="soft" in2="n" operator="arithmetic" k1="0" k2="2.8" k3="-1.3" k4="-0.25" result="a"/>
-    <feComposite in="SourceGraphic" in2="a" operator="in"/>
-  </filter>
-</defs></svg>
-
 <!-- CONTACT -->
-<section id="contact" class="wrap fwrap">
+<!-- ⚠️ THE #edgeDissolve SVG FILTER IS GONE from this page, with .ftitle in c-base.css. It blurred and
+     noise-eroded the Contact headline's letter edges — the hero's dissolving-borders language at text
+     scale — and it was the ONLY thing that made this heading differ from the other five: same face,
+     weight, case and clamp otherwise. The client read the eroded edges as a different typeface
+     (2026-08-05: "Contact us — drugaciji font je sada. uskladiti sa ostalim na home page"), so the
+     heading now takes plain .lead like About, Projects, Who we are and Media. -->
+<section class="wrap fwrap">
   <div class="grid" style="margin-bottom:clamp(5rem,12vh,9rem)">
     <div class="figwrap" data-par="0.13" style="grid-column:1/10">
       <figure class="fig reveal-l">
@@ -441,13 +447,23 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
     </div>
   </div>
   <div class="grid">
-    <div class="t" data-par="0.07"><h2 class="ftitle reveal draw hang-l">Contact us</h2></div>
+    <div class="t" data-par="0.07"><h2 class="lead reveal draw hang-l">Contact us</h2></div>
   </div>
   <!-- The two named contacts and the three registered addresses, verbatim from the client's own
        /contact/ page (content/contact.md, pulled 2026-08-03) — including the phone numbers' own
        spacing, which they write inconsistently (+381 641489479 against +49 1717 064221) and which
-       is left exactly as given, like every other spelling on this site. -->
-  <div class="grid">
+       is left exactly as given, like every other spelling on this site.
+       ⚠️ id="contact" IS ON THIS BLOCK, NOT ON THE <section> (client, 2026-08-05: clicking Contact
+       "bilo bi dobro da spusti skroz dole da se vide adrese. A ne samo do slike i reci contact us").
+       The section opens with a 16:9 photo ~560px tall plus up to 144px of margin and then the
+       headline, so an anchor on the section landed two screens above the details. The href stays
+       exactly "#contact" — thirteen sub-pages link to index.html#contact, postbuild rewrites
+       unbuilt links to it, and c-base.js finds the nav link BY that href to force it active at the
+       foot of the page. Moving the target, not the name, is what keeps all three working.
+       ⚠️ Premil and the addresses share grid-row 2 — the client asked for the addresses level with
+       his name, and a row is what guarantees it. A margin guessed against Jelena's block height
+       would drift the moment a role or a number wraps. -->
+  <div class="grid cxgrid" id="contact">
     <div class="f">
       <div class="cx reveal">
         <p>Jelena Dojčinović</p>
@@ -464,6 +480,10 @@ html.pdlg-open body{padding-right:var(--sbw,0px)}
     </div>
     <div class="meta reveal">
       <p class="eyebrow">Address</p>
+      <!-- HARD BREAKS, and they are the structure: a postal address is one block whose line breaks
+           are meaningful, the same reason the Lovers Tour credit keeps its three. Stacked, in their
+           own column, top-aligned with the names beside them. A comma-run and a three-across row
+           were both built and rejected (client, 2026-08-05). -->
       <p class="addr">No Borders Orchestra e.V.<br>c/o Tabacki<br>Osloerstr 101<br>13359 Berlin<br>Germany</p>
       <p class="addr">No Borders Orchestra<br>Kralja Milana 22<br>11000 Belgrade<br>Serbia</p>
       <p class="addr">No Borders Orchestra<br>Trg Sv. Jurja 6<br>52428 Oprtalj – Portole<br>Croatia</p>

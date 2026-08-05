@@ -167,6 +167,28 @@
   </div>
 </footer>
 
+<!-- THE VIDEO MODAL — ONE dialog for all thirteen (client, 2026-08-05: "da li je moguce da videi
+     izadju kao pop up? Kao sto je slucaj sa project descriptions u Projects", plus left/right).
+     It is a .pdlg, so it inherits the scroll-lock, the backdrop click, Escape and the single
+     release-on-close path from c-base.js's shared controller — see "THE VIDEO MODAL" there for the
+     playlist, and for why the tiles deliberately do NOT carry data-dlg.
+     ⚠️ The title and the counter are filled by JS and start EMPTY on purpose: a placeholder here
+     would ship as real copy if the controller ever went missing again, which is exactly how the
+     Project Details modal read as working for a day while doing nothing. -->
+<dialog class="pdlg vdlg" id="video-dlg" aria-labelledby="video-dlg-h">
+  <div class="pdhead">
+    <div><p class="pdt" id="video-dlg-h"></p><p class="pdsub metanum soft vcount"></p></div>
+    <button class="pdx" type="button" data-pdclose>Close</button>
+  </div>
+  <div class="pdbody vbody" tabindex="-1" autofocus>
+    <div class="vslot"></div>
+    <div class="vnav">
+      <button class="lnbtn vprev" type="button"><span class="lnlbl">&#8592; Previous</span></button>
+      <button class="lnbtn vnext" type="button"><span class="lnlbl">Next &#8594;</span></button>
+    </div>
+  </div>
+</dialog>
+
 <script src="c-base.js"></script>
 </body>
 </html>

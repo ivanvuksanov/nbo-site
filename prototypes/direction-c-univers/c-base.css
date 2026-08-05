@@ -134,20 +134,22 @@ body.panels-dark .field .soft,body.panels-dark .field .who-bio,body.panels-dark 
   border-bottom:1px solid currentColor;transition:opacity .3s}
 .sublinks a:hover{opacity:.55}
 
-/* footer title — hangs left, echoes the hero's dissolving borders at the close of the page.
-   Any page using .ftitle must also carry the #edgeDissolve <svg><defs> block.
-   ⚠️ The padding/negative-margin pair is what keeps the glyphs whole, and it is NOT cosmetic.
-   A CSS `filter` rasterizes its element at the BORDER BOX, so anything outside that box is gone
-   before the filter runs — widening the SVG's own filter region does nothing (measured). At
-   line-height .98 the box is 0.98em while the ink needs ~1.21em, so the round letters lost their
-   overshoot: C, O, S and U came out sliced flat top and bottom. The padding grows the box past the
-   ink (~0.12em) plus the blur's reach (stdDeviation 2.4 ≈ 0.09em); the equal negative margin gives
-   the outer footprint back, so the tight .98 line stacking and the page rhythm are unchanged. */
 footer{padding-block:var(--pad) 3.5rem}
-.ftitle{font-family:"Inter Tight",var(--sans);font-weight:700;font-size:clamp(2.4rem,6vw,5rem);line-height:.98;letter-spacing:.005em;text-transform:uppercase;
-  padding-block:.22em;margin-block:-.22em;
-  filter:url(#edgeDissolve)}
-.ftitle .l2{display:block;padding-left:var(--ind)}
+/* ⚠️ `.ftitle` AND THE #edgeDissolve FILTER ARE DELETED, not moved (client, 2026-08-05). The footer
+   title echoed the hero's dissolving borders by blurring and noise-eroding its letter edges, and
+   "Contact us" on index.html was its ONE user — identical to `.lead` in face, weight, case, line
+   height and tracking, differing only by that filter. The client read the eroded edges as a
+   different typeface and asked for it to match the rest of the homepage, so the heading now takes
+   plain `.lead` and the `<svg><defs>` block is gone from index.html with it.
+   Removed rather than left dormant BECAUSE it was a trap: the rule carried a `filter:url()` pointing
+   at markup that lives on ONE page, so any other page adopting `.ftitle` would have silently
+   rendered an unfiltered heading with 0.22em of stray vertical padding.
+   The reason that padding existed is worth keeping if the effect is ever wanted again: a CSS
+   `filter` rasterizes at the BORDER BOX, so ink outside it is gone before the filter runs and
+   widening the SVG's own filter region does nothing (measured). At line-height .98 the box is
+   0.98em while the ink needs ~1.21em, so C, O, S and U came out sliced flat. The padding grew the
+   box past the ink (~0.12em) plus the blur's reach (stdDeviation 2.4 ≈ 0.09em) and an equal negative
+   margin gave the outer footprint back, leaving the .98 stacking and the page rhythm unchanged. */
 
 /* site footer — social links + copyright, the one thing every page ends with, and now the SAME thing
    on all fourteen (client, 2026-08-03). The homepage used to keep its own inline socials row and an
@@ -215,8 +217,49 @@ body.draw-in .draw.in{clip-path:inset(0 0 -8% 0)}
 .tweaks input[type=range]{width:100%;accent-color:var(--ink);margin:.2rem 0}
 body.clean .tweaks{display:none}
 
+/* ── THE PHONE MENU ───────────────────────────────────────────────────────────────────────────
+   Both hidden above the breakpoint; the markup is injected by c-base.js on every page (see "THE
+   PHONE MENU" there for why it is built rather than authored).
+   ⚠️ THE TOGGLE IS THE WORD "MENU", NOT THREE BARS — deliberately. This site carries exactly two
+   glyphs and both are functional: `.back`'s ← and the video tile's play triangle, whose own comment
+   says a functional triangle is in grammar where a decorative one is not. A hamburger would be the
+   third and the first purely decorative one. The word also inherits `nav a`'s exact recipe, so on a
+   phone the header reads in the same voice it does on a laptop, and it follows `currentColor` — white
+   over the homepage hero, ink once the header goes solid — with no extra rule. */
+.navtoggle,.navpanel{display:none}
 @media(max-width:880px){
   nav,.actions{display:none}
+  .navtoggle{display:block;margin-left:auto;background:none;border:0;padding:.4rem 0;
+    font:inherit;color:inherit;cursor:pointer;
+    font-size:.82rem;text-transform:uppercase;letter-spacing:.18em;font-weight:500}
+  .navtoggle:focus-visible,.navclose:focus-visible{outline:1px solid currentColor;outline-offset:.4rem}
+  /* full-bleed paper, not an overlay: a translucent sheet over a page whose own type is this large
+     reads as two menus at once. `margin:0` because c-base's `*{margin:0}` is what a <dialog> relies
+     on to centre — here we want it filling the screen instead. */
+  .navpanel{margin:0;width:100%;max-width:none;height:100%;max-height:none;
+    border:0;padding:0;background:var(--paper);color:var(--ink)}
+  .navpanel::backdrop{background:var(--paper)}
+  .navpanel[open]{display:flex;flex-direction:column}
+  .navclose{align-self:flex-end;margin:.9rem var(--gut) 0;background:none;border:0;padding:.4rem 0;
+    font:inherit;color:inherit;cursor:pointer;
+    font-size:.82rem;text-transform:uppercase;letter-spacing:.18em;font-weight:500}
+  /* `margin-block:auto` centres the six in the leftover height, so the list sits where the thumb is
+     rather than pinned under the Close control.
+     ⚠️ `margin-inline:0` IS NOT REDUNDANT — this is a real `<nav>`, so it inherits the header's own
+     `nav{margin-left:auto}`, the rule that pushes the links to the right of the masthead. Inside a
+     flex COLUMN that auto margin shoves the whole list against the right edge, and every count and
+     measurement still passes while it does: six links, correct labels, panel fills the screen. Only
+     a screenshot showed it. */
+  .navpanel nav{display:flex;flex-direction:column;gap:clamp(.9rem,3.2vh,1.7rem);
+    margin-block:auto;margin-inline:0;padding:0 var(--gut) 10vh;align-items:flex-start}
+  /* the page-title voice at a size six of them fit in: this is the one screen where a nav link is
+     the content, so it takes the display face rather than the header's micro-caps. */
+  .navpanel nav a{font-family:"Inter Tight",var(--sans);font-weight:700;text-transform:uppercase;
+    font-size:clamp(1.6rem,7.6vw,2.4rem);line-height:1;letter-spacing:.005em;
+    border:0;padding:0}
+  /* the page you are already on steps back rather than lighting up — grey is this site's passive
+     voice, and an "active" link in a menu is the one thing you cannot usefully press. */
+  .navpanel nav a.active{color:var(--ink-soft)}
   .hang-l,.hang-r{margin-inline:0}
   .gig,.row{grid-template-columns:1fr auto}
   .gig .date,.row .k{grid-column:1/-1;margin-bottom:.3rem}

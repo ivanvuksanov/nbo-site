@@ -254,6 +254,25 @@ body.sub .sitefoot{margin-top:auto}
    inherit. The :not() lifts this rule above the tie and excludes the case it shouldn't win. */
 .textpage .read *:not(.slabel) + .qlist{margin-top:1.15em}
 .textpage .qlist p + p{margin-top:.85em}
+/* ── PARTNERS' NAME LISTS: TWO COLUMNS, ALIGNED TO THE SHEET ABOVE ────────────────────────────
+   Client, 2026-08-05: "sami nazivi organizacija da budu manji font. I da budu u dve kolone
+   uskladjeno sa logoima gore". They were full prose size in ONE column running the whole 10-track
+   content width, with nothing tying them to the 600px sheet they sit under — so a season's logos and
+   its names read as two unrelated blocks.
+   ⚠️ THE SIZE IS `.roster`'s .98rem, NOT A NEW VALUE. That is already this site's "a list of names"
+   voice (Musicians' 161-city roster), and `.roster.cols` is already its two-column form — so this
+   invents no type size and no new column recipe, which is the doctrine the page leans on everywhere
+   else. 600px is `.textpage .sheet`'s own fixed width, so the list's right edge lands on the sheet's.
+   ⚠️ Scoped to `.cgroup` — `.qlist` also sets Manifesto's twelve questions, which are prose at the
+   reading size and must not shrink or split. Only Partners uses `.cgroup`. */
+.textpage .cgroup .qlist{max-width:600px;columns:2;column-gap:clamp(1.6rem,4vw,3.4rem);
+  font-size:.98rem;line-height:1.9}
+/* a column break between a name and its city would read as two entries */
+.textpage .cgroup .qlist p{break-inside:avoid}
+/* ⚠️ AND THE PER-ITEM MARGIN GOES, because `.roster`'s 1.9 line-height already IS the separation.
+   Keeping `.qlist p + p`'s .85em on top of it double-spaced the list — ~43px a row, so ten names
+   occupied more height in two columns than they had in one, which is the opposite of the ask. */
+.textpage .cgroup .qlist p + p{margin-top:0}
 
 /* ── THE CLICKABLE MONO LINE ─────────────────────────────────────────────────────────────────
    Shared: Projects' "Project Details" control and Donate's PayPal submit are the same object —
@@ -373,11 +392,36 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
    marks the season, and a hairline under the year read as a second underline belonging to it.
    The block gap alone separates the two groups, which is what the rhythm is for. */
 .textpage .cgroup + .cgroup{margin-top:var(--gap-b)}
-.textpage .chap > .lead + .cgroup{margin-top:clamp(1.1rem,2.4vh,1.8rem)}
+/* the season heading and what it introduces — 22px sat the logo sheet almost against the heading's
+   baseline (client, 2026-08-05: "a bit too close to the logos"). `--gap-t` is the site's own
+   "same argument continuing" tier, so this stays on the two values the page already runs on rather
+   than adding a third; it lands ~31px against the block break's ~60px, which keeps the heading
+   grouped with its logos instead of floating between them and the rule above. */
+.textpage .chap > .lead + .cgroup{margin-top:var(--gap-t)}
 /* ⚠ NO RULE ABOVE THE FIRST YEAR (client, 2026-08-03). A chapter rule exists to SPLIT one season from
    the one before it, so the first has nothing to be split from — over it the rule read as a lid on the
    page rather than a divider, and it sat immediately under the page title doing that title's job
    twice. Projects has always drawn the same distinction (`.chaps > .chap:first-child`). */
+/* ⚠️ A SEASON MUST OPEN WIDER THAN THE GROUPS INSIDE IT (client, 2026-08-05: "vise prostora izmedju
+   godina. Sada je sve nekako nabijeno"). The gap was INVERTED and that is the whole reason the page
+   read as crammed: `.chap`'s shared `--pad-s` gave two seasons 38–72px, while `.cgroup + .cgroup`
+   gives Partners → Friends *within one season* `--gap-b`'s 48–83px. So the smaller break was the
+   more important one, and five seasons ran together as a single column of names. This clears
+   `--gap-b` at both ends of the clamp; with `.chap`'s own 19.2px padding-top a new year now starts
+   90–137px below the last line of the one before it.
+   ⚠️ Not a change to `.chap` itself — that rule is Projects' too, and Projects is `body.sub
+   panels-dark`, never `.textpage`, so scoping it here is what keeps fourteen chapters untouched. */
+.textpage .cbody > .chap{margin-top:clamp(4.4rem,9vh,7.4rem)}
+/* ⚠️ AND THE RULE HAS TO SIT BETWEEN THE TWO SEASONS, NOT AGAINST THE LOWER ONE (client, 2026-08-05:
+   "it still looks like the next year is too close to the separator line"). Widening the margin alone
+   fixed the wrong half: it bought 81px ABOVE the rule while `.chap`'s base `padding-top:1.2rem` left
+   19px BELOW it, so the divider hung four times closer to the season it was introducing than to the
+   one it was closing — and a rule that close to a heading reads as that heading's underline.
+   `--gap-b` puts the lower gap at 48–83px against the upper 70–118px: clearly the smaller of the two,
+   so the rule still belongs downward, but no longer welded to the year.
+   ⚠️ `:not(:first-child)` — the padding exists to CLEAR THE RULE, and the first season has none, so
+   on 2021 it would be 59px of nothing under the page title. */
+.textpage .cbody > .chap:not(:first-child){padding-top:var(--gap-b)}
 .textpage .cbody > .chap:first-child{border-top:none;margin-top:0}
 
 /* ── ONE RAIL PER PAGE ────────────────────────────────────────────────────────────────────────
@@ -469,8 +513,42 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
 .textpage .vtile:focus-visible{outline:1px solid var(--ink);outline-offset:.4rem}
 .textpage .vitem .vt{margin-top:.9rem}
 .textpage .vitem:hover .vt{text-decoration:underline;text-underline-offset:.22em}
-/* what the facade is replaced BY */
-.textpage .vframe{display:block;width:100%;aspect-ratio:16/9;border:0}
+/* the player itself, inside the modal */
+.vframe{display:block;width:100%;height:100%;border:0}
+
+/* ── THE VIDEO MODAL — .pdlg, WIDENED FOR A PLAYER ───────────────────────────────────────────────
+   Client, 2026-08-05: videos open like Projects' descriptions do. Only four things differ from the
+   base modal, because everything else about it should be the same object.
+   ⚠️ WIDER THAN 736px, and that is the one real departure. A dialog sized for a 592px reading measure
+   puts a 16:9 player at 416px tall, which is smaller than the tile you clicked to enlarge it. 1040px
+   gives ~585px of picture and still leaves the 94vw guard for narrow screens.
+   ⚠️ THE BODY KEEPS `overflow:auto` FROM THE BASE. A short viewport (a laptop at 700px, or a phone
+   in landscape) cannot fit head + 16:9 + controls inside `max-height:88svh`, and with the scroll
+   removed the controls would simply be cut off with no way to reach them.
+   ⚠️ `padding:0` on the body so the picture goes edge to edge — the padding exists for prose. The
+   nav row restates it so the two buttons keep the head's own inset instead of touching the corners.
+   ⚠️ The slot carries the ratio and a BLACK ground: an embed paints its own black anyway, and
+   without it the box flashes paper-white between one video and the next. */
+.pdlg.vdlg{width:min(94vw,1040px)}
+.vdlg .pdbody{padding:0}
+.vdlg .vslot{aspect-ratio:16/9;background:#000}
+.vdlg .vnav{display:flex;justify-content:space-between;gap:1rem;
+  padding:clamp(1rem,2.4vh,1.4rem) clamp(1.5rem,4vw,4.5rem) clamp(1.4rem,3vh,2rem)}
+/* ⚠️ AND `.lnbtn`'s OWN margin-top has to go, the same way `.lnbtn.weld` kills it on a credit row.
+   The base 26–42px is tuned for Projects' facts column, where the control follows a block of
+   metadata. In a nav row the row's padding already sets the distance, so the margin was pure dead
+   paper — 36px of it under the player, which read as the modal having a blank strip at the bottom. */
+.vdlg .vnav .lnbtn{margin-top:0}
+/* ── OUR CHROME FADES WHILE YOU WATCH ────────────────────────────────────────────────────────
+   The head and the prev/next row go after a few idle seconds so the picture is the only thing on
+   screen; c-base.js decides when (see "THE VIDEO MODAL"). ⚠️ `pointer-events:none` goes with the
+   opacity — a control faded to nothing but still clickable is worse than one that never hid, since
+   the click lands on something invisible. ⚠️ The DIALOG's own background must not fade with them:
+   only the two chrome rows carry the class, so the paper behind the player stays put and the box
+   does not appear to change size. Off under reduced motion, in the JS rather than here, because
+   what is being suppressed is the hiding — not a transition. */
+.vdlg .pdhead,.vdlg .vnav{transition:opacity .35s ease}
+.vdlg.chrome-off .pdhead,.vdlg.chrome-off .vnav{opacity:0;pointer-events:none}
 
 /* A SECTION RULE — what tells a heading from a list item on a page where every line is short.
    The heading itself stays plain prose. On Mission a heading is legible without help because it sits

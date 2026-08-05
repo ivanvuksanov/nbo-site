@@ -55,6 +55,68 @@ addEventListener('scroll',()=>{
   }
 },{passive:true});
 
+// ══ THE PHONE MENU ══════════════════════════════════════════════════════════════════════════════
+// ⚠️ BELOW 880px THE HEADER RENDERED NOTHING BUT THE LOGO. c-base.css's `nav,.actions{display:none}`
+// switched all six links off with no hamburger and no fallback, so a phone visitor could not reach a
+// single page from the header. The client's question was "da li postoji mogucnost da meni bude gore?"
+// — the BAR was always at the top; it was empty.
+//
+// Built here rather than written into markup, and that is the load-bearing choice: the header is
+// hand-written into all 15 pages, so an authored panel is 15 chances to miss one and 15 copies to
+// keep in step. Cloning the header's OWN links means a nav change reaches the phone for free and the
+// active-page marking travels with it.
+// ⚠️ A <dialog> + showModal(), not a positioned div — Escape, the focus trap and the inertness of the
+//    page behind are the platform's, not ours to reimplement.
+// ⚠️ A dialog does NOT stop the body scrolling underneath, so it takes the site's one lock class.
+//    `--sbw` is measured BEFORE the class goes on, the same order the modal documents.
+const navHdr = document.querySelector('header#nav');
+if(navHdr && !navHdr.querySelector('.navtoggle')){
+  const navSrc = [...navHdr.querySelectorAll('nav a, .actions a')];
+  if(navSrc.length){
+    const toggle = document.createElement('button');
+    toggle.className = 'navtoggle';
+    toggle.type = 'button';
+    toggle.textContent = 'Menu';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-controls', 'navpanel');
+    navHdr.appendChild(toggle);
+
+    const panel = document.createElement('dialog');
+    panel.className = 'navpanel';
+    panel.id = 'navpanel';
+    const shutBtn = document.createElement('button');
+    shutBtn.className = 'navclose';
+    shutBtn.type = 'button';
+    shutBtn.textContent = 'Close';
+    const panelNav = document.createElement('nav');
+    navSrc.forEach(a => panelNav.appendChild(a.cloneNode(true)));
+    panel.append(shutBtn, panelNav);
+    document.body.appendChild(panel);
+
+    const shut = () => { if(panel.open) panel.close(); };
+    toggle.addEventListener('click', ()=>{
+      document.documentElement.style.setProperty('--sbw',
+        (innerWidth - document.documentElement.clientWidth) + 'px');
+      document.documentElement.classList.add('pdlg-open');
+      panel.showModal();
+      toggle.setAttribute('aria-expanded', 'true');
+    });
+    shutBtn.addEventListener('click', shut);
+    // ⚠️ A LINK MUST CLOSE THE PANEL. Five of the six are in-page or same-page anchors, which change
+    //    nothing but the scroll position — without this the panel stays open over the section it
+    //    just jumped to, and the site looks frozen.
+    panelNav.addEventListener('click', e=>{ if(e.target.closest('a')) shut(); });
+    panel.addEventListener('close', ()=>{
+      document.documentElement.classList.remove('pdlg-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+    // ⚠️ The panel is display:none above 880px, but a dialog opened on a phone STAYS OPEN through a
+    //    rotation into tablet width — leaving an invisible modal holding the scroll lock and the
+    //    focus trap over a page that looks perfectly normal and answers nothing.
+    matchMedia('(min-width:881px)').addEventListener('change', e=>{ if(e.matches) shut(); });
+  }
+}
+
 // PROTOTYPE: ECM-style scroll-linked parallax (Rellax analog) with SMOOTHING so content follows the scroll
 // with a slight delay and settles — the fluid lag the reference site has, not a 1:1 snap. Whole block
 // containers ([data-par], never .reveal elements) drift in translateY at per-block speeds, but the offset is
@@ -119,25 +181,11 @@ if(yrLinks.length && yrSecs.length){
   yrSecs.forEach(c=>obs.observe(c));
 }
 
-// VIDEO FACADE — a tile shows our own still until it is pressed, then becomes the real embed and plays.
-// The point is that a grid of n videos loads ZERO third-party players on open: thirteen live iframes
-// would paint the whole page in YouTube's chrome before anyone asked to watch anything. Pressing one
-// swaps that single tile for a true autoplaying embed, so the page still delivers embedded video.
-// youtube-nocookie.com, and the iframe is only ever created after a real click — so nothing is
-// requested from YouTube until the visitor chooses to.
-document.querySelectorAll('.vtile').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const id=btn.dataset.yt; if(!id) return;
-    const f=document.createElement('iframe');
-    f.className='vframe';
-    f.title=btn.dataset.title||'Video';
-    f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1';
-    f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-    f.referrerPolicy='strict-origin-when-cross-origin';
-    f.allowFullscreen=true;
-    btn.replaceWith(f);   // replace the BUTTON, not its contents: an iframe inside a button is unusable
-  },{once:true});
-});
+// VIDEO — the facade still holds (a tile is our own still, and NOTHING is requested from YouTube
+// until a real click), but a press now opens the shared .pdlg instead of swapping the tile in place.
+// Client, 2026-08-05: "da li je moguce da videi izadju kao pop up? Kao sto je slucaj sa project
+// descriptions u Projects", plus left/right within the set.
+// The controller lives at the FOOT of this file, beside the modal it drives — see "THE VIDEO MODAL".
 
 // ?reveal=all — the scroll-in on a TEXT PAGE's running paragraphs. Off by default: the pages carry
 // only two entrances (title + opening paragraph on load, and the footer), and prose that lifts itself
@@ -228,4 +276,90 @@ const pdWant = new URLSearchParams(location.search).get('open');
 if(pdWant){
   const byYear = document.querySelector('#y'+pdWant+' [data-dlg]');
   pdOpen(byYear ? byYear.dataset.dlg : pdWant+'-dlg');
+}
+
+// ══ THE VIDEO MODAL — ONE dialog for all thirteen, with prev/next ═══════════════════════════════
+// Client, 2026-08-05. It is a .pdlg, so scroll-lock, --sbw, the backdrop click, Escape, [data-pdclose]
+// and the single release-on-close path all come from the block above for free — this adds only the
+// playlist. The thirteen TILES stay in the grid untouched; a press no longer consumes its own tile.
+//
+// ⚠️ THE TILES ARE NOT GIVEN data-dlg. The delegated opener above would then fire alongside this
+//    handler on the same click, and pdOpen would run twice on one press. Wiring the tiles directly
+//    keeps one call site, and it is also what lets the index be known before the dialog opens.
+// ⚠️ THE IFRAME IS DESTROYED ON CLOSE, and that is not tidiness. A YouTube embed left in the DOM
+//    keeps PLAYING — audio carries on behind a dismissed dialog with nothing on screen to stop it.
+// ⚠️ prev/next REPLACE the iframe rather than reusing one and re-pointing src. A src swap leaves the
+//    previous video's player state in the frame's history, so Back inside the embed walks the
+//    playlist backwards while the page's own Back does something else entirely.
+const vdlg = document.getElementById('video-dlg');
+if(vdlg){
+  const tiles = [...document.querySelectorAll('.vtile')];
+  const slot  = vdlg.querySelector('.vslot');
+  const ttl   = vdlg.querySelector('.pdt');
+  const count = vdlg.querySelector('.vcount');
+  let vi = -1;
+
+  function vload(n){
+    if(!tiles.length) return;
+    vi = (n + tiles.length) % tiles.length;      // wraps both ways: next past the last returns to 1
+    const t = tiles[vi], title = t.dataset.title || 'Video';
+    ttl.textContent = title;
+    count.textContent = (vi + 1) + ' / ' + tiles.length;
+    slot.textContent = '';
+    const f = document.createElement('iframe');
+    f.className = 'vframe';
+    f.title = title;
+    f.src = 'https://www.youtube-nocookie.com/embed/' + t.dataset.yt + '?autoplay=1&rel=0&modestbranding=1';
+    f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    f.referrerPolicy = 'strict-origin-when-cross-origin';
+    f.allowFullscreen = true;
+    slot.appendChild(f);
+  }
+
+  // ── OUR CHROME GETS OUT OF THE WAY WHILE YOU WATCH ─────────────────────────────────────────────
+  // The head and the prev/next row fade after a few idle seconds so the picture is the only thing
+  // on screen, and come back on any pointer move, key or tap inside the dialog.
+  // ⚠️ AN IFRAME SWALLOWS POINTER EVENTS — a cross-origin embed gives the page no mousemove at all
+  //    while the cursor is over the player, so "show on move" cannot fire there. It fires the moment
+  //    the pointer leaves the picture, which is exactly when it is heading for a control, so
+  //    approaching the chrome is what reveals it. Do not "fix" this with a timer that polls.
+  // ⚠️ NEVER HIDE A CONTROL THAT HAS FOCUS or one the pointer is resting on — a keyboard user tabbed
+  //    onto Close would otherwise watch it vanish under them.
+  // ⚠️ Off entirely under reduced motion: hiding the only visible way out is a change we should not
+  //    make for someone who has asked the interface to stop moving. Escape always works regardless.
+  const HIDE_MS = 2600;
+  let vhide;
+  function chromeOn(){
+    vdlg.classList.remove('chrome-off');
+    clearTimeout(vhide);
+    if(reduce || !vdlg.open) return;
+    vhide = setTimeout(()=>{
+      if(!vdlg.open) return;
+      // ⚠️ `:focus-visible`, NOT `document.activeElement`. A mouse click LEAVES focus on the button
+      //    it pressed, so testing for focus at all meant that pressing Next pinned the chrome open
+      //    for the rest of the video — the one moment you most want it gone. `:focus-visible` is the
+      //    browser's own answer to "is this person navigating by keyboard", which is the only case
+      //    where hiding a control would strand someone.
+      if(vdlg.querySelector('.pdhead :focus-visible, .vnav :focus-visible')) return;
+      if(vdlg.querySelector('.pdhead:hover, .vnav:hover')) return;
+      vdlg.classList.add('chrome-off');
+    }, HIDE_MS);
+  }
+  ['pointermove','pointerdown','focusin'].forEach(ev => vdlg.addEventListener(ev, chromeOn));
+
+  tiles.forEach((t,n)=>t.addEventListener('click',()=>{ vload(n); pdOpen('video-dlg'); chromeOn(); }));
+  vdlg.querySelector('.vprev').addEventListener('click', ()=>{ vload(vi - 1); chromeOn(); });
+  vdlg.querySelector('.vnext').addEventListener('click', ()=>{ vload(vi + 1); chromeOn(); });
+  // arrows only while it is open, and only when focus is not inside the embed (YouTube takes its own)
+  addEventListener('keydown', e=>{
+    if(!vdlg.open || e.target.tagName === 'IFRAME') return;
+    chromeOn();
+    if(e.key === 'ArrowLeft')  vload(vi - 1);
+    if(e.key === 'ArrowRight') vload(vi + 1);
+  });
+  vdlg.addEventListener('close', ()=>{
+    slot.textContent = '';
+    clearTimeout(vhide);
+    vdlg.classList.remove('chrome-off');   // never reopen already faded
+  });
 }
