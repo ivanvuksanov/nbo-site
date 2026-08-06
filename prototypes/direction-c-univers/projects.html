@@ -54,20 +54,40 @@
    takes the title's own margin. Without this the words sat 14px under the year heading while every
    other year's first line sits 26–42px down, and the two read as different kinds of thing. */
 .pr .pblk > .subline:first-child{margin-top:clamp(1.6rem,3.5vh,2.6rem)}
-/* THE TAGLINE: THE TITLE'S SIZE, WELDED UNDER IT, OTHERWISE `.dlede` AS IT COMES (client,
+/* THE TAGLINE: A STEP BELOW THE TITLE, WELDED UNDER IT, OTHERWISE `.dlede` AS IT COMES (client,
    2026-08-05: "isto kao Embracing Vulnerability… ali sa malim slovima, i bez bolda", then "make it
-   light and two lines… pull it even higher, a little bit closer to the Embracing Vulnerability").
+   light and two lines… pull it even higher, a little bit closer to the Embracing Vulnerability";
+   then 2026-08-06: "The wound is… i dalje je preveliko. To je podnaslov od Embracing Vulnerability.
+   Trebalo bi da bude isto ili manje").
    sub.css's base runs clamp(1.55,3.1vw,2.7rem) — up to 43px, louder than the 32px title above it,
    so the tour read as the tagline's subtitle rather than the other way round. Exactly TWO
    departures, and everything else is deliberately left to the base:
-     · SIZE → the .ptitle clamp, so the title and the line of verse share one size.
+     · SIZE → clamp(1.15rem,2.2vw,1.7rem), which is `.silence`'s clamp — a value this page already
+       runs on, so the step costs the type scale no new number. It lands 27px against the title's
+       32px. ⚠️ MATCHING `.ptitle` EXACTLY WAS TRIED FIRST AND THE CLIENT REJECTED IT TWICE: at one
+       size a 2-line light phrase carries more paper than the 1-line bold title above it, so "the
+       same size" reads as bigger. "isto ili manje" resolves downward — equal was the version being
+       complained about. A subtitle has to MEASURE smaller to read as subordinate.
      · WELD → .5rem. This is the site's 8px weld, the documented "a short line belongs to the block
        above it" gap (.slabel, .cite, .qual) — tighter than `.5em` would give, which at this size
        computes to 16px and still read as a gap rather than a join.
-   ⚠️ WEIGHT 300 AND THE 30ch MEASURE ARE THE BASE'S, ON PURPOSE — a 400-weight single line was
-   tried and rejected: light over two lines is what makes this read as verse beside the tour's caps,
-   and one long line read as a strapline. Do not "fix" the light weight or uncap the measure. */
-.pr .dlede{font-size:clamp(1.25rem,2.4vw,2rem);margin-top:.5rem}
+     · MEASURE → uncapped, so the line sits on ONE row (Ivan, 2026-08-06: "with this size … maybe we
+       can try keeping it in one row"). ⚠️ THIS REVERSES AN EARLIER REJECTION AND THE REASON IT
+       REVERSED IS THE SIZE. At 43px, and again at 32px, one line was rejected for reading as a
+       strapline — a 624px line of near-title-size type competing with the tour's caps. At 27px the
+       same words are shorter, quieter, and clearly subordinate, so the objection no longer applies:
+       the earlier verdict was about the SIZE the line was set at, not about line count. **A rejected
+       option is only rejected under the conditions that were true when it was tried.**
+       `max-width:none` rather than a `ch` cap because THE CONTENT COLUMN IS THE REAL MEASURE here,
+       and a number would be arbitrary: this page has exactly ONE tagline (51 characters, the only
+       `tagline` key in the JSON), so there is no second string for a cap to serve. MEASURED: one
+       line at 1440 / 1280 / 1100 / 980 / 820 / 600 (543px of a 898px column at 1440, and the
+       clamp shrinks the type in step with the column), two balanced lines at 390 — reflow, correct.
+       ⚠️ If a second tagline is ever added,
+       re-decide this — an uncapped measure is safe for one known string, not as a general rule.
+   ⚠️ WEIGHT 300 IS THE BASE'S, ON PURPOSE — a 400-weight line was tried and rejected: light is what
+   makes this read as verse beside the tour's caps. Do not "fix" the light weight. */
+.pr .dlede{font-size:clamp(1.15rem,2.2vw,1.7rem);margin-top:.5rem;max-width:none}
 
 /* PROJECT DETAILS, IN A MODAL — the .pdlg component (CSS) now lives in the shared sub.css
    and its controller in the shared c-base.js, because Team and Board carry bio dialogs too.
@@ -132,9 +152,20 @@ body.view-grid .prail{display:none}
 /* .pdbody is named too: the production credits are .fn and they travel INTO the modal, which is
    outside .pr — the commission footnote under the programme is the copy that stays on the page */
 .pr .fn,.pdbody .fn{font-family:var(--mono);font-size:.7rem;color:var(--ink-soft);letter-spacing:.03em;margin-top:1.1rem}
-/* a year with a monument and an empty rail — the most restrained thing on the page */
+/* a year with a monument and an empty rail — the most restrained thing on the page.
+   ⚠️ 46ch, NOT 40ch, AND THE MEASURE IS THE HALF THAT MOVES THE WORD (client, 2026-08-06: "Balkan
+   Season 2020 Tour — staviti Tour u gornji red"). At 40ch line one ended exactly on "…Balkan Season
+   2020" and dropped "Tour" alone onto line two, splitting the tour's own name across the break.
+   ⚠️ A non-breaking space CANNOT fix this by itself and would make it worse — binding "2020 Tour"
+   in a line that has no room for both pushes the pair DOWN, so the upper row loses "2020" as well.
+   Room on the line is what pulls the word up; the U+00A0 in build-projects.py is what stops the name
+   splitting again once the measure shrinks (below 880px it still cannot hold 53 characters). The two
+   halves do different jobs — keep both. This is the page's only `.silence`.
+   ⚠️ Verified by TRUE LINE BOXES (a Range's client rects), not by dividing height by line-height —
+   `padding-block:1.2rem` makes that arithmetic read 2 lines as 3. Two lines at 1440 / 1100 / 820
+   with "…Balkan Season 2020 Tour" closing line one; three at 390, where the name holds together. */
 .silence{font-weight:300;font-size:clamp(1.15rem,2.2vw,1.7rem);line-height:1.3;letter-spacing:-.012em;
-  max-width:40ch;color:var(--ink-soft);padding-block:1.2rem}
+  max-width:46ch;color:var(--ink-soft);padding-block:1.2rem}
 .poem{margin-top:clamp(2.4rem,5vh,3.8rem)}
 .stmt .say.wide{max-width:none}
 /* Concerts + Programme run a notch below sub.css's regular row sizes, and tighter. A chapter can
@@ -162,7 +193,27 @@ body.view-grid .prail{display:none}
    ⚠️ THE CAP IS IN rem, NOT ch, and .t is why. `ch` measures the "0" advance and knows nothing
    about letter-spacing, so at this recipe's .16em tracking a 34ch box held only ~26 characters —
    Macao and Marseille broke into FOUR lines of tracked caps. 22rem is the measured equivalent
-   (~46 characters a line): every venue here is at most two lines, and the city column keeps 265px. */
+   (~46 characters a line), and the city column keeps 265px.
+   ⚠️ MEASURED 2026-08-06, ONCE THE RULE ACTUALLY RENDERED: every venue is two lines EXCEPT
+   Marseille's 87-character one, which is three. The earlier claim here was "at most two lines" —
+   it was never true and could not have been, because the rule it described was being swallowed by
+   the delimiter bug below and had never once reached a browser. **A number in a comment is only
+   worth what verified it.** Three lines of clean right-ragged caps is accepted: capping tighter to
+   force two would re-break the shorter venues, and 265px of city column is the constraint that
+   matters. On a phone the same rule gives 3–6 lines, which is reflow, not a defect.
+   ⚠️⚠️ A DOUBLED COMMENT-CLOSER HERE SILENTLY DELETED THIS ENTIRE RULE FOR A DAY (found 2026-08-06).
+   The stray closer sat after "265px." and ended the comment early, so the three lines below it became a
+   malformed SELECTOR — and CSS error recovery swallows the next `{…}` block as that selector's body.
+   The venue rule was the next block, so it never reached the page: Macao, Naples and Marseille
+   computed `text-align:start; justify-self:auto; max-width:none` and ran left, which is exactly the
+   complaint this rule was written on 08-05 to fix. **The client reported the same bug twice and the
+   second report was the fix being absent, not insufficient.** Nothing caught it — the file still
+   parsed, the page still looked plausible, and `probe-modal.mjs` asserts behaviour, not alignment.
+   Counting comment openers against closers in the generated page is what finds it — 39 against 40.
+   ⚠️ AND THE SAME BUG BIT THIS VERY COMMENT WHILE IT WAS BEING WRITTEN: spelling the closing
+   delimiter out to document the check ENDED THE COMMENT AT THAT WORD. A comment about the trap
+   cannot contain the trap. Describe the check, never quote its characters — `check-css.py` in the
+   project root now walks the comment state and names the line, which beats counting either way.
    ⚠️ `.hasnote` is EXCLUDED here rather than overridden later. Both selectors would otherwise carry
    the same weight and be decided by file order — the fragility `.erow.cont` already documents in
    sub.css. Excluding the case that shouldn't win is what lifts it out of the tie. */
@@ -173,9 +224,17 @@ body.view-grid .prail{display:none}
    line while the sentence stays readable. Right-aligning a 150-character clause would put it on that
    line and make it unreadable — the alignment rule is about where the COLUMN ends, not the ragging.
    The hall keeps the venue's tracked caps; the clause drops to the sentence-case metadata voice, the
-   same recipe `.t.note` uses, welded .5em under it (the site's "this line answers the one above"). */
-.pr .row:not(.prog) .t.hasnote{max-width:34ch;justify-self:end}
-.pr .row .vnote{display:block;margin-top:.5em;text-transform:none;letter-spacing:0;
+   same recipe `.t.note` uses, welded .5em under it (the site's "this line answers the one above").
+   ⚠️ THE HALL RIGHT-ALIGNS, THE CLAUSE DOES NOT (client, 2026-08-06: "2013 i 2012 — venues beze u
+   levo. Kolarac, Sava Center i House of Arts. Trebalo bi kao ostali da bude uskladjeno sa desnom
+   ivicom"). Pushing the BOX to the right edge was not enough: the hall name is 2–4 words inside a
+   34ch box, so left-set it began ~180px short of the line every other venue ends on — SYNAGOGUE and
+   RADIAL SYSTEM sat flush right in the same list while KOLARAC CONCERT HALL floated. So the ragging
+   splits by role: the hall takes the same flush-right treatment as every other venue, and `.vnote`
+   restates `text-align:left` because it is the case the paragraph above already argues for — a
+   150-character clause set right is unreadable. Both edges are now deliberate rather than shared. */
+.pr .row:not(.prog) .t.hasnote{max-width:34ch;justify-self:end;text-align:right}
+.pr .row .vnote{display:block;margin-top:.5em;text-transform:none;letter-spacing:0;text-align:left;
   font-family:var(--sans);font-weight:400;font-size:.88rem;line-height:1.45}
 /* a description standing in for a venue (2012, 2013) — sentence case at the metadata size, because
    the venue's tracked uppercase turns a 150-character clause into a shouted three-line paragraph */
@@ -353,7 +412,7 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
 <section class="chap pr" id="y2020">
   <div class="grid txt">
     <div class="b">
-      <h2 class="lead reveal draw">2020</h2><div class="pblk"><p class="subline metanum soft">Balkan Season 2020</p><p class="eyebrow blk">Concerts</p><p class="silence">Due to the covid pandemic, the Balkan Season 2020 Tour was postponed until next year.</p></div>
+      <h2 class="lead reveal draw">2020</h2><div class="pblk"><p class="subline metanum soft">Balkan Season 2020</p><p class="eyebrow blk">Concerts</p><p class="silence">Due to the covid pandemic, the Balkan Season 2020 Tour was postponed until next year.</p></div>
     </div>
   </div>
 </section>

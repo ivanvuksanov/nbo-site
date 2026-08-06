@@ -395,11 +395,16 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
    The block gap alone separates the two groups, which is what the rhythm is for. */
 .textpage .cgroup + .cgroup{margin-top:var(--gap-b)}
 /* the season heading and what it introduces — 22px sat the logo sheet almost against the heading's
-   baseline (client, 2026-08-05: "a bit too close to the logos"). `--gap-t` is the site's own
-   "same argument continuing" tier, so this stays on the two values the page already runs on rather
-   than adding a third; it lands ~31px against the block break's ~60px, which keeps the heading
-   grouped with its logos instead of floating between them and the rule above. */
-.textpage .chap > .lead + .cgroup{margin-top:var(--gap-t)}
+   baseline (client, 2026-08-05: "a bit too close to the logos"), and `--gap-t`'s ~34px was still too
+   tight (client, 2026-08-06: "i izmedju godine i sponzora").
+   ⚠️ THE INVARIANT IS THE vh TERM, NOT THE PIXEL VALUE. 5vh sits strictly below `--gap-b`'s 6.6vh, so
+   this gap can never overtake the break BETWEEN two groups at any window height — which is the whole
+   reason the heading still reads as belonging to the logos under it rather than floating between them
+   and the rule above. It lands ~50px against the block break's ~66px. A fixed third token would hold
+   that relationship at one viewport and lose it at others; a smaller fraction of the same axis holds
+   it everywhere. ⚠️ Do not "simplify" this to `var(--gap-b)` — equal gaps make the year read as one
+   more item in the list instead of the head of it. */
+.textpage .chap > .lead + .cgroup{margin-top:clamp(2.4rem,5vh,4rem)}
 /* ⚠ NO RULE ABOVE THE FIRST YEAR (client, 2026-08-03). A chapter rule exists to SPLIT one season from
    the one before it, so the first has nothing to be split from — over it the rule read as a lid on the
    page rather than a divider, and it sat immediately under the page title doing that title's job
@@ -410,10 +415,15 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
    gives Partners → Friends *within one season* `--gap-b`'s 48–83px. So the smaller break was the
    more important one, and five seasons ran together as a single column of names. This clears
    `--gap-b` at both ends of the clamp; with `.chap`'s own 19.2px padding-top a new year now starts
-   90–137px below the last line of the one before it.
+   90–137px below the last line of the one before it. ⚠️ Asked again and widened again (client,
+   2026-08-06: "malo vise prostora izmedju godina"): 12vh puts the upper gap at ~120px, so a season
+   now opens ~186px below the last line of the one before it (120 above the rule + `--gap-b` below).
+   The two ratios that make the page legible both still hold, and they hold by construction:
+   12vh > 6.6vh keeps the rule closer to the season it introduces than to the one it closes, and
+   6.6vh > 5vh keeps a season's own break bigger than the gap under its heading.
    ⚠️ Not a change to `.chap` itself — that rule is Projects' too, and Projects is `body.sub
    panels-dark`, never `.textpage`, so scoping it here is what keeps fourteen chapters untouched. */
-.textpage .cbody > .chap{margin-top:clamp(4.4rem,9vh,7.4rem)}
+.textpage .cbody > .chap{margin-top:clamp(6rem,12vh,10rem)}
 /* ⚠️ AND THE RULE HAS TO SIT BETWEEN THE TWO SEASONS, NOT AGAINST THE LOWER ONE (client, 2026-08-05:
    "it still looks like the next year is too close to the separator line"). Widening the margin alone
    fixed the wrong half: it bought 81px ABOVE the rule while `.chap`'s base `padding-top:1.2rem` left
@@ -627,6 +637,43 @@ body.cta-solid .cta:hover{background:none;color:var(--ink)}
    silently caps width:600px at the column's width and shrinks the sheet right back into illegibility
    on a phone. The fixed width does nothing without it. */
 .textpage .sheet{display:block;width:600px;max-width:none;height:auto;mix-blend-mode:multiply}
+
+/* A GRID OF INDIVIDUAL LOGOS — 2023, 2024 and 2025 (pull-leaflet-logos.py).
+   ⚠ THE OPPOSITE CASE TO .sheet ABOVE, AND IT IS WORTH BEING CLEAR WHY BOTH EXIST. A sheet is one
+   flattened raster whose layout we do not own: it cannot reflow, so it is pinned to 600px and PANS on
+   a phone. These three seasons come from the tour leaflets, which are vector PDFs, so each logo is
+   its own file — and once the marks are separate the row is ours to lay out. So this one REFLOWS,
+   which is what the sheets could never do, and it needs no scroller at any width.
+   ⚠ IT ALSO CARRIES NO BAKED-IN WORDS. The leaflet's own group headings ("MAIN DONORS", "MOSTAR")
+   stayed behind on the panel when the logos were cut out, so each group takes a .slabel in our type.
+   That retires, for these three years only, the defect the sheets still have: "Partners" printing
+   twice over every one of them, once in our face and once inside the picture.
+   ⚠ NO max-width, AND IT HAD ONE FOR A ROUND. Capping it at 600px to "match .sheet and .qlist" was
+   wrong twice over: the rows are ragged-right by nature — eight different logo widths, no edge to
+   hold — so nothing ever reached that edge to align to it, and meanwhile 2024's four Supporters
+   need 603px, so the cap silently wrapped the fourth one onto a line of its own. An orphaned logo,
+   bought for an edge that was never visible. The 600px on .sheet is load-bearing (a fixed raster
+   that must not be resampled); here it was decoration with a side effect.
+   The row now uses its column, so wrapping happens only when a screen is genuinely too narrow —
+   which is what wrapping is for. Widest row is 603px against a 1001px column at 1440.
+   ⚠ EACH LOGO'S SIZE IS SET BY width/height ON THE IMG, computed for EQUAL AREA per mark rather than
+   equal height (see LOGO_AREA in the script). Equal height would give a 6.9:1 wordmark ten times the
+   paper of a 0.87:1 shield beside it. So there is deliberately no sizing rule here: the flex row just
+   places boxes whose dimensions already carry that decision.
+   ⚠ align-items:center, NOT baseline or stretch. These are pictures at eight different heights with
+   no shared baseline to find, and a stretch would distort every one of them.
+   ⚠ MULTIPLY, for the same load-bearing reason as .sheet — the crops keep the leaflet panel's pure
+   white ground, and the paper is #fbfbfa. Trimming each logo to its own ink is what makes that safe:
+   once white is invisible, white inside the file becomes page rhythm nothing asked for. */
+.textpage .lgrid{list-style:none;display:flex;flex-wrap:wrap;align-items:center;
+  gap:clamp(1.5rem,3.4vh,2.3rem) clamp(1.6rem,3.6vw,2.6rem)}
+.textpage .lgrid img{height:auto;mix-blend-mode:multiply}
+/* THE MAIN DONOR ON A ROW OF ITS OWN (client, 2026-08-06). One .cgroup can now hold two `.lgrid`
+   rows: several leaflet headings print under one "Partners" label, and the donor still opens it
+   alone. ⚠️ THE GAP DELIBERATELY EQUALS `.lgrid`'S OWN row-gap — the two rows must read as ONE wall
+   that happens to break after the donor, not as two groups. Anything larger re-introduces the
+   division the client just asked us to remove, one level down, and this time with no label on it. */
+.textpage .lgrid + .lgrid{margin-top:clamp(1.5rem,3.4vh,2.3rem)}
 
 /* A PORTRAIT ON THE TEXT EDGE, its credit beside it — Team and Board.
    ⚠ MOVED OUT OF THE LEFT RAIL on 2026-08-03 (client: "slike su suviše levo … na svim ostalim npr.
