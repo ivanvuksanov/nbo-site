@@ -295,6 +295,26 @@ body.prog-plain .pr .row.prog .t{display:inline;max-width:none;text-align:left;c
   .pr .b{grid-column:1/-1}
   .plates .pl{grid-column:1/-1}
   .plates .pl + .pl{margin-top:2rem}
+  /* ── THE VENUE TAKES ITS OWN LINE ON A PHONE, AND THIS IS AN OVERFLOW FIX, NOT A TASTE CHANGE.
+     `c-base.css` collapses `.row` to `1fr auto` here and spans the date across both. That leaves the
+     city and the venue sharing one line, and neither track can shrink below its content's
+     MIN-CONTENT — which for a venue means its longest unbreakable WORD.
+     ⚠️ ONE WORD CAUSED THIS: "KUNSTENFESTIVALDESARTS" (Brussels, 2015) is 22 characters of tracked
+     caps and measures 197px with no break opportunity in it. Against a content column of 253px at
+     390px it forced the row wider than its column, the full-width date inherited that width, and the
+     document scrolled sideways — 11px at 390, 33px at 360, 63px at 320. Measured, not estimated.
+     Stacking gives that word the whole column instead of a share of it. The venue keeps
+     `text-align:right`, so the column still ends on one edge; only the sharing stops.
+     ⚠️ REJECTED: `min-width:0` on the row's children, which also clears the overflow — it lets the
+     `1fr` city track collapse to ZERO width (measured: "Macao" at 0px, its text spilling out of its
+     own box). The city is the row's display type; a fix that erases it is not a fix.
+     ⚠️ REJECTED: breaking the word (`overflow-wrap`), which hyphenates a festival's name.
+     ⚠️ HEADROOM IS THIN AT 320px — 200px of column against that 197px word. A longer unbreakable name
+     will overflow again, and the honest fix then is `overflow-wrap:anywhere` on `.t` at that width.
+     ⚠️ Scoped to `.pr`: the base rule is shared with the homepage's `.gig`, which has no venue string
+     anywhere near this length. Every other page is clean at 390 — checked. */
+  .pr .row:not(.prog){grid-template-columns:1fr}
+  .pr .row:not(.prog) .t{grid-column:1/-1}
 }
 </style>
 </head>
