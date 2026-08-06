@@ -219,22 +219,25 @@ body.view-grid .prail{display:none}
    sub.css. Excluding the case that shouldn't win is what lifts it out of the tie. */
 .pr .row:not(.prog) .t:not(.note):not(.hasnote){max-width:22rem;text-align:right;justify-self:end}
 /* A HALL WITH ITS OCCASION UNDER IT — the two Belgrade concerts whose venue the source never gave.
-   It takes `.t.note`'s existing shape, because that is already this page's treatment for a clause:
-   text set LEFT inside a box pushed to the right edge, so the block still ends on the page's right
-   line while the sentence stays readable. Right-aligning a 150-character clause would put it on that
-   line and make it unreadable — the alignment rule is about where the COLUMN ends, not the ragging.
    The hall keeps the venue's tracked caps; the clause drops to the sentence-case metadata voice, the
    same recipe `.t.note` uses, welded .5em under it (the site's "this line answers the one above").
-   ⚠️ THE HALL RIGHT-ALIGNS, THE CLAUSE DOES NOT (client, 2026-08-06: "2013 i 2012 — venues beze u
-   levo. Kolarac, Sava Center i House of Arts. Trebalo bi kao ostali da bude uskladjeno sa desnom
-   ivicom"). Pushing the BOX to the right edge was not enough: the hall name is 2–4 words inside a
-   34ch box, so left-set it began ~180px short of the line every other venue ends on — SYNAGOGUE and
-   RADIAL SYSTEM sat flush right in the same list while KOLARAC CONCERT HALL floated. So the ragging
-   splits by role: the hall takes the same flush-right treatment as every other venue, and `.vnote`
-   restates `text-align:left` because it is the case the paragraph above already argues for — a
-   150-character clause set right is unreadable. Both edges are now deliberate rather than shared. */
+   ⚠️ HALL AND CLAUSE BOTH END ON THE VENUE LINE (client, 2026-08-06: "venues beze u levo. Kolarac,
+   Sava Center i House of Arts", then Ivan on the clause: "the small text should be right-aligned with
+   the venue"). Two passes, and the second corrected the first:
+     · the HALL was left-set inside a 34ch box pushed right, so it began ~180px short of the line
+       SYNAGOGUE and RADIAL SYSTEM end on, and floated while they sat flush.
+     · the CLAUSE was then deliberately kept left, on the argument that a 150-character sentence set
+       right is unreadable. ⚠️ THAT ARGUMENT WAS WRONG ON THIS PAGE, and the page itself is the
+       evidence: `.pr .row.prog .t` already sets work titles up to 98 characters flush right over as
+       many as three lines, and has since the programme was built. So "long text cannot be
+       right-aligned here" was contradicted by the column directly below it. The real reason the
+       clause looked wrong was that it was the ONLY thing in the venue column not ending on the
+       venue line.
+   Both now end on it. Three clauses exist — 156, 67 and 51 characters — so Kolarac's is the worst
+   case and it is the one to look at if this is ever revisited. ⚠️ Judge it by SCREENSHOT, not by the
+   character count: the count is what made this the wrong call the first time. */
 .pr .row:not(.prog) .t.hasnote{max-width:34ch;justify-self:end;text-align:right}
-.pr .row .vnote{display:block;margin-top:.5em;text-transform:none;letter-spacing:0;text-align:left;
+.pr .row .vnote{display:block;margin-top:.5em;text-transform:none;letter-spacing:0;
   font-family:var(--sans);font-weight:400;font-size:.88rem;line-height:1.45}
 /* a description standing in for a venue (2012, 2013) — sentence case at the metadata size, because
    the venue's tracked uppercase turns a 150-character clause into a shouted three-line paragraph */
