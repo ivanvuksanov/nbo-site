@@ -287,10 +287,15 @@
 
 <!-- 2012 & 2013 — partners only, and the two years share ONE sheet because the client's own graphic
      titles them together ("2012 & 2013 Concerts supporters"). Deliberately not split further: the
-     logos under that heading are not attributed to one year or the other anywhere in the source. -->
+     logos under that heading are not attributed to one year or the other anywhere in the source.
+     ⚠️ THAT BAKED TITLE IS NOT IN THE FILE WE SHIP — it names the SOURCE composite's band, and
+     `pull-supporter-sheets.py` cuts it off: this sheet is in its `BEHEADABLE` set, along with 2021
+     and 2019. That is precisely what licenses the `.slabel` here, and why season-2018 still cannot
+     have one — its title shares a row with three city headings, so no cut removes it alone. -->
 <section class="chap" id="y2012">
       <h2 class="lead reveal">2012 &amp; 2013</h2>
       <div class="cgroup read reveal-opt">
+        <p class="slabel">Partners</p>
         <div class="sheetwrap">
           <img class="sheet" src="supporters/season-2012-2013.png" width="600" height="220" loading="lazy"
                alt="2012 and 2013 concerts supporters: European Union Culture Programme,
